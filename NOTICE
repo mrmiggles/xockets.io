@@ -1,0 +1,29 @@
+OpenNTF webshell-xpages-ext-lib
+(C)Copyright Tek Counsel LLC
+
+This product includes software contributed to
+OpenNTF Alliance (http://www.OpenNTF.org/)
+
+This product is licensed under the terms of the Apache 2.0 license.
+
+The project contains the following 3rd party code:
+
+1. The product contains jackson-all-1.9.9.jar, which is available from http://wiki.fasterxml.com/JacksonDownload, and which is under the Apache 2.0 license. (JSON Parser)
+
+2. The product contains apache commons jar files:
+commons-codec-1.6.jar
+commons-fileupload-1.2.2.jar 
+commons-io-2.1.jar
+commons-lang3-3.1.jar
+commons-net-3.1.jar
+which are available from Apache at http://commons.apache.org/, and which is under the Apache 2.0 license.
+
+3. The product contains a Base64.java class developed by Robert Harder that he has placed in the public domain.
+
+4. The product contains libraries from google's guice which can be found here (https://code.google.com/p/google-guice/) , and which is licensed under Apache 2.0 license. (dependency injector)
+
+5. The product contains css / javascript libraries from http://getbootstrap.com/ licensed using MIT (UI components for sample applications)
+
+6. The product contains libraries/code from The Netty Project https://github.com/netty licensed using Apache 2.0 (primary engine for websocket / networking)
+
+7. The product contains libraries from jzlib http://www.jcraft.com/jzlib/ under a BSD-style license (used for websocket extension / compression)

@@ -1,0 +1,18 @@
+xockets.io (pronounced zockets.io, for XPages websockets) plugin adds support for browser based websockets in the XPages runtime.  
+It leverages Netty.io websocket libraries to easily scale to a large number of users.  This plugin replaces the websocket implementation 
+found in the webshell-xpages-ext-lib hence the 2.0.0 release.  Below is a list of the latest features available in xockets.io:
+
+
+-Use of Netty as the websocket/networking engine
+-Increased scale (tested locally with 15k websocket connections / users)
+-Granular control of threading, send / receive buffers to tweak performance of the server
+-Configuration can be stored in a profile document, or notes.ini (both use name/value pairs)
+-You will no longer be restricted to using the server's Id.  Any Id can be configured to integrate with the Domino server
+-Server.id password no longer has to be empty (websocket server initializes with trusted session, then reverts to configured userId)
+-Rhino embedded JavaScript clients can be registered and run under their own Ids as well (e.g. chatapp user)
+-Added Origin based security patch to prohibit Cross-Site Websocket Hijacking (CSWSH) (you must configure allowed Origins e.g. mysite.com, yoursite.com, oursite.com)
+-Added security patch to make sure the logged in user has at least reader access to the nsf if the websocket url contains the nsf as part of its path. 
+-Added LRU SystemCache reference available to your Rhino JavaScript libraries to share and persist data between SSJS library invocations (scoped to class, so be careful with your keys).
+
+
+Please see websocket-setup.pdf for more detailed information

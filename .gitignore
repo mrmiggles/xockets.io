@@ -1,0 +1,9 @@
+.metadata
+com.ibm.notes.java.api
+com.example.junit.tests
+com.example.xsp
+com.ibm.xsp.test.framework
+Thumbs.db
+*.phd
+*.trc
+*.class

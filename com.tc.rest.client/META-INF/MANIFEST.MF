@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Simple REST Client
+Bundle-SymbolicName: com.tc.rest.client
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.tc.rest.client.Activator
+Bundle-Vendor: TC
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0"
+Bundle-ActivationPolicy: lazy
+Require-Bundle: javax.servlet;bundle-version="2.4.0",
+ com.tc.utils;bundle-version="1.1.3",
+ org.openntf.junit.libraries;bundle-version="1.1.0",
+ org.apache.commons;bundle-version="2.1.0"
+Export-Package: com.tc.rest.client

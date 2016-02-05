@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: guicer
+Bundle-SymbolicName: com.tc.di.guicer
+Bundle-Version: 1.1.3
+Bundle-Vendor: Tek Counsel LLC
+Require-Bundle: com.ibm.xsp.core,
+ org.eclipse.core.runtime,
+ com.google.guice;bundle-version="1.0.0"
+Export-Package: com.tc.di.guicer
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6 

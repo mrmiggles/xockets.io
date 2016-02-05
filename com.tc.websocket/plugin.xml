@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+
+
+      <extension
+            point="com.ibm.commons.Extension">
+         <service
+               class="com.tc.websocket.library.WebSocketLibrary"
+               type="com.ibm.xsp.Library">
+         </service>
+      </extension>
+      
+       
+      <extension
+         point="com.ibm.commons.Extension">
+      <service
+            class="com.tc.websocket.StartupHandler"
+            type="com.ibm.designer.runtime.extensions.RuntimeInitializationEvent">
+      </service>
+   </extension>
+   
+   
+ <extension point="com.ibm.domino.das.service">
+        <serviceResources
+            class="com.tc.websocket.rest.WebSocketService"
+            name="websocket"
+            path="websocket">
+        </serviceResources>         
+   </extension>
+
+
+</plugin>

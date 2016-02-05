@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: guice librarires
+Bundle-SymbolicName: com.google.guice
+Bundle-Version: 1.0.0
+Bundle-ClassPath: guice-3.0.jar,
+ guice-assistedinject-3.0.jar,
+ javax.inject.jar,
+ aopalliance.jar
+Bundle-Vendor: google
+Export-Package: com.google.inject,
+ com.google.inject.assistedinject,
+ com.google.inject.binder,
+ com.google.inject.internal,
+ com.google.inject.internal.asm,
+ com.google.inject.internal.cglib.core,
+ com.google.inject.internal.cglib.proxy,
+ com.google.inject.internal.cglib.reflect,
+ com.google.inject.internal.util,
+ com.google.inject.matcher,
+ com.google.inject.name,
+ com.google.inject.spi,
+ com.google.inject.util,
+ javax.inject,
+ org.aopalliance.aop,
+ org.aopalliance.intercept
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

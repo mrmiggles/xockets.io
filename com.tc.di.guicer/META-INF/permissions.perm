@@ -1,0 +1,5 @@
+# Permissions file
+( org.osgi.framework.AdminPermission "*" "*" )
+( org.osgi.framework.PackagePermission "*" "exportonly,import" )
+( org.osgi.framework.ServicePermission "*" "get,register")
+( org.osgi.framework.BundlePermission "*" "host,provide,fragment,metadata")

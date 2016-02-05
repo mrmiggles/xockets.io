@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Xpage Java Profiler
+Bundle-SymbolicName: com.tc.xpage.profiler
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.tc.xpage.profiler.Activator
+Bundle-Vendor: Tek Counsel LLC
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0"
+Bundle-ActivationPolicy: lazy
+Require-Bundle: com.google.guice;bundle-version="1.0.0",
+ com.ibm.commons;bundle-version="9.0.0",
+ com.tc.utils;bundle-version="1.1.3"
+Export-Package: com.tc.xpage.profiler
