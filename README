@@ -15,4 +15,4 @@ found in the webshell-xpages-ext-lib hence the 2.0.0 release.  Below is a list o
 -Added LRU SystemCache reference available to your Rhino JavaScript libraries to share and persist data between SSJS library invocations (scoped to class, so be careful with your keys).
 
 
-Please see websocket-setup.pdf for more detailed information
+Please see xockets.io.setup.pdf for more detailed information
