@@ -3,6 +3,13 @@ It leverages Netty.io websocket libraries to easily scale to a large number of u
 found in the webshell-xpages-ext-lib hence the 2.0.0 release.  Below is a list of the latest features available in xockets.io:
 
 
+xockets.io as of 2.0.1
+Fixed a problem with the feature plugin referencing a plugin indirectly that may have caused problems during the installation on the client or server.  
+Also, updated the logic for message durability to save an inbound message during the onMessage method instead of during the send.
+
+
+
+xockets.io as of 2.0.0
 -Use of Netty as the websocket/networking engine
 -Increased scale (tested locally with 15k websocket connections / users)
 -Granular control of threading, send / receive buffers to tweak performance of the server
