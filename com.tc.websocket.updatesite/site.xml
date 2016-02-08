@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/com.tc.websocket.feature_2.0.0.201602042331.jar" id="com.tc.websocket.feature" version="2.0.0.201602042331"/>
+   <feature url="features/com.tc.websocket.feature_2.0.0.201602081153.jar" id="com.tc.websocket.feature" version="2.0.0.201602081153"/>
 </site>

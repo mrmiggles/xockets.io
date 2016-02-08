@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.tc.websocket.feature"
-      label="websocket(netty)"
+      label="xockets.io"
       version="2.0.0.qualifier"
       provider-name="TC">
 
@@ -16,48 +16,6 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
-
-   <requires>
-      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.equinox.http.registry" version="1.0.100" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi.util" version="3.1.300" match="greaterOrEqual"/>
-      <import plugin="com.ibm.domino.osgi.core"/>
-      <import plugin="com.ibm.commons"/>
-      <import plugin="com.ibm.pvc.servlet"/>
-      <import plugin="com.ibm.xsp.extsn"/>
-      <import plugin="com.ibm.xsp.core"/>
-      <import plugin="com.ibm.xsp.designer"/>
-      <import plugin="com.ibm.xsp.dojo"/>
-      <import plugin="com.ibm.xsp.domino"/>
-      <import plugin="com.google.guice" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.ibm.notes.java.api" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.ibm.designer.runtime"/>
-      <import plugin="com.tc.di.guicer" version="1.1.3" match="greaterOrEqual"/>
-      <import plugin="com.tc.utils" version="1.1.3" match="greaterOrEqual"/>
-      <import plugin="com.tc.domino.module" version="1.1.3" match="greaterOrEqual"/>
-      <import plugin="com.tc.xpage.profiler" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.jackson.library" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.commons" version="2.1.0" match="greaterOrEqual"/>
-      <import plugin="com.ibm.wink" version="9.0.1" match="greaterOrEqual"/>
-      <import plugin="com.ibm.domino.das" version="9.0.1" match="greaterOrEqual"/>
-      <import plugin="com.ibm.domino.services" version="9.0.1" match="greaterOrEqual"/>
-      <import plugin="com.tc.scriptrunner" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="io.netty" version="4.1.0" match="greaterOrEqual"/>
-      <import plugin="com.tc.websocket" version="1.1.3" match="greaterOrEqual"/>
-      <import plugin="com.tc.rest.client" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="javax.servlet" version="2.4.0" match="greaterOrEqual"/>
-      <import plugin="org.openntf.junit.libraries" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="com.ibm.designer.runtime" version="9.0.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi"/>
-      <import plugin="com.ibm.commons" version="9.0.0" match="greaterOrEqual"/>
-      <import plugin="com.ibm.xsp.domino" version="8.5.3" match="greaterOrEqual"/>
-      <import plugin="com.ibm.xsp.core" version="8.5.3" match="greaterOrEqual"/>
-      <import plugin="com.ibm.jscript"/>
-      <import plugin="com.ibm.xsp.extlib" version="9.0.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi" version="3.4.3" match="greaterOrEqual"/>
-      <import plugin="com.ibm.pvc.servlet" version="2.5.0" match="greaterOrEqual"/>
-      <import plugin="com.ibm.domino.osgi.core" version="9.0.0" match="greaterOrEqual"/>
-   </requires>
 
    <plugin
          id="com.tc.websocket"

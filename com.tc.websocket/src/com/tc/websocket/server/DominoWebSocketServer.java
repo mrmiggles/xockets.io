@@ -379,15 +379,12 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 	@Override
-
 	public void onMessage(ContextWrapper conn, String message) {
 
 		//we don't want to push a message that is too large
 		if(!isValidSize(message)) return;
 
-		String sessionId = this.resolveSessionId(conn);
-
-		IUser user = VALID_USERS.get(sessionId);
+		IUser user = VALID_USERS.get(this.resolveSessionId(conn));
 
 		SocketMessage msg =JSONUtils.toObject(message, SocketMessageLite.class);
 
@@ -406,13 +403,12 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		}
 
 
-
 		//if msg fails to be created by json parser handle the null object
 		if(msg == null){
 			logger.log(Level.SEVERE,"Socket Message could not be created.");
 			return;
 		}
-
+		
 
 
 		//msg.setDate(new Date());
@@ -424,6 +420,13 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		if(!user.getUserId().equals(msg.getFrom())){
 			throw new IllegalArgumentException("Invalid value in from. from must equal current user's Id " + user.getUserId() + " " + msg.getFrom());
+		}
+		
+		
+		//commit to disk if durable, let the queue processor send the message.
+		if(msg.isDurable()){
+			this.queueMessage(msg);
+			return;
 		}
 
 
@@ -446,7 +449,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 		//check to see if there's any messages waiting on this event for the sender.
-
 		EventQueueProcessor sendEvent = guicer.createObject(EventQueueProcessor.class);
 		sendEvent.setEventQueue(Const.VIEW_ON_SEND_MSG);
 		sendEvent.setTarget(msg.getFrom());
@@ -669,12 +671,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				this.queueMessage(JSONUtils.toObject(json, SocketMessage.class));
 			}
 		}
-		if (!sent){
-			SocketMessage msg = JSONUtils.toObject(json, SocketMessage.class);
-			if(msg.isDurable()){
-				this.queueMessage(msg);
-			}
-		}
 		return sent;
 	}
 
@@ -690,14 +686,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 					if(this.send(user.getUserId(), json)){
 						b = true; //if the message was sent to anyone in the uri we're consider it sent.
 					}
-
 				}
-			}
-		}else{
-			SocketMessage msg = JSONUtils.toObject(json, SocketMessage.class);
-			if(msg.isDurable()){
-				this.queueMessage(msg);
-				b = false;
 			}
 		}
 		return b;
