@@ -6,7 +6,7 @@ found in the webshell-xpages-ext-lib hence the 2.0.0 release.  Below is a list o
 xockets.io as of 2.0.1
 -Fixed a problem with the plugin importing to the designer client (indirect reference to unneeded plugin removed)
 -Updated the logic for message durability to save an inbound message during the onMessage method instead of during the send.
--Added native transport settings WEBSOCKET_NATIVE_TRANSPORT for Linux based systems only (reduces memory consumption and GC overhead)
+-(NOT TESTED YET) Added native transport settings WEBSOCKET_NATIVE_TRANSPORT for Linux based systems only (reduces memory consumption and GC overhead)
 -Refactored NettyTestClient to use main method invocation so the loaded websocket clients stay loaded throughout the entire test.
 -Refactored some of the notes api java operations for performance (e.g. use unid instead of view lookup where possible)
 -Updated Config object to be based off an interface for easier substitutions during testing.
