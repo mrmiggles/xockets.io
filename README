@@ -11,6 +11,7 @@ xockets.io as of 2.0.1
 -Refactored some of the notes api java operations for performance (e.g. use unid instead of view lookup where possible)
 -Updated Config object to be based off an interface for easier substitutions during testing.
 -Updated some netty calls to reduce memory overhead and GC
+-(NOT TESTED) Removed the XPage 9.0.1 plugin references.  This might allow the websocket plugin to function in 8.5.3
 
 
 
