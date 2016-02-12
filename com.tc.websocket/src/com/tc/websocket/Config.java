@@ -25,6 +25,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.SystemUtils;
+
 import lotus.domino.Database;
 import lotus.domino.Document;
 import lotus.domino.NotesException;
@@ -36,7 +38,7 @@ import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
 import com.tc.utils.XSPUtils;
 
-public class Config implements Runnable {
+public class Config implements Runnable, IConfig {
 	private static Logger logger = Logger.getLogger(Config.class.getName());
 
 	private boolean allowAnonymous;
@@ -48,6 +50,7 @@ public class Config implements Runnable {
 	private int port;
 	private boolean debug;
 	private boolean profiled;
+	private boolean nativeTransport;
 
 
 	private String websocketFilter;
@@ -83,7 +86,7 @@ public class Config implements Runnable {
 	private List<String> allowedOrigins;
 	private Properties props;
 
-	private static Config config = new Config();
+	private static IConfig config = new Config();
 
 
 	//private constructor / singleton
@@ -91,63 +94,76 @@ public class Config implements Runnable {
 		this.run();
 	}
 
-	public static Config getInstance(){
+	public static IConfig getInstance(){
 		return config;
 	}
 
 
+	@Override
 	public boolean isAllowAnonymous() {
 		return allowAnonymous;
 	}
 	
 	
+	@Override
 	public boolean isBroadcastServer(){
 		return ServerInfo.getInstance().getServerName().equals(this.getBroadcastServer());
 	}
 
 
+	@Override
 	public boolean isEncrypted() {
 		return encrypted;
 	}
 
 
+	@Override
 	public int getPort() {
 		return port;
 	}
 
+	@Override
 	public String getKeyStore() {
 		return keyStore;
 	}
 
+	@Override
 	public String getKeyStorePassword() {
 		return keyStorePassword;
 	}
 
+	@Override
 	public String getKeyPassword() {
 		return keyPassword;
 	}
 
+	@Override
 	public boolean isDebug(){
 		return debug;
 	}
 
 
+	@Override
 	public String getKeyStoreType(){
 		return this.keyStoreType;
 	}
 
+	@Override
 	public String getWebsocketFilter(){
 		return this.websocketFilter;
 	}
 
+	@Override
 	public boolean isTestMode(){
 		return this.testMode;
 	}
 
 
+	@Override
 	public void print(Object o){
 		System.out.println("websocket service: " + o);
 	}
+
 
 	@Override
 	public void run() {
@@ -213,6 +229,11 @@ public class Config implements Runnable {
 			}
 			
 			
+			this.nativeTransport=envAsBool(s,"WEBSOCKET_NATIVE_TRANSPORT",false);
+			if(this.nativeTransport && !SystemUtils.IS_OS_LINUX){
+				print("****WARNING: Native transport only available on Linux based machines. Reverting to NIO transport.****");
+				this.nativeTransport=false;
+			}
 		
 			this.onServer = s.isOnServer();
 			
@@ -276,8 +297,7 @@ public class Config implements Runnable {
 
 			this.maxSize = envAsLong(s, "WEBSOCKET_MAX_MSG_SIZE", Const.WEBSOCKET_MAX_MSG_SIZE);
 			if(maxSize < Const.WEBSOCKET_MAX_MSG_SIZE){
-				print("WEBSOCKET_MAX_MSG_SIZE is lower than default buffer size.  Using default buffer size of " + Const.WEBSOCKET_MAX_MSG_SIZE);
-				maxSize = Const.WEBSOCKET_MAX_MSG_SIZE;
+				print("****WARNING: Max message size of " + maxSize + " is less than the default of " + Const.WEBSOCKET_MAX_MSG_SIZE + " bytes");
 			}
 
 
@@ -354,10 +374,12 @@ public class Config implements Runnable {
 
 	}
 
+	@Override
 	public int getEventLoopThreads() {
 		return eventLoopThreads;
 	}
 
+	@Override
 	public boolean isValid(){
 		return valid;
 	}
@@ -418,73 +440,90 @@ public class Config implements Runnable {
 	}
 
 
+	@Override
 	public boolean isOnServer() {
 		return onServer;
 	}
 
+	@Override
 	public void setOnServer(boolean onServer) {
 		this.onServer = onServer;
 	}
 
 
+	@Override
 	public String getBroadcastServer() {
 		return broadcastServer;
 	}
 
 
+	@Override
 	public String getClustermateMonitor(){
 		return this.clustermateMonitor;
 	}
 
+	@Override
 	public int getClustermateExpiration() {
 		return clustermateExpiration;
 	}
 
+	@Override
 	public boolean isClustered(){
 		return this.clustered;
 	}
 
 
+	@Override
 	public String getError(){
 		return this.error;
 	}
 
+	@Override
 	public long getMaxSize() {
 		return maxSize;
 	}
 
+	@Override
 	public int getMaxConnections() {
 		return maxConnections;
 	}
 
+	@Override
 	public void setMaxConnections(int maxConnections) {
 		this.maxConnections = maxConnections;
 	}
 
+	@Override
 	public int getPingInterval() {
 		return pingInterval;
 	}
 
+	@Override
 	public int getThreadCount() {
 		return threadCount;
 	}
 
+	@Override
 	public void setThreadCount(int threadCount) {
 		this.threadCount = threadCount;
 	}
 
+	@Override
 	public int getPurgeInterval() {
 		return purgeInterval;
 	}
 
+	@Override
 	public void setPurgeInterval(int purgeInterval) {
 		this.purgeInterval = purgeInterval;
 	}
 
+	@Override
 	public List<String> getAllowedOrigins() {
 		return allowedOrigins;
 	}
 
+	@Override
 	public boolean isAllowedOrigin(String origin){
 		boolean b = false;
 		URI uri=null;
@@ -498,36 +537,48 @@ public class Config implements Runnable {
 	}
 
 	
+	@Override
 	public boolean isProfiled() {
 		return profiled;
 	}
 
+	@Override
 	public String getUsername() {
 		return username;
 	}
 
 
 
+	@Override
 	public String getPassword() {
 		return password;
 	}
 
 
+	@Override
 	public int getClientCacheMax() {
 		return this.clientCacheMax;
 	}
 	
 	
+	@Override
 	public boolean isCompressionEnabled() {
 		return compressionEnabled;
 	}
 
+	@Override
 	public int getSendBuffer() {
 		return sendBuffer;
 	}
 
+	@Override
 	public int getReceiveBuffer() {
 		return receiveBuffer;
+	}
+	
+	@Override
+	public boolean isNativeTransport(){
+		return this.nativeTransport;
 	}
 
 }

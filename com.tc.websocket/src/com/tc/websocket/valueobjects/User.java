@@ -28,13 +28,15 @@ import com.tc.websocket.server.ContextWrapper;
 
 
 public class User implements IUser {
-
+	private String docId;
 	private String sessionId;
 	private String userId;
 	private Date date=new Date();
 	private Date lastPing=new Date();
 	private String string;
 	private String status;
+
+
 	private boolean goingOffline;
 	private ContextWrapper conn;
 	private String host; //used for clustered environments.
@@ -231,5 +233,24 @@ public class User implements IUser {
 			}
 		}
 	}
+
+	@Override
+	public boolean canReceive() {
+		boolean b = this.getConn()!=null
+				&& this.getStatus().equals(Const.STATUS_ONLINE)
+				&& this.isOnServer()
+				&& !this.getConn().isClosed() && !this.isGoingOffline();
+
+		return b;
+	}
 	
+	@Override
+	public String getDocId() {
+		return docId;
+	}
+
+	@Override
+	public void setDocId(String docId) {
+		this.docId = docId;
+	}
 }

@@ -29,9 +29,9 @@ import com.tc.scriptrunner.guice.ScriptRunnerModule;
 import com.tc.websocket.guice.DominoWebSocketModule;
 import com.tc.websocket.guice.NettyModule;
 import com.tc.websocket.guice.RunnablesModule;
-import com.tc.websocket.queue.StampAll;
-import com.tc.websocket.queue.StampAllUsers;
-import com.tc.websocket.queue.TaskRunner;
+import com.tc.websocket.runners.StampAll;
+import com.tc.websocket.runners.StampAllUsers;
+import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.xpage.profiler.ProfilerModule;
 
@@ -49,7 +49,6 @@ public class StartAndStop {
 		if(ServerInfo.getInstance().isOnServer()){
 
 			if(Config.getInstance().isValid()){
-				
 				@SuppressWarnings("rawtypes")
 				Dictionary dict = Activator.BUNDLE.getHeaders();
 				Activator.VERSION= String.valueOf(dict.get(Constants.BUNDLE_VERSION));

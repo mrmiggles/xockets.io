@@ -22,14 +22,14 @@ import lotus.domino.Document;
 import lotus.domino.ViewEntryCollection;
 
 import com.tc.websocket.valueobjects.SocketMessage;
-import com.tc.xpage.profiler.Profiled;
+import com.tc.xpage.profiler.Stopwatch;
 
 public interface ISocketMessageFactory {
 	
-	@Profiled
+	@Stopwatch
 	public abstract List<SocketMessage> buildMessages(ViewEntryCollection col);
 
-	@Profiled
+	@Stopwatch
 	public abstract SocketMessage buildMessage(Document doc);
 
 }

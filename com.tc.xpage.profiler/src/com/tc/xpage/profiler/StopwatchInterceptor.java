@@ -32,10 +32,11 @@ public class StopwatchInterceptor implements MethodInterceptor {
 		Stopwatch watch = new Stopwatch();
 		Object value = null;
 		String methodname = invocation.getMethod().getName();
+		String clz = invocation.getThis().getClass().getName();
 		value = invocation.proceed();
 		long time = watch.elapsedTime(TimeUnit.MILLISECONDS);
-		if(time > 0){
-			System.out.println(methodname + " took " + time + " milliseconds");
+		if(time > 100){
+			System.out.println(clz + "." + methodname + " took " + time + " milliseconds");
 		}
 		return value;
 	}

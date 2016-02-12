@@ -28,8 +28,8 @@ public class QueueWebSocketLoadTest{
 
 	private static QueueWebSocketLoadTest loader;
 	
-	private static final TestConfig cfg = TestConfig.getInstance();
-	private List<NettyTestClient> clients = new ArrayList<NettyTestClient>();
+	protected static final TestConfig cfg = TestConfig.getInstance();
+	protected List<NettyTestClient> clients = new ArrayList<NettyTestClient>();
 	private static Scanner scanner;
 	
 	/*
@@ -37,19 +37,25 @@ public class QueueWebSocketLoadTest{
 	 * after this class loads, go back to the websocket.nsf and manually invoke the broadcast many agent
 	 */
 	public static void main(String[] args) throws InterruptedException{
+		cfg.overrideProperty("number.of.clients", "2000");
+		cfg.overrideProperty("print.on.count", "1000000");
+	
+		
 		loader = new QueueWebSocketLoadTest();
 		System.out.println("Loaded " + cfg.getNumberOfClients() + " . Run the test agents to broadcast from websocket.nsf");
 		
 		scanner = new Scanner(System.in);
 		while(scanner.hasNext()){
 			String cmd = scanner.next();
-			if(cmd.equals("stop")){
-				System.out.println("Avg Seconds: " + NettyTestClient.calcAvg());
-				System.out.println("msg/sec: " + NettyTestClient.messagesPerSecond());
+			if(cmd.equals("runningcount")){
+				System.out.println("Running count is : " + NettyTestClient.counter.get());
+			}
+			else if(cmd.equals("stop")){
+				NettyTestClient.printStats();
 				loader.closeClients();
 				System.exit(0);
 			}else if(cmd.equals("resetcounter")){
-				NettyTestClient.responseCount.set(0);
+				NettyTestClient.resetCounter();
 			}else if("gc".equals(cmd)){
 				System.gc();
 			}

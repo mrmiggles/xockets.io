@@ -28,7 +28,6 @@ import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
 import com.tc.utils.DateUtils;
 import com.tc.utils.JSONUtils;
@@ -56,13 +55,17 @@ public class VariableSizeWebSocketTest implements Runnable{
 	
 	private static Scanner scanner;
 	
-	private AtomicLong dataVolume= new AtomicLong(0);
-
-
 	public static void main(String[] args){
 
 		try {
 			System.out.println("Test will run for " + RUN_TIME_MIN +  " minutes");
+			TestConfig cfg = TestConfig.getInstance();
+			cfg.overrideProperty("print.on.count", "1000");
+			cfg.overrideProperty("number.of.clients", "4000");
+			cfg.overrideProperty("enable.compression", "true");
+			cfg.overrideProperty("message.delay", "100");
+			
+			
 			VariableSizeWebSocketTest loader=new VariableSizeWebSocketTest();
 			scheduled.scheduleAtFixedRate(loader, 0, 100, TimeUnit.MILLISECONDS);	
 			
@@ -71,13 +74,9 @@ public class VariableSizeWebSocketTest implements Runnable{
 			while(scanner.hasNext()){
 				String cmd = scanner.next();
 				if(cmd.equals("stop")){
-					System.out.println("Avg:" + NettyTestClient.calcAvg());
-					System.out.println("Msg/Sec: " + NettyTestClient.messagesPerSecond());
-					new NettyClientFactory().closeClients();
-					System.exit(0);
+					loader.stop();
 				}
 			}
-			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -118,30 +117,30 @@ public class VariableSizeWebSocketTest implements Runnable{
 	public void run() {
 		long elapsedTime = DateUtils.getTimeDiffMin(START, new Date());
 		if(elapsedTime >= RUN_TIME_MIN){
-			scheduled.shutdownNow();
-			System.out.println("Test time expired, shutting down VariableSizeWebSocketTest.  Total data volume was " + dataVolume.get() );
-			System.out.println("Avg: " + NettyTestClient.calcAvg());
-			System.out.println("Msg/Sec: " + NettyTestClient.messagesPerSecond());
-			
-			try {
-				new NettyClientFactory().closeClients();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			System.exit(0);
+			stop();
 			return;
 		}
 		this.testWebSocketServer();
 	}
 
+	public void stop(){
+		scheduled.shutdownNow();
+		NettyTestClient.printStats();
+		try {
+			new NettyClientFactory().closeClients();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.exit(0);
+	}
 
 	public void testWebSocketServer() {
 
 		try{
 			//randomly select two clients from the collection.
-			for(int i =0;i<8;i++){
+			for(int i =0;i<=1000;i++){
 				NettyTestClient from = clients.get(random.nextInt(clients.size()));
 				NettyTestClient to = clients.get(random.nextInt(clients.size()));
 				
@@ -157,9 +156,6 @@ public class VariableSizeWebSocketTest implements Runnable{
 				msg.setDate(new Date());
 				String json = JSONUtils.toJson(msg);
 				from.send(json);
-				
-				
-				dataVolume.getAndAdd(json.length());
 				
 				Thread.sleep(TestConfig.getInstance().getMessageDelay());
 			}

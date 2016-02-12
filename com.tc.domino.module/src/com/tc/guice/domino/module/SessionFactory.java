@@ -7,10 +7,13 @@ import com.ibm.domino.xsp.module.nsf.NSFComponentModule;
 import com.ibm.domino.xsp.module.nsf.NotesContext;
 import com.ibm.domino.xsp.module.nsf.SessionCloner;
 
+import lotus.domino.Database;
+import lotus.domino.Document;
 import lotus.domino.NotesException;
 import lotus.domino.NotesFactory;
 import lotus.domino.NotesThread;
 import lotus.domino.Session;
+import lotus.domino.local.DocumentCollection;
 
 
 public class SessionFactory {
@@ -61,7 +64,30 @@ public class SessionFactory {
 		Recycler.recycle(session);
 		NotesThread.stermThread();
 	}
-
+	
+	public static void closeSession(Database db){
+		try {
+			closeSession(db.getParent());
+		} catch (NotesException e) {
+			logger.log(Level.SEVERE, null, e);
+		}
+	}
+	
+	public static void closeSession(Document doc){
+		try {
+			closeSession(doc.getParentDatabase());
+		} catch (NotesException e) {
+			logger.log(Level.SEVERE, null, e);
+		}
+	}
+	
+	public static void closeSession(DocumentCollection col){
+		try {
+			closeSession(col.getParent());
+		} catch (NotesException e) {
+			logger.log(Level.SEVERE, null, e);
+		}
+	}
 
 	public static Session openSessionCloner(){
 		Session session = null;

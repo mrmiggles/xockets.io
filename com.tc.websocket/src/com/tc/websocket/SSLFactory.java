@@ -24,7 +24,7 @@ public class SSLFactory implements ISSLFactory {
 	 * @see com.tc.websocket.ISSLFactory#createSSLSocket()
 	 */
 	@Override
-	public Socket createSSLSocket() {
+	public Socket createSSLSocket(IConfig cfg) {
 		Socket socket = null;
 		try{
 			SSLSocketFactory factory = this.createSSLContext().getSocketFactory();// (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -40,10 +40,9 @@ public class SSLFactory implements ISSLFactory {
 	 * @see com.tc.websocket.ISSLFactory#createSSLContext()
 	 */
 	@Override
-	public SSLContext createSSLContext(){
+	public SSLContext createSSLContext(IConfig cfg){
 		SSLContext sslContext = null;
 		try{
-			Config cfg = Config.getInstance();
 			KeyStore ks = KeyStore.getInstance( cfg.getKeyStoreType() );
 			File kf = new File( cfg.getKeyStore() );
 			ks.load( new FileInputStream( kf ), cfg.getKeyStorePassword().toCharArray() );
@@ -64,5 +63,24 @@ public class SSLFactory implements ISSLFactory {
 		}
 		return sslContext;
 	}
+
+
+	@Override
+	public Socket createSSLSocket() {
+		System.out.println("using default config");
+		return this.createSSLSocket(Config.getInstance());
+	}
+
+
+	@Override
+	public SSLContext createSSLContext() {
+		System.out.println("using default config");
+		return this.createSSLContext(Config.getInstance());
+	}
+
+
+
+
+
 
 }

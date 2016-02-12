@@ -4,6 +4,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.SSLContext;
+
+import com.tc.websocket.SSLFactory;
 import com.tc.websocket.tests.client.NettyTestClient;
 
 public class NettyClientFactory {
@@ -18,6 +22,11 @@ public class NettyClientFactory {
 		System.out.println("building websocket clients...");
 
 		TestConfig cfg = TestConfig.getInstance();
+		
+		SSLContext sslContext = null;
+		if(cfg.isEncrypted()){
+			sslContext = new SSLFactory().createSSLContext(cfg);
+		}
 
 		String url = null;
 
@@ -44,6 +53,12 @@ public class NettyClientFactory {
 			}
 
 			c = new NettyTestClient( new URI(url));
+			
+			//set the ssl engine if needed.
+			if(sslContext!=null) {
+				c.setSSLContext(sslContext);
+			}
+			
 			c.setMaxPayload(maxPayload);
 			c.setUsername(username);
 			c.setUuid(username);

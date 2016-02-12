@@ -30,11 +30,12 @@ import com.tc.utils.StrUtils;
 import com.tc.websocket.Activator;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
+import com.tc.websocket.IConfig;
 import com.tc.websocket.ISSLFactory;
 import com.tc.websocket.SSLFactory;
+import com.tc.websocket.embeded.clients.ClientCache;
 import com.tc.websocket.embeded.clients.IClientCache;
 import com.tc.websocket.embeded.clients.IScriptClientRegistry;
-import com.tc.websocket.embeded.clients.ClientCache;
 import com.tc.websocket.embeded.clients.RhinoRegistry;
 import com.tc.websocket.factories.ISocketMessageFactory;
 import com.tc.websocket.factories.IUserFactory;
@@ -43,10 +44,10 @@ import com.tc.websocket.factories.UserFactory;
 import com.tc.websocket.filter.IWebsocketFilter;
 import com.tc.websocket.jsf.IWebSocketBean;
 import com.tc.websocket.jsf.WebSocketBean;
-import com.tc.websocket.queue.TaskRunner;
 import com.tc.websocket.rest.IRestWebSocket;
 import com.tc.websocket.rest.RestWebSocket;
 import com.tc.websocket.rest.RestWebSocketBean;
+import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.server.DominoWebSocketServer;
 import com.tc.websocket.server.IDominoWebSocketServer;
 
@@ -56,7 +57,7 @@ public class DominoWebSocketModule extends AbstractModule {
 	private static final Logger logger = Logger.getLogger(DominoWebSocketModule.class.getName());
 
 	private static IDominoWebSocketServer server;
-	private static Config config = Config.getInstance();
+	private static IConfig config = Config.getInstance();
 	private static IWebsocketFilter filter;
 	private final Object lock = new Object();
 
@@ -104,7 +105,7 @@ public class DominoWebSocketModule extends AbstractModule {
 
 
 	@Provides
-	public Config provideConfig(){
+	public IConfig provideConfig(){
 		return config;
 	}
 
@@ -149,7 +150,7 @@ public class DominoWebSocketModule extends AbstractModule {
 
 
 	@Provides
-	public IDominoWebSocketServer provideWebSocketServer(Config cfg, IWebsocketFilter filter){
+	public IDominoWebSocketServer provideWebSocketServer(IConfig cfg, IWebsocketFilter filter){
 		try{
 			if(server==null){
 				synchronized(lock){

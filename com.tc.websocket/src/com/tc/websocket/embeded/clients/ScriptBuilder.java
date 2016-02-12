@@ -32,8 +32,8 @@ import com.tc.websocket.Activator;
 import com.tc.websocket.Const;
 import com.tc.websocket.ISSLFactory;
 import com.tc.websocket.factories.IUserFactory;
-import com.tc.websocket.queue.ApplyStatus;
-import com.tc.websocket.queue.TaskRunner;
+import com.tc.websocket.runners.ApplyStatus;
+import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 

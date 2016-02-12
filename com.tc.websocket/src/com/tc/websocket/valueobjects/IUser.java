@@ -24,6 +24,9 @@ import com.tc.websocket.server.ContextWrapper;
 
 public interface IUser {
 	
+	public abstract void setDocId(String docId);
+	public abstract String getDocId();
+	
 	public abstract String getSessionId();
 
 	public abstract void setSessionId(String sessionId);
@@ -58,6 +61,8 @@ public interface IUser {
 	public boolean isOnServer();
 	
 	public boolean isAnonymous();
+	
+	public boolean canReceive();
 	
 	public ContextWrapper getConn();
 

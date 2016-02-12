@@ -43,15 +43,16 @@ public class Const {
 	
 
 	//default values if not present in notes.ini
-	public static final int WEBSOCKET_MAX_MSG_SIZE=1048576;
+	public static final int WEBSOCKET_MAX_MSG_SIZE=4096;
 	public static final int WEBSOCKET_THREAD_COUNT = 1;
 	public static final int WEBSOCKET_EVENT_LOOP_THREADS= 1;
 	public static final int WEBSOCKET_PING_INTERVAL=60;
 	public static final int WEBSOCKET_PURGE_INTERVAL=900;
+	public static final int TEMP_FILE_PURGE_INTERVAL=1800;
 	public static final int WEBSOCKET_PORT=8889;
 	public static final int WEBSOCKET_MAX_CONNECTIONS=200;
-	public static final int WEBSOCKET_SEND_BUFFER=16384;
-	public static final int WEBSOCKET_RECEIVE_BUFFER=16384;
+	public static final int WEBSOCKET_SEND_BUFFER=8192;
+	public static final int WEBSOCKET_RECEIVE_BUFFER=8192;
 	public static final boolean WEBSOCKET_ENCRYPT=false;
 	public static final boolean WEBSOCKET_CLUSTERED=false;
 	public static final boolean WEBSOCKET_ALLOW_ANONYMOUS=false;

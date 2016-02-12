@@ -52,6 +52,7 @@ public class RhinoClientTest {
 
 		URI uri = URI.create(url);
 		client = new RhinoClient(uri);
+		client.cfg(TestConfig.getInstance());
 		
 		IUser user = new User();
 		user.setUserId("rhinoclient");

@@ -22,7 +22,7 @@ import java.util.UUID;
 import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
 import com.tc.websocket.jsf.AbstractWebSocketBean;
-import com.tc.websocket.queue.TaskRunner;
+import com.tc.websocket.runners.TaskRunner;
 
 
 public class RhinoRegistry implements IScriptClientRegistry {

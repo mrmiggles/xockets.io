@@ -36,7 +36,7 @@ import org.apache.commons.io.IOUtils;
 import com.tc.utils.JSONUtils;
 import com.tc.websocket.Const;
 import com.tc.websocket.valueobjects.SocketMessage;
-import com.tc.xpage.profiler.Profiled;
+import com.tc.xpage.profiler.Stopwatch;
 
 public class SocketMessageFactory implements ISocketMessageFactory {
 	private static final Logger logger = Logger.getLogger(SocketMessageFactory.class.getName());
@@ -46,7 +46,7 @@ public class SocketMessageFactory implements ISocketMessageFactory {
 	 * @see com.tc.websocket.factories.ISocketMessageFactory#buildMessages(lotus.domino.ViewEntryCollection)
 	 */
 	@Override
-	@Profiled
+	@Stopwatch
 	public List<SocketMessage> buildMessages(ViewEntryCollection col){
 		List<SocketMessage> list = new ArrayList<SocketMessage>();
 		
@@ -82,7 +82,7 @@ public class SocketMessageFactory implements ISocketMessageFactory {
 	 * @see com.tc.websocket.factories.ISocketMessageFactory#buildMessage(lotus.domino.Document)
 	 */
 	@Override
-	@Profiled
+	@Stopwatch
 	public SocketMessage buildMessage(Document doc){
 		SocketMessage msg = null;
 		try{

@@ -22,15 +22,18 @@ import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 
+import com.tc.websocket.Config;
 import com.tc.websocket.Const;
+import com.tc.websocket.IConfig;
 import com.tc.websocket.SSLFactory;
 
 public abstract class AbstractClient implements IWebSocketClient{
 
 	private static final Logger logger = Logger.getLogger(AbstractClient.class.getName());
-
+	private IConfig cfg;
 
 	//netty objects.
 	private EventLoopGroup group = new NioEventLoopGroup(1);
@@ -39,6 +42,7 @@ public abstract class AbstractClient implements IWebSocketClient{
 	private URI uri;
 	private int maxPayload=65536;
 	private boolean compress;
+	private SSLContext sslContext;
 
 
 	public AbstractClient( URI uri ) throws InterruptedException {
@@ -46,6 +50,20 @@ public abstract class AbstractClient implements IWebSocketClient{
 
 	}
 
+	public void cfg(IConfig cfg){
+		this.cfg = cfg;
+	}
+	
+	public IConfig cfg(){
+		if(cfg == null) {
+			cfg = Config.getInstance();
+		}
+		return cfg;
+	}
+
+	public void setSSLContext(SSLContext sslContext){
+		this.sslContext = sslContext;
+	}
 
 
 	@Override
@@ -69,9 +87,14 @@ public abstract class AbstractClient implements IWebSocketClient{
 			@Override
 			protected void initChannel(SocketChannel ch) {
 				ChannelPipeline p = ch.pipeline();
-
+				SSLEngine sslEngine;
 				if(AbstractClient.this.isEncrypted()){
-					SSLEngine sslEngine = new SSLFactory().createSSLContext().createSSLEngine();
+					if(sslContext == null){
+						sslEngine = new SSLFactory().createSSLContext().createSSLEngine();
+					}else{
+						sslEngine = sslContext.createSSLEngine();
+					}
+					
 					sslEngine.setUseClientMode(true);
 					p.addLast("ssl", new SslHandler(sslEngine));
 				}

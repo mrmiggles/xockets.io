@@ -9,5 +9,10 @@ public interface ISSLFactory {
 	public abstract Socket createSSLSocket();
 
 	public abstract SSLContext createSSLContext();
+	
+	
+	public abstract Socket createSSLSocket(IConfig cfg);
+
+	public abstract SSLContext createSSLContext(IConfig cfg);
 
 }

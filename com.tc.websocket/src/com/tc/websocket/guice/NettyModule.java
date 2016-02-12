@@ -1,6 +1,7 @@
 package com.tc.websocket.guice;
 
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 
 import com.google.inject.AbstractModule;
@@ -25,14 +26,26 @@ public class NettyModule extends AbstractModule {
 	@Named(Const.GUICE_EVENTLOOP_BOSS)
 	@Singleton
 	public EventLoopGroup provideBoss(){
-		return new NioEventLoopGroup(1);
+		EventLoopGroup loopy = null;
+		if(Config.getInstance().isNativeTransport()){
+			loopy = new EpollEventLoopGroup(1);
+		}else{
+			loopy = new NioEventLoopGroup(1);
+		}
+		return loopy;
 	}
 	
 	@Provides
 	@Named(Const.GUICE_EVENTLOOP_WORKER)
 	@Singleton
 	public EventLoopGroup provideWorker(){
-		return new NioEventLoopGroup(Config.getInstance().getEventLoopThreads());
+		EventLoopGroup loopy = null;
+		if(Config.getInstance().isNativeTransport()){
+			loopy = new EpollEventLoopGroup(Config.getInstance().getEventLoopThreads());
+		}else{
+			loopy = new NioEventLoopGroup(Config.getInstance().getEventLoopThreads());
+		}
+		return loopy;
 	}
 
 }

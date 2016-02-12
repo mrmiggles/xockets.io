@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.tc.utils;singleton:=true
 Bundle-Version: 1.1.3
 Bundle-Vendor: Tek Counsel LLC
 Require-Bundle: org.eclipse.osgi;bundle-version="3.4.3",
- com.ibm.designer.runtime;bundle-version="9.0.1",
+ com.ibm.designer.runtime,
  com.ibm.commons,
  com.ibm.xsp.core,
  com.ibm.xsp.extlib,

@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import com.google.inject.Inject;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
+import com.tc.websocket.IConfig;
 
 public class RequestValidator{
 
@@ -31,7 +32,7 @@ public class RequestValidator{
 	@Inject
 	private IDominoWebSocketServer server;
 	
-	private Config cfg = Config.getInstance();
+	private IConfig cfg = Config.getInstance();
 	
 
 

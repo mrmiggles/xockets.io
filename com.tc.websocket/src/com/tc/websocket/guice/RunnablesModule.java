@@ -2,14 +2,14 @@ package com.tc.websocket.guice;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
-import com.tc.websocket.queue.BroadcastQueueProcessor;
-import com.tc.websocket.queue.ClustermateMonitor;
-import com.tc.websocket.queue.EventQueueProcessor;
-import com.tc.websocket.queue.QueueMessage;
-import com.tc.websocket.queue.QueueProcessor;
-import com.tc.websocket.queue.StampAllUsers;
-import com.tc.websocket.queue.UserCleanup;
-import com.tc.websocket.queue.UserMonitor;
+import com.tc.websocket.runners.BroadcastQueueProcessor;
+import com.tc.websocket.runners.ClustermateMonitor;
+import com.tc.websocket.runners.EventQueueProcessor;
+import com.tc.websocket.runners.QueueMessage;
+import com.tc.websocket.runners.QueueProcessor;
+import com.tc.websocket.runners.StampAllUsers;
+import com.tc.websocket.runners.UserCleanup;
+import com.tc.websocket.runners.UserMonitor;
 
 public class RunnablesModule extends AbstractModule {
 

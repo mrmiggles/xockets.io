@@ -55,11 +55,9 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 		pipeline.addLast(new HttpServerCodec());
 		pipeline.addLast(new HttpObjectAggregator(65536));
 		
-		
 		if(Config.getInstance().isCompressionEnabled()){
 			pipeline.addLast(new WebSocketServerCompressionHandler());
 		}
-		
 		pipeline.addLast(guicer.inject(new WebSocketServerHandler()));
 	}
 }

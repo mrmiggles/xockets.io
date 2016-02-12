@@ -43,7 +43,7 @@ public class SocketMessage {
 	}
 	
 	public boolean isValid(){
-		return from!=null && to!=null && text!=null;
+		return from!=null && to!=null && (text!=null || !data.isEmpty());
 	}
 	
 	public String getFrom() {

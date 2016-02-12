@@ -44,7 +44,6 @@ import com.tc.utils.DxlUtils;
 import com.tc.utils.JSONUtils;
 import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
-import com.tc.websocket.Config;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.RhinoClientMap;
 import com.tc.websocket.valueobjects.SocketMessage;
@@ -52,7 +51,6 @@ import com.tc.websocket.valueobjects.SocketMessage;
 public class RhinoClient extends AbstractClient implements IScriptClient {
 
 	
-	private static final Config cfg = Config.getInstance();
 	private static final RhinoClientMap clients = new RhinoClientMap();
 	
 	private String username;
@@ -219,7 +217,7 @@ public class RhinoClient extends AbstractClient implements IScriptClient {
 		if(this.useCreds){
 			session = SessionFactory.openSession(username, password);
 		}else{
-			session = SessionFactory.openSession(cfg.getUsername(),cfg.getPassword());
+			session = SessionFactory.openSession(cfg().getUsername(),cfg().getPassword());
 		}
 		
 		try {
@@ -283,7 +281,7 @@ public class RhinoClient extends AbstractClient implements IScriptClient {
 				path.length());
 		String finalpath = path.substring(1, path.lastIndexOf('/'));
 
-		Session session = SessionFactory.openSession(cfg.getUsername(),cfg.getPassword());
+		Session session = SessionFactory.openSession(cfg().getUsername(),cfg().getPassword());
 		Database db = null;
 		try {
 			db = session.getDatabase(StringCache.EMPTY, finalpath);

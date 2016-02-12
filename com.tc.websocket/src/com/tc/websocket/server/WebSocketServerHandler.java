@@ -109,7 +109,9 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 		}
 
 		String message = ((TextWebSocketFrame) frame).text();
-		dominoServer.onMessage(new ContextWrapper(ctx), message);;
+		dominoServer.onMessage(new ContextWrapper(ctx), message);
+		
+	
 	}
 
 	@Override

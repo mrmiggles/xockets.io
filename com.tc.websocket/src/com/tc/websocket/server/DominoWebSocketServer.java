@@ -22,6 +22,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.util.Attribute;
@@ -31,7 +32,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -51,13 +51,15 @@ import com.tc.utils.JSONUtils;
 import com.tc.utils.StringCache;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
+import com.tc.websocket.IConfig;
 import com.tc.websocket.factories.IUserFactory;
 import com.tc.websocket.filter.IWebsocketFilter;
-import com.tc.websocket.queue.ApplyStatus;
-import com.tc.websocket.queue.EventQueueProcessor;
-import com.tc.websocket.queue.QueueMessage;
-import com.tc.websocket.queue.TaskRunner;
+import com.tc.websocket.runners.ApplyStatus;
+import com.tc.websocket.runners.EventQueueProcessor;
+import com.tc.websocket.runners.QueueMessage;
+import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.valueobjects.IUser;
+import com.tc.websocket.valueobjects.MultiKeyMap;
 import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.websocket.valueobjects.SocketMessageLite;
 import com.tc.websocket.valueobjects.UniqueList;
@@ -68,10 +70,10 @@ import com.tc.xpage.profiler.Stopwatch;
 
 public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
-	private static final Config cfg = Config.getInstance();
+	private static final IConfig cfg = Config.getInstance();
 
 	private static final UriMap URI_MAP = new UriMap();
-	private static final ConcurrentHashMap<String,IUser> VALID_USERS = new ConcurrentHashMap<String,IUser>(cfg.getMaxConnections() / 2);
+	private static final MultiKeyMap<String,IUser> VALID_USERS = new MultiKeyMap<String,IUser>(cfg.getMaxConnections() / 2); //new ConcurrentHashMap<String,IUser>(cfg.getMaxConnections() / 2);
 	private static final Logger logger = Logger.getLogger(DominoWebSocketServer.class.getName());
 
 	//set during server provisioning (see DominoWebSocketModule)
@@ -89,7 +91,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	//netty WebSocketServerInitializer
 	@Inject
 	private WebSocketServerInitializer init;
-
+	
 
 	@Inject
 	private IGuicer guicer;
@@ -138,36 +140,19 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			//remove the user first, make sure any prior references from an older sessionId are gone.
 			this.removeUser(user);
 
-
 			//store a reference in the map for sessionId, and userId.
-			VALID_USERS.putIfAbsent(user.getSessionId(), user);
-			VALID_USERS.putIfAbsent(user.getUserId(), user);
+			VALID_USERS.putWithKeys(user, user.getSessionId(),user.getUserId());
 
 		}else if(storedUser!=null && !user.isAnonymous()){
-
-			VALID_USERS.remove(storedUser.getUserId());
-			VALID_USERS.remove(storedUser.getSessionId());
-
-			//overwrite storedUser's userId as userId moved from Anonymous to a person.
+			VALID_USERS.remove(storedUser.getUserId(),storedUser.getSessionId());
 			storedUser.setUserId(user.getUserId());
-
-			//re-apply the user to the store
-			VALID_USERS.putIfAbsent(storedUser.getSessionId(), storedUser);
-			VALID_USERS.putIfAbsent(storedUser.getUserId(), storedUser);
-
+			VALID_USERS.putWithKeys(storedUser, storedUser.getSessionId(),storedUser.getUserId());
 
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.tc.websocket.server.IDominoWebSocketServer#removeUser(java.lang.String)
-	 */
-	/* (non-Javadoc)
-	 * @see com.tc.websocket.server.IDominoWebSocketServer#removeUser(java.lang.String)
-	 */
 
 	@Override
-
 	public void removeUser(String key){
 		IUser user = VALID_USERS.get(key);
 
@@ -180,9 +165,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		//cleanup all references.
 		if(user!=null){
-			VALID_USERS.remove(user.getSessionId());
-			VALID_USERS.remove(user.getUserId());
-
+			VALID_USERS.remove(user.getSessionId(), user.getUserId());
 			//cleanup urimap
 			URI_MAP.remove(user);
 
@@ -190,12 +173,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 	}
 
-	/* (non-Javadoc)
-	 * @see com.tc.websocket.server.IDominoWebSocketServer#removeUser(com.tc.websocket.valueobjects.IUser)
-	 */
-
 	@Override
-
 	public void removeUser(IUser user){
 		if(VALID_USERS.containsKey(user.getUserId())){
 			this.removeUser(user.getUserId());
@@ -204,14 +182,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			this.removeUser(user.getSessionId());
 		}
 	}
-
-
-	/* (non-Javadoc)
-	 * @see com.tc.websocket.server.IDominoWebSocketServer#getUsers()
-	 */
-	/* (non-Javadoc)
-	 * @see com.tc.websocket.server.IDominoWebSocketServer#getUsers()
-	 */
 
 	@Override
 	@Stopwatch
@@ -226,34 +196,26 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
-
-	/* (non-Javadoc)
-	 * @see com.tc.websocket.server.IDominoWebSocketServer#getUsersOnThisServer()
-	 */
-
 	@Override
 	@Stopwatch
 	public Collection<IUser> getUsersOnThisServer(){
-		Map<String,IUser> map = new HashMap<String,IUser>(VALID_USERS.size());
+		final Map<String,IUser> map = new HashMap<String,IUser>(VALID_USERS.size());
 		for(IUser user : VALID_USERS.values()){
-			if(user.getStatus().equals(Const.STATUS_ONLINE)){
-				if(ServerInfo.getInstance().isCurrentServer(user.getHost())){
-					map.put(user.getUserId(), user);
-				}
+			if(user.canReceive()){
+				map.put(user.getUserId(), user);
 			}
 		}
 		return map.values();
 	}
 
 
+	
 	public DominoWebSocketServer() {
 	}
 
 
 
-
 	@Override
-
 	public void onOpen(ContextWrapper conn, FullHttpRequest req) {
 
 		conn.setResourceDescriptor(req.uri());
@@ -379,12 +341,15 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 	@Override
+
 	public void onMessage(ContextWrapper conn, String message) {
 
 		//we don't want to push a message that is too large
 		if(!isValidSize(message)) return;
 
-		IUser user = VALID_USERS.get(this.resolveSessionId(conn));
+		String sessionId = this.resolveSessionId(conn);
+
+		IUser user = VALID_USERS.get(sessionId);
 
 		SocketMessage msg =JSONUtils.toObject(message, SocketMessageLite.class);
 
@@ -403,12 +368,18 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		}
 
 
+
 		//if msg fails to be created by json parser handle the null object
 		if(msg == null){
 			logger.log(Level.SEVERE,"Socket Message could not be created.");
 			return;
 		}
 		
+		if(msg.isDurable()){
+			this.queueMessage(JSONUtils.toObject(message, SocketMessage.class));
+			return;
+		}
+
 
 
 		//msg.setDate(new Date());
@@ -420,13 +391,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		if(!user.getUserId().equals(msg.getFrom())){
 			throw new IllegalArgumentException("Invalid value in from. from must equal current user's Id " + user.getUserId() + " " + msg.getFrom());
-		}
-		
-		
-		//commit to disk if durable, let the queue processor send the message.
-		if(msg.isDurable()){
-			this.queueMessage(msg);
-			return;
 		}
 
 
@@ -449,6 +413,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 		//check to see if there's any messages waiting on this event for the sender.
+
 		EventQueueProcessor sendEvent = guicer.createObject(EventQueueProcessor.class);
 		sendEvent.setEventQueue(Const.VIEW_ON_SEND_MSG);
 		sendEvent.setTarget(msg.getFrom());
@@ -479,6 +444,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+	@Stopwatch
 	private String resolveSessionId(ContextWrapper conn){
 		int indexOf = conn.getResourceDescriptor().lastIndexOf(StringCache.FORWARD_SLASH);
 		String token = conn.getResourceDescriptor().substring(indexOf + 1,conn.getResourceDescriptor().length());
@@ -488,6 +454,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 	@Override
+	@Stopwatch
 	public IUser resolveUser(ContextWrapper conn){
 		return VALID_USERS.get(this.resolveSessionId(conn));
 	}
@@ -497,7 +464,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	 */
 
 	@Override
-
+	@Stopwatch
 	public IUser resolveUser(String key){
 		return VALID_USERS.get(key);
 	}
@@ -507,7 +474,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	 */
 
 	@Override
-
+	@Stopwatch
 	public boolean containsUser(String key){
 		return VALID_USERS.containsKey(key);
 	}
@@ -622,15 +589,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.tc.websocket.server.IDominoWebSocketServer#send(java.lang.String, java.lang.String)
-	 */
-
-	//private final Object sendLock = new Object();
-
-	/* (non-Javadoc)
-	 * @see com.tc.websocket.server.IDominoWebSocketServer#send(java.lang.String, java.lang.String)
-	 */
 
 	@Override
 	@Stopwatch
@@ -653,15 +611,14 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		//send to all users on this server.
 		if(ServerInfo.getInstance().isCurrentServer(target)){
 			for(IUser user : this.getUsersOnThisServer()){
-				if(user!=null && user.getConn()!=null && !user.getConn().isClosed() && !user.isGoingOffline()){
+				if(user!=null && user.canReceive()){
 					user.send(json);
 					sent = true;
 				}
 			}
 		}else{
-
 			IUser user = VALID_USERS.get(target);
-			if(user!=null && user.getConn()!=null && !user.getConn().isClosed() && !user.isGoingOffline()){
+			if(user!=null && user.canReceive()){
 				sent = true;
 				user.send(json);
 
@@ -686,6 +643,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 					if(this.send(user.getUserId(), json)){
 						b = true; //if the message was sent to anyone in the uri we're consider it sent.
 					}
+
 				}
 			}
 		}
@@ -724,8 +682,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	public boolean isValidSize(String json){
 		boolean b = true;
 		if(json.length() > cfg.getMaxSize()){
-			long kb = ((json.length() / 1000) / 1000);
-			logger.log(Level.SEVERE,"message is too large (" + kb + "kb).  It will not be sent.");
+			logger.log(Level.SEVERE,"Message is larger than " + cfg.getMaxSize() + " bytes.  It will not be sent.");
 			b = false;
 		}
 		return b;
@@ -768,16 +725,22 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		try{
 			try {
 				ServerBootstrap boot = new ServerBootstrap();
+				
+				if(cfg.isNativeTransport()){
+					 boot.channel(EpollServerSocketChannel.class);
+				}else{
+					boot.channel(NioServerSocketChannel.class);
+				}
+				
 				boot.group(bossGroup, workerGroup)
-				.channel(NioServerSocketChannel.class)
-				//.handler(new LoggingHandler(LogLevel.INFO))
+				.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
 				.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+				//.childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 32 * 1024)
+				//.childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 8 * 1024)
 				.childOption(ChannelOption.SO_SNDBUF, cfg.getSendBuffer())
 				.childOption(ChannelOption.SO_RCVBUF, cfg.getReceiveBuffer())
-				.option(ChannelOption.TCP_NODELAY, true)
 				.childOption(ChannelOption.TCP_NODELAY, true)
 				.childHandler(init);
-
 
 				boot.bind(cfg.getPort()).sync().channel();
 				this.on.set(true);

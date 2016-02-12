@@ -35,7 +35,7 @@ import com.tc.websocket.embeded.clients.IScriptClient;
 import com.tc.websocket.embeded.clients.IScriptClientRegistry;
 import com.tc.websocket.embeded.clients.RhinoClient;
 import com.tc.websocket.embeded.clients.Script;
-import com.tc.websocket.queue.PurgeDocuments;
+import com.tc.websocket.runners.PurgeDocuments;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 

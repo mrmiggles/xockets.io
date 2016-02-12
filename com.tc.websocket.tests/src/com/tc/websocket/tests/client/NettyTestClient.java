@@ -2,34 +2,29 @@ package com.tc.websocket.tests.client;
 
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
-import com.tc.utils.Base64;
 import com.tc.utils.DateUtils;
-import com.tc.utils.JSONUtils;
 import com.tc.websocket.embeded.clients.AbstractClient;
 import com.tc.websocket.tests.config.TestConfig;
-import com.tc.websocket.valueobjects.SocketMessage;
 
-public class NettyTestClient extends AbstractClient{
+public class NettyTestClient extends AbstractClient implements Runnable{
 	
 	private String username;
 	private String uuid;
 	
 
-	public static AtomicInteger responseCount = new AtomicInteger();
-	public static boolean printmessage=false;
+	public static AtomicInteger counter = new AtomicInteger();
 	public static List<Double> seconds = Collections.synchronizedList(new ArrayList<Double>());
-	private static Date start = new Date();
+	private static Date start=null;
+	private static AtomicLong dataVolume = new AtomicLong();
 	private static Date initDate = new Date();
 	private int printOnCount = TestConfig.getInstance().getPrintOnCount();
 
@@ -51,59 +46,22 @@ public class NettyTestClient extends AbstractClient{
 	}
 
 	@Override
-	public void onMessage(String message) {
-		int count = responseCount.getAndIncrement();
-		if(count == 1){
-			start = new Date();
-		}
+	public synchronized void onMessage(String message) {
+		
+		if(start == null ) start = new Date();
+		dataVolume.addAndGet(message.getBytes().length);
 		long kb = message.length() / 1000;
 		long mb = kb / 1000;
 		String strdate = DateUtils.toISODateTime(new Date());
-		
-		if(printmessage){
-			try {
-				SocketMessage msg = JSONUtils.toObject(message, SocketMessage.class);
-				byte[] data;
-				if(msg.getData().containsKey("gzip")){
-					String zipdata = (String) msg.getData().get("gzip");
-					data = Base64.decode(String.valueOf(zipdata));
-					
-					
-					int savings = data.length - zipdata.length();
-					double ratio= (double)zipdata.length() / (double)data.length;
-					System.out.println("before compression = " + data.length + " after=" + zipdata.length() + " savings of " + savings + " bytes, ratio=" + ratio);
-					
-					
-				}else {
-					data = msg.getData().toString().getBytes();
-				}
 				
-				File file = new File("c:/temp/" + UUID.randomUUID().toString());
-				FileOutputStream out = new FileOutputStream(file);
-				out.write(data);
-				out.close();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		
-		if((count % printOnCount == 0)){
-			
-			if(count == 0) return; //omit the first entry.
+		if((counter.incrementAndGet() % printOnCount == 0)){
 			double time = DateUtils.getTimeDiffSecDouble(start, new Date());
 			seconds.add(time);
 			start = new Date();
-			System.out.println("datetime=" + strdate + ", msgcount=" + count +  ", seconds=" + time + ", username=" + this.getUsername() + ", uri=" + this.getUri().getPath() + ", received: mb=" + mb + ", kb=" + kb + ", bytes=" + message.length() + ", host=" + this.getRemoteHost());
-			System.gc();
+			System.out.println("datetime=" + strdate + ", total.msgs=" + counter.get() +  ", seconds=" + time + ", username=" + this.getUsername() + ", uri=" + this.getUri().getPath() + ", received: mb=" + mb + ", kb=" + kb + ", bytes=" + message.length() + ", host=" + this.getRemoteHost());
 		}	
-		
-			
 	}
 
-	
-	
 	public String getUsername() {
 		return username;
 	}
@@ -130,10 +88,14 @@ public class NettyTestClient extends AbstractClient{
 			sum = sum + i;
 		}
 		
+		if(sum == 0) return 0;
+		
 		return round( sum / (double)seconds.size(),2);
 	}
 	
 	public static double messagesPerSecond(){
+		double avg = calcAvg();
+		if(avg == 0) return 0;
 		return round(TestConfig.getInstance().getPrintOnCount() / calcAvg(),2);
 	}
 	
@@ -145,6 +107,49 @@ public class NettyTestClient extends AbstractClient{
 	
 	public static long elapsedSeconds(){
 		return DateUtils.getTimeDiffSec(initDate, new Date());
+	}
+	
+	public static long totalBytes(){
+		return dataVolume.get();
+	}
+	
+	public static void resetCounter(){
+		counter.set(0);
+		start = null;
+	}
+	
+	public static void printDataVolume(){
+		long kb = NettyTestClient.totalBytes() / 1000;
+		long mb = kb / 1000;
+		long gb = mb / 1000;
+		System.out.println("Total data volume was kb=" + kb + ", mb=" + mb + ", gb=" + gb );
+	}
+	
+	public static void printAvg(){
+		System.out.println("Avg Sec: " + NettyTestClient.calcAvg());
+		
+	}
+	
+	public static void printMsgPerSec(){
+		System.out.println("Msg/Sec: " + NettyTestClient.messagesPerSecond());
+	}
+	
+	public static void printTotalMsgs(){
+		System.out.println("Total Msgs: " + counter.get());
+	}
+	
+	public static void printStats(){
+		
+		printDataVolume();
+		printAvg();
+		printMsgPerSec();
+		printTotalMsgs();
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

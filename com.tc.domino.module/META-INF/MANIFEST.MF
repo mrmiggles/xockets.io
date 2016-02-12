@@ -11,7 +11,7 @@ Require-Bundle: com.ibm.xsp.core,
  com.ibm.notes.java.api,
  com.ibm.xsp.domino,
  com.ibm.domino.osgi.core,
- com.google.guice;bundle-version="1.0.0",
- com.ibm.xsp.extlib;bundle-version="9.0.1"
+ com.google.guice,
+ com.ibm.xsp.extlib
 Export-Package: com.tc.guice.domino.module
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
