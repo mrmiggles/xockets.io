@@ -44,6 +44,7 @@ import com.tc.utils.DxlUtils;
 import com.tc.utils.JSONUtils;
 import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
+import com.tc.websocket.Const;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.RhinoClientMap;
 import com.tc.websocket.valueobjects.SocketMessage;
@@ -176,7 +177,7 @@ public class RhinoClient extends AbstractClient implements IScriptClient {
 		socketMessage.setJson(message);
 		if (scripts.containsKey(ON_MESSAGE)) {
 			logger.log(Level.INFO, "executing onMessage script");
-			this.addToScope("socketMessage", socketMessage);
+			this.addToScope(Const.RHINO_SOCKET_MESSAGE, socketMessage);
 			this.execute(ON_MESSAGE, scripts.get(ON_MESSAGE).getCompiled());
 		}
 	}
@@ -193,7 +194,7 @@ public class RhinoClient extends AbstractClient implements IScriptClient {
 	
 	@Override
 	public void onOpen(WebSocketClientHandshaker handShaker) {
-		this.addToScope("handShake", handShaker);
+		this.addToScope(Const.RHINO_HANDSHAKE, handShaker);
 		if (scripts.containsKey(ON_OPEN)) {
 			this.execute(ON_OPEN, scripts.get(ON_OPEN).getCompiled());
 		}
@@ -205,7 +206,7 @@ public class RhinoClient extends AbstractClient implements IScriptClient {
 		logger.log(Level.SEVERE, null, ex);
 		if (scripts.containsKey(ON_ERROR)) {
 			logger.log(Level.INFO, "executing onError script");
-			this.addToScope("ex", ex);
+			this.addToScope(Const.RHINO_EX, ex);
 			this.execute(ON_ERROR, scripts.get(ON_ERROR).getCompiled());
 		}
 
@@ -217,25 +218,25 @@ public class RhinoClient extends AbstractClient implements IScriptClient {
 		if(this.useCreds){
 			session = SessionFactory.openSession(username, password);
 		}else{
-			session = SessionFactory.openSession(cfg().getUsername(),cfg().getPassword());
+			session = SessionFactory.openSessionDefaultToTrusted(cfg().getUsername(),cfg().getPassword());
 		}
 		
 		try {
 			
 			//cache for temporary storage between invocations
-			this.addToScope("cache", cache);
+			this.addToScope(Const.RHINO_CACHE, cache);
 
 			// add the server session to scope.
-			this.addToScope("event", event);
+			this.addToScope(Const.RHINO_EVENT, event);
 
 			// Domino session to gain access to Domino data
-			this.addToScope("session", session);
+			this.addToScope(Const.RHINO_SESSION, session);
 
 			// RhinoClient to send messages after server side processing.
-			this.addToScope("websocketClient", this);
+			this.addToScope(Const.RHINO_WEB_SOCKET_CLIENT, this);
 
 			// to load external osgi plugin
-			this.addToScope("bundleUtils", new BundleUtils());
+			this.addToScope(Const.RHINO_BUNDLE_UTIL, new BundleUtils());
 
 			// execute the compiled script.
 			if (script == null)
@@ -251,7 +252,7 @@ public class RhinoClient extends AbstractClient implements IScriptClient {
 			error = true;
 			logger.log(Level.SEVERE, null, e);
 		} finally {
-			this.removeFromScope("session");
+			this.removeFromScope(Const.RHINO_SESSION);
 			SessionFactory.closeSession(session);
 		}
 	}
@@ -277,11 +278,11 @@ public class RhinoClient extends AbstractClient implements IScriptClient {
 
 	private String extractScript(String path) {
 		String script = null;
-		String resource = path.substring(path.lastIndexOf('/') + 1,
+		String resource = path.substring(path.lastIndexOf(StringCache.FORWARD_SLASH) + 1,
 				path.length());
-		String finalpath = path.substring(1, path.lastIndexOf('/'));
+		String finalpath = path.substring(1, path.lastIndexOf(StringCache.FORWARD_SLASH));
 
-		Session session = SessionFactory.openSession(cfg().getUsername(),cfg().getPassword());
+		Session session = SessionFactory.openSessionDefaultToTrusted(cfg().getUsername(),cfg().getPassword());
 		Database db = null;
 		try {
 			db = session.getDatabase(StringCache.EMPTY, finalpath);

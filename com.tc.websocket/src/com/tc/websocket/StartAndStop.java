@@ -50,11 +50,11 @@ public class StartAndStop {
 
 			if(Config.getInstance().isValid()){
 				@SuppressWarnings("rawtypes")
-				Dictionary dict = Activator.BUNDLE.getHeaders();
+				Dictionary dict = Activator.bundle.getHeaders();
 				Activator.VERSION= String.valueOf(dict.get(Constants.BUNDLE_VERSION));
 
 				//create the guicer object.
-				Guicer.createGuicer(Activator.BUNDLE, this.getModules());
+				Guicer.createGuicer(Activator.bundle, this.getModules());
 
 				TaskRunner.getInstance().start();
 				
@@ -62,9 +62,9 @@ public class StartAndStop {
 				
 				//cleanup all the RhinoClient users
 				StampAll stamp = new StampAll();
-				stamp.setSearch("@Contains(sessionId;\"rhino\");");
-				stamp.setField("Form");
-				stamp.setValue("delete");
+				stamp.setSearch(Const.RHINO_DOC_SRCH);
+				stamp.setField(Const.FIELD_FORM);
+				stamp.setValue(Const.FIELD_VALUE_DELETE);
 				stamp.run();
 				
 				
@@ -80,7 +80,7 @@ public class StartAndStop {
 				
 
 				//get an instance of the server which will start it up...
-				Guicer.getInstance(Activator.BUNDLE).createObject(IDominoWebSocketServer.class);
+				Guicer.getInstance(Activator.bundle).createObject(IDominoWebSocketServer.class);
 
 
 			}else{
@@ -96,7 +96,7 @@ public class StartAndStop {
 	public void stop(){
 		
 		if(ServerInfo.getInstance().isOnServer()){
-			IDominoWebSocketServer server = (IDominoWebSocketServer) Guicer.getInstance(Activator.BUNDLE).createObject(IDominoWebSocketServer.class);
+			IDominoWebSocketServer server = (IDominoWebSocketServer) Guicer.getInstance(Activator.bundle).createObject(IDominoWebSocketServer.class);
 
 			//stop the websocket server.
 			server.stop();
@@ -109,7 +109,7 @@ public class StartAndStop {
 			DominoWebSocketModule.nullifyServer();//null it out.
 			
 			//remove the guicer object for this bundle.
-			Guicer.removeGuicer(Activator.BUNDLE);
+			Guicer.removeGuicer(Activator.bundle);
 			
 			System.out.println("websocket server stopped.");
 

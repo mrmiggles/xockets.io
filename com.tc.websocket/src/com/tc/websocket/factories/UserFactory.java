@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 import lotus.domino.Document;
 import lotus.domino.NotesException;
 
+import com.google.inject.Inject;
+import com.tc.di.guicer.IGuicer;
 import com.tc.guice.domino.module.ServerInfo;
 import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
@@ -32,10 +34,13 @@ import com.tc.websocket.valueobjects.User;
 
 public class UserFactory implements IUserFactory {
 	private static final Logger logger = Logger.getLogger(UserFactory.class.getName());
+	
+	@Inject
+	IGuicer guicer;
 
 	@Override
 	public IUser createUser(String sessionId, String userId, String status){
-		IUser user = new User();
+		IUser user = guicer.createObject(IUser.class);
 		user.setDate(new Date());
 		user.setSessionId(sessionId);
 		

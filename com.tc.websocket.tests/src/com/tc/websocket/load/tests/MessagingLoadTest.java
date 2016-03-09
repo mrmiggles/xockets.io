@@ -81,7 +81,6 @@ public class MessagingLoadTest{
 			NettyClientFactory factory = new NettyClientFactory();
 			this.clients.addAll(factory.buildClients(TestConfig.getInstance().getMaxPayload()));
 		}catch(Exception e){
-			System.out.println("be sure to initialize the xpages run time, either manually, or setup XPagesPreload");
 			e.printStackTrace();
 		}
 	}

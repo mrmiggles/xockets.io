@@ -4,6 +4,19 @@ import java.nio.charset.Charset;
 
 public class StringCache {
 	
+	
+	public static final String DOT_JSON=".json";
+	
+	public static final String DOT_NSF=".nsf";
+	
+	public static final String NAMES_DOT_NSF="names.nsf";
+	
+	public static final String HTTP="http://";
+	
+	public static final String HTTPS="https://";
+	
+	public static final String HTTP_1_1="HTTP/1.1";
+	
 	public static final String FIELD_REF= "$REF";
 	
 	public static final String FIELD_CONFLICT="$Conflict";

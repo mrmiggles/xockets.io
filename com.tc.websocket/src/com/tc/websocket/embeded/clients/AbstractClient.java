@@ -11,18 +11,19 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
+import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslHandler;
 
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 
 import com.tc.websocket.Config;
@@ -42,7 +43,9 @@ public abstract class AbstractClient implements IWebSocketClient{
 	private URI uri;
 	private int maxPayload=65536;
 	private boolean compress;
-	private SSLContext sslContext;
+	private SslContext sslContext;
+	
+	
 
 
 	public AbstractClient( URI uri ) throws InterruptedException {
@@ -61,7 +64,7 @@ public abstract class AbstractClient implements IWebSocketClient{
 		return cfg;
 	}
 
-	public void setSSLContext(SSLContext sslContext){
+	public void setSSLContext(SslContext sslContext){
 		this.sslContext = sslContext;
 	}
 
@@ -87,16 +90,17 @@ public abstract class AbstractClient implements IWebSocketClient{
 			@Override
 			protected void initChannel(SocketChannel ch) {
 				ChannelPipeline p = ch.pipeline();
-				SSLEngine sslEngine;
+				SSLEngine sslEngine=null;
 				if(AbstractClient.this.isEncrypted()){
 					if(sslContext == null){
-						sslEngine = new SSLFactory().createSSLContext().createSSLEngine();
+						sslEngine = new SSLFactory().createClientSslCtx(Config.getInstance()).newEngine(ch.alloc(), uri.getHost(),uri.getPort());
 					}else{
-						sslEngine = sslContext.createSSLEngine();
+						sslEngine = sslContext.newEngine(ch.alloc(),uri.getHost(),uri.getPort());
 					}
 					
+					sslEngine.setEnabledProtocols(Const.TLS_PROTOCOLS);
 					sslEngine.setUseClientMode(true);
-					p.addLast("ssl", new SslHandler(sslEngine));
+					p.addLast(new SslHandler(sslEngine));
 				}
 
 				p.addLast( new HttpClientCodec());
@@ -139,8 +143,15 @@ public abstract class AbstractClient implements IWebSocketClient{
 
 	@Override
 	public void disconnect() {
-		group.shutdownGracefully();
-		this.ch.close();
+		ch.writeAndFlush(new CloseWebSocketFrame());
+        try {
+			ch.closeFuture().sync();
+		} catch (InterruptedException e) {
+			logger.log(Level.SEVERE,null, e);
+		}finally{
+			group.shutdownGracefully();
+		}
+	
 	}
 
 	@Override

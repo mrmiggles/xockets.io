@@ -1,4 +1,4 @@
-package com.tc.websocket.valueobjects;
+package com.tc.websocket.valueobjects.structures;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,11 +7,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.tc.websocket.Config;
 import com.tc.websocket.server.RoutingPath;
+import com.tc.websocket.valueobjects.IUser;
+
+
 
 public class UriMap {
 	
 	
-	private static Map<String, List<IUser>> map = new ConcurrentHashMap<String,List<IUser>>(Config.getInstance().getMaxConnections() / 2);
+	private static Map<String, List<IUser>> map = new ConcurrentHashMap<String,List<IUser>>(Config.getInstance().getMaxConnections()/2);
 	
 	
 	public synchronized void add(IUser user){

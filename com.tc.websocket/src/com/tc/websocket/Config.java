@@ -25,12 +25,12 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.SystemUtils;
-
 import lotus.domino.Database;
 import lotus.domino.Document;
 import lotus.domino.NotesException;
 import lotus.domino.Session;
+
+import org.apache.commons.lang3.SystemUtils;
 
 import com.tc.guice.domino.module.ServerInfo;
 import com.tc.guice.domino.module.SessionFactory;
@@ -39,7 +39,8 @@ import com.tc.utils.StringCache;
 import com.tc.utils.XSPUtils;
 
 public class Config implements Runnable, IConfig {
-	private static Logger logger = Logger.getLogger(Config.class.getName());
+	private static Logger LOGGER = Logger.getLogger(Config.class.getName());
+
 
 	private boolean allowAnonymous;
 	private boolean encrypted;
@@ -48,9 +49,15 @@ public class Config implements Runnable, IConfig {
 	private String keyPassword;
 	private String keyStoreType;
 	private int port;
+	private List<Integer> redirectPorts;
 	private boolean debug;
 	private boolean profiled;
 	private boolean nativeTransport;
+
+	private String keyFile;
+	private String certFile;
+	private boolean leakDetector;
+
 
 
 	private String websocketFilter;
@@ -70,7 +77,10 @@ public class Config implements Runnable, IConfig {
 	private int receiveBuffer;
 	private int clientCacheMax;
 	private boolean compressionEnabled;
-	
+
+
+	private String proxyBackendHost;
+	private int proxyBackendPort;
 
 
 
@@ -78,8 +88,8 @@ public class Config implements Runnable, IConfig {
 	private String username;
 	private String password;
 	private int threadCount;
-	
-	
+
+
 
 	private int eventLoopThreads;
 	private boolean valid;
@@ -103,8 +113,8 @@ public class Config implements Runnable, IConfig {
 	public boolean isAllowAnonymous() {
 		return allowAnonymous;
 	}
-	
-	
+
+
 	@Override
 	public boolean isBroadcastServer(){
 		return ServerInfo.getInstance().getServerName().equals(this.getBroadcastServer());
@@ -161,24 +171,21 @@ public class Config implements Runnable, IConfig {
 
 	@Override
 	public void print(Object o){
-		System.out.println("websocket service: " + o);
+		System.out.println("xockets.io service: " + o);
 	}
 
 
 	@Override
 	public void run() {
 		//create a trsuted session
-		
+
 		print("Opening trusted session to gain access to the config document.");
 		Session s = SessionFactory.openTrusted();
-		
-	
 
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder(300);
 
 		//bind to the notes.ini settings.
 		try {
-			
 			if(s==null){
 				sb.append("Unable to obtain session.  Make sure the following parameters are setup in your notes.ini\n\n");
 				sb.append("XPagesPreload=1\nXPagesPreloadDB=websocket.nsf\n\n");
@@ -186,143 +193,159 @@ public class Config implements Runnable, IConfig {
 				this.error = sb.toString();
 				return;
 			}
-			
+
 			this.print("Config session is " + s.getEffectiveUserName());
-			
-			
+
+
 			int preloadFlag = envAsInt(s, "XPagesPreload", -1);
 			if(preloadFlag == -1){
-				sb.append("XPagesPreload=1 is required in the notes.ini");
+				print("XPagesPreload=1 is required in the notes.ini");
+				return;
 			}
-			
-			
+
+
 			String preload = this.env(s, "XPagesPreloadDB", StringCache.EMPTY);
 			if(!preload.startsWith(Const.WEBSOCKET_PATH)){
-				sb.append("XPagesPreloadDB=websocket.nsf is required in the notes.ini.  Make sure websocket.nsf is the first parameter.");
+				print("XPagesPreloadDB=websocket.nsf is required in the notes.ini.  Make sure websocket.nsf is the first parameter.");
+				return;
 			}
 
 
 			Database db = s.getDatabase(StrUtils.EMPTY_STRING, Const.WEBSOCKET_PATH);
 			if (db == null || !db.isOpen()){
-				sb.append(Const.WEBSOCKET_PATH +  " is required!");
+				print(Const.WEBSOCKET_PATH +  " is required!");
+				return;
 			}
-			
+
 			//check to see if the config data is stored in the websocket.nsf
 			Document docConfig = db.getProfileDocument(Const.PROFILE_FORM, Const.PROFILE_KEY);
-			
-			
+
+
 			if (!StrUtils.isEmpty(docConfig.getItemValueString("config"))){
 				this.props = XSPUtils.loadProps(docConfig, Const.PROFILE_FIELD);
 				print("Loading websocket configuration from " + Const.WEBSOCKET_PATH);
 			}else{
 				print("Loading websocket configuration from notes.ini");
 			}
-			
-			//setup the creds used for server-side operations.
-			this.username = env(s,"WEBSOCKET_USER","");
-			this.password=env(s,"WEBSOCKET_PASSWORD","");
-			
-			if(StrUtils.isEmpty(username) || StrUtils.isEmpty(password)){
-				sb.append("WEBSOCKET_USER and WEBSOCKET_PASSWORD must be populated.");
-			}else{
-				print("Websocket operations will run under userId " + this.username);
+
+
+			//default to empty and zero.
+			this.proxyBackendHost = env(s,Params.WEBSOCKET_PROXY_BACKEND_HOST.name(),"");
+			this.proxyBackendPort=envAsInt(s,Params.WEBSOCKET_PROXY_BACKEND_PORT.name(),0);
+			if(this.isProxy()){
+				print("INFO: Websocket server will proxy http/s requests for " + this.proxyBackendHost + ":" + this.proxyBackendPort);
 			}
-			
-			
-			this.nativeTransport=envAsBool(s,"WEBSOCKET_NATIVE_TRANSPORT",false);
+
+			this.redirectPorts = this.envAsIntegerList(s,Params.WEBSOCKET_REDIRECT_PORTS.name(), StringCache.EMPTY);
+
+
+			//setup the creds used for server-side operations.
+			this.username = env(s,Params.WEBSOCKET_USER.name(),"");
+			this.password=env(s,Params.WEBSOCKET_PASSWORD.name(),"");
+
+			if(StrUtils.hasEmpty(username, password)){
+				print("****WARNING: WEBSOCKET_USER and WEBSOCKET_PASSWORD are not setup.  xockets.io will run under a trusted session.****");
+			}else{
+				print("xockets.io operations will run under userId " + this.username);
+			}
+
+
+			this.leakDetector=envAsBool(s,Params.WEBSOCKET_LEAK_DETECTOR.name(),false);
+			if(this.isLeakDetector()){
+				print ("****WARNING: Leak detection is turned on.  This may impact performance.****");
+			}
+
+
+			this.nativeTransport=envAsBool(s,Params.WEBSOCKET_NATIVE_TRANSPORT.name(),false);
 			if(this.nativeTransport && !SystemUtils.IS_OS_LINUX){
 				print("****WARNING: Native transport only available on Linux based machines. Reverting to NIO transport.****");
 				this.nativeTransport=false;
 			}
-		
+
 			this.onServer = s.isOnServer();
+
+			this.sendBuffer=envAsInt(s,Params.WEBSOCKET_SEND_BUFFER.name(),Const.WEBSOCKET_SEND_BUFFER);
+			print("Send buffer is " + sendBuffer + " bytes");
 			
-			this.sendBuffer=envAsInt(s,"WEBSOCKET_SEND_BUFFER",Const.WEBSOCKET_SEND_BUFFER);
-			if(sendBuffer < Const.WEBSOCKET_SEND_BUFFER){
-				print("Send buffer too low, restoring default " + Const.WEBSOCKET_SEND_BUFFER + " bytes");
-				sendBuffer = Const.WEBSOCKET_SEND_BUFFER;
-			}else{
-				print("Send buffer is " + sendBuffer + " bytes");
-			}
+
+			this.receiveBuffer=envAsInt(s,Params.WEBSOCKET_RECEIVE_BUFFER.name(),Const.WEBSOCKET_RECEIVE_BUFFER);
+			print("Receive buffer is " + this.receiveBuffer + " bytes");
 			
-			this.receiveBuffer=envAsInt(s,"WEBSOCKET_RECEIVE_BUFFER",Const.WEBSOCKET_RECEIVE_BUFFER);
-			if(receiveBuffer < Const.WEBSOCKET_RECEIVE_BUFFER){
-				print("Receive buffer too low, restoring default " + Const.WEBSOCKET_RECEIVE_BUFFER + " bytes");
-				sendBuffer = Const.WEBSOCKET_RECEIVE_BUFFER;
-			}else{
-				print("Receive buffer is " + this.receiveBuffer + " bytes");
-			}
-			
-			
-			this.allowedOrigins = envAsList(s,"WEBSOCKET_ALLOWED_ORIGINS", new ArrayList<String>());
-			if(this.allowedOrigins.isEmpty()){
-				sb.append("WEBSOCKET_ALLOWED_ORIGINS must be populated.");
-			}else if (allowedOrigins.contains(StringCache.STAR)){
-				print ("****WARNING: All origins are allowed. not recommended****");
+
+
+			this.allowedOrigins = envAsList(s,Params.WEBSOCKET_ALLOWED_ORIGINS.name(), Const.WEBSOCKET_ALLOWED_ORIGINS);
+			if (allowedOrigins.contains(StringCache.STAR)){
+				print ("****WARNING: All origins are allowed. Not recommended****");
 			}else{
 				print("Allowed origins are " + allowedOrigins.toString());
 			}
-			
-			this.profiled = envAsBool(s,"WEBSOCKET_PROFILED", false);
+
+			this.profiled = envAsBool(s, Params.WEBSOCKET_PROFILED.name(), false);
 			if(this.isProfiled()){
 				print("****WARNING: Profiling enabled on the websocket server****");
 			}
-			
+
 			//get the thread count
-			this.eventLoopThreads = envAsInt(s,"WEBSOCKET_EVENT_LOOP_THREADS", Const.WEBSOCKET_EVENT_LOOP_THREADS);
+			this.eventLoopThreads = envAsInt(s,Params.WEBSOCKET_EVENT_LOOP_THREADS.name(), Const.WEBSOCKET_EVENT_LOOP_THREADS);
 			print("Loading " + this.eventLoopThreads + " event loop thread(s).");
-			
-			this.threadCount = envAsInt(s,"WEBSOCKET_THREAD_COUNT", Const.WEBSOCKET_THREAD_COUNT);
+
+
+			this.threadCount = envAsInt(s,Params.WEBSOCKET_THREAD_COUNT.name(), Const.WEBSOCKET_THREAD_COUNT);
 			print("Loading " + this.threadCount + " other background thread(s).");
-			
+
 			//set the ping interval, default to 60 seconds
-			this.pingInterval = envAsInt(s,"WEBSOCKET_PING_INTERVAL",Const.WEBSOCKET_PING_INTERVAL);
-			
+			this.pingInterval = envAsInt(s,Params.WEBSOCKET_PING_INTERVAL.name(),Const.WEBSOCKET_PING_INTERVAL);
+
 			//run the purge every 900 seconds (15 minutes)
-			this.purgeInterval = envAsInt(s,"WEBSOCKET_PURGE_INTERVAL", Const.WEBSOCKET_PURGE_INTERVAL);
+			this.purgeInterval = envAsInt(s,Params.WEBSOCKET_PURGE_INTERVAL.name(), Const.WEBSOCKET_PURGE_INTERVAL);
 			print ("Purge interval is " + purgeInterval + " seconds.");
-			
-			this.compressionEnabled = envAsBool(s,"WEBSOCKET_COMPRESSION_ENABLED",Const.WEBSOCKET_COMPRESSION_ENABLED);
+
+			this.compressionEnabled = envAsBool(s,Params.WEBSOCKET_COMPRESSION_ENABLED.name(),Const.WEBSOCKET_COMPRESSION_ENABLED);
 			if(compressionEnabled){
 				print("Compression enabled.");
 			}else{
 				print("Compression disabled");
 			}
-			
-			this.clientCacheMax= envAsInt(s,"WEBSOCKET_CLIENT_CACHE_MAX", 1000);
-			this.port= envAsInt(s,"WEBSOCKET_PORT", 8889);
-		
-			this.maxConnections=envAsInt(s,"WEBSOCKET_MAX_CONNECTIONS", Const.WEBSOCKET_MAX_CONNECTIONS);
+
+			this.clientCacheMax= envAsInt(s,Params.WEBSOCKET_CLIENT_CACHE_MAX.name(), 1000);
+			this.port= envAsInt(s,Params.WEBSOCKET_PORT.name(), 8889);
+
+			this.maxConnections=envAsInt(s,Params.WEBSOCKET_MAX_CONNECTIONS.name(), Const.WEBSOCKET_MAX_CONNECTIONS);
 			print ("Maximum connections " + maxConnections);
 
-			this.maxSize = envAsLong(s, "WEBSOCKET_MAX_MSG_SIZE", Const.WEBSOCKET_MAX_MSG_SIZE);
+			this.maxSize = envAsLong(s, Params.WEBSOCKET_MAX_MSG_SIZE.name(), Const.WEBSOCKET_MAX_MSG_SIZE);
 			if(maxSize < Const.WEBSOCKET_MAX_MSG_SIZE){
 				print("****WARNING: Max message size of " + maxSize + " is less than the default of " + Const.WEBSOCKET_MAX_MSG_SIZE + " bytes");
 			}
 
 
-			this.encrypted=new Boolean(this.envAsBool(s, "WEBSOCKET_ENCRYPT", Const.WEBSOCKET_ENCRYPT));
+			this.encrypted=new Boolean(this.envAsBool(s, Params.WEBSOCKET_ENCRYPT.name(), Const.WEBSOCKET_ENCRYPT));
 			if(encrypted){	
-				this.keyStore=env(s, "WEBSOCKET_KEYSTORE_PATH", "");
-				this.keyPassword=env(s,"WEBSOCKET_KEY_PASSWORD","");
-				this.keyStorePassword=env(s,"WEBSOCKET_KEYSTORE_PASSWORD","");
-				this.keyStoreType=env(s,"WEBSOCKET_KEYSTORE_TYPE","");
-
-				String[] check = {keyStore,keyStorePassword,keyStorePassword,keyStoreType};
-				for(String str : check){
-					if(StrUtils.isEmpty(str)){
-						sb.append("if network encryption \nWEBSOCKET_KEYSTORE_PATH\nWEBSOCKET_KEY_PASSWORD\nWEBSOCKET_KEYSTORE_TYPE\nare required\n");
-					}
+				
+				//certificate file and keyfile.
+				this.certFile = env(s,Params.WEBSOCKET_CERT_FILE.name(),"");
+				this.keyFile=env(s,Params.WEBSOCKET_KEY_FILE.name(),"");
+				
+				//set all the keystore attributes
+				this.keyStore=env(s, Params.WEBSOCKET_KEYSTORE_PATH.name(), "");
+				this.keyPassword=env(s,Params.WEBSOCKET_KEY_PASSWORD.name(),"");
+				this.keyStorePassword=env(s,Params.WEBSOCKET_KEYSTORE_PASSWORD.name(),"");
+				this.keyStoreType=env(s,Params.WEBSOCKET_KEYSTORE_TYPE.name(),"");
+				
+				
+				if(StrUtils.areEmpty(certFile, keyFile, keyStore,keyPassword,keyStorePassword,keyStoreType)){
+					sb.append("****ERROR: SSL/TLS encryption is enabled, but neither Keystore nor cert/key files are configured.  xockets.io will not run.****");
 				}
+				
 			}else{
 				print("****WARNING: Websocket connections not encrypted.****");
 			}
 
 
 			//these config options are used in a clustered environment.
-			this.clustered=new Boolean(envAsBool(s,"WEBSOCKET_CLUSTERED", Const.WEBSOCKET_CLUSTERED));
+			this.clustered=new Boolean(envAsBool(s,Params.WEBSOCKET_CLUSTERED.name(), Const.WEBSOCKET_CLUSTERED));
 			if(clustered){
-				this.clustermateMonitor=env(s,"WEBSOCKET_CLUSTERMATE_MONITOR", "");
+				this.clustermateMonitor=env(s,Params.WEBSOCKET_CLUSTERMATE_MONITOR.name(), "");
 				this.clustermateExpiration= this.envAsInt(s, "WEBSOCKET_CLUSTERMATE_EXPIRATION", 300);
 
 				if(StrUtils.isEmpty(clustermateMonitor) || this.clustermateExpiration==-1){
@@ -334,23 +357,26 @@ public class Config implements Runnable, IConfig {
 				}
 			}
 
-			this.broadcastServer=env(s, "WEBSOCKET_BROADCAST_SERVER", ServerInfo.getInstance().getServerName());
+			this.broadcastServer=env(s, Params.WEBSOCKET_BROADCAST_SERVER.name(), ServerInfo.getInstance().getServerName());
 
 			//other settings
-			this.debug=envAsBool(s,"WEBSOCKET_DEBUG", Const.WEBSOCKET_DEBUG);
+			this.debug=envAsBool(s,Params.WEBSOCKET_DEBUG.name(), Const.WEBSOCKET_DEBUG);
 			if(this.isDebug()){
 				print("****WARNING: In debug mode.  Logs will be flooded.****");
 			}
 
-			this.allowAnonymous=envAsBool(s,"WEBSOCKET_ALLOW_ANONYMOUS", Const.WEBSOCKET_ALLOW_ANONYMOUS);
-			
-			this.testMode=envAsBool(s,"WEBSOCKET_TEST_MODE", Const.WEBSOCKET_TEST_MODE);
+			this.allowAnonymous=envAsBool(s,Params.WEBSOCKET_ALLOW_ANONYMOUS.name(), Const.WEBSOCKET_ALLOW_ANONYMOUS);
+			if(this.allowAnonymous){
+				print("****WARNING: Anonymous access is allowed.****");
+			}
+
+			this.testMode=envAsBool(s,Params.WEBSOCKET_TEST_MODE.name(), Const.WEBSOCKET_TEST_MODE);
 			if(this.isTestMode()){
 				print("****WARNING: In test mode****");
 			}
-			
-			
-			this.websocketFilter=env(s,"WEBSOCKET_FILTER",null);
+
+
+			this.websocketFilter=env(s,Params.WEBSOCKET_FILTER.name(),null);
 			if(this.websocketFilter == null){
 				print("No websocket filter registered.");
 			}
@@ -363,10 +389,10 @@ public class Config implements Runnable, IConfig {
 			}
 
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE,null,e);
+			LOGGER.log(Level.SEVERE,null,e);
 
 		} catch(Exception e){
-			logger.log(Level.SEVERE,null, e);
+			LOGGER.log(Level.SEVERE,null, e);
 
 		} finally{
 			SessionFactory.closeSession(s);
@@ -383,7 +409,7 @@ public class Config implements Runnable, IConfig {
 	public boolean isValid(){
 		return valid;
 	}
-	
+
 	private String getValue(Session s, String key) throws NotesException{
 		String str=null;
 		if(this.props!=null){
@@ -409,18 +435,34 @@ public class Config implements Runnable, IConfig {
 		}
 		return str;
 	}
-	
-	private List<String> envAsList(Session s, String key, List<String> defaultValue) throws NotesException{
+
+	private List<String> envAsList(Session s, String key, String defaultValue) throws NotesException{
 		String str=this.getValue(s,key);
-		if(StrUtils.isEmpty(str)){
-			return defaultValue;
+		
+		//if both values are empty... return an empty ArrayList.
+		if(StrUtils.areEmpty(str, defaultValue)){
+			return new ArrayList<String>();
+			
+		}else if(StrUtils.isEmpty(str)){
+			str = defaultValue;
 		}
-		String[] arr = str.split(",");
+		
+		
+		String[] arr = str.split(StringCache.COMMA);
 		List<String> list = new ArrayList<String>();
 		for(String value : arr){
 			list.add(value.trim());
 		}
 		return list;
+	}
+
+	private List<Integer> envAsIntegerList(Session s, String key, String defaultValue) throws NotesException{
+		List<String> list = this.envAsList(s, key, defaultValue);
+		List<Integer> ilist = new ArrayList<Integer>();
+		for(String str : list){
+			ilist.add(Integer.parseInt(str));
+		}
+		return ilist;
 	}
 
 	private int envAsInt(Session s, String key, int defaultValue) throws NotesException{
@@ -531,12 +573,12 @@ public class Config implements Runnable, IConfig {
 			uri = new URI(origin);
 			b=this.getAllowedOrigins().contains(uri.getHost()) || this.getAllowedOrigins().contains(StringCache.STAR);
 		} catch (URISyntaxException e) {
-			logger.log(Level.SEVERE, null, e);
+			LOGGER.log(Level.SEVERE, null, e);
 		}
 		return b;
 	}
 
-	
+
 	@Override
 	public boolean isProfiled() {
 		return profiled;
@@ -559,8 +601,8 @@ public class Config implements Runnable, IConfig {
 	public int getClientCacheMax() {
 		return this.clientCacheMax;
 	}
-	
-	
+
+
 	@Override
 	public boolean isCompressionEnabled() {
 		return compressionEnabled;
@@ -575,10 +617,61 @@ public class Config implements Runnable, IConfig {
 	public int getReceiveBuffer() {
 		return receiveBuffer;
 	}
-	
+
 	@Override
 	public boolean isNativeTransport(){
 		return this.nativeTransport;
+	}
+
+
+	@Override
+	public int getProxyBackendPort() {
+		return this.proxyBackendPort;
+	}
+
+	@Override
+	public String getProxyBackendHost() {
+		return this.proxyBackendHost;
+	}
+
+
+
+	@Override
+	public boolean isLeakDetector() {
+		return leakDetector;
+	}
+
+	@Override
+	public boolean isProxy() {
+		return !StrUtils.isEmpty(this.getProxyBackendHost()) && this.getProxyBackendPort() > 0;
+	}
+
+
+
+	@Override
+	public List<Integer> getRedirectPorts() {
+		return this.redirectPorts;
+	}
+
+	@Override
+	public String getKeyFile() {
+		return this.keyFile;
+	}
+
+	@Override
+	public String getCertFile() {
+		return this.certFile;
+	}
+
+
+	@Override
+	public boolean isKeyStore(){
+		return StrUtils.hasEmpty(this.getCertFile(), this.getKeyFile());
+	}
+
+	@Override
+	public boolean isEmptyCredentials() {
+		return StrUtils.hasEmpty(this.getUsername(),this.getPassword());
 	}
 
 }

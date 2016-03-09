@@ -36,7 +36,7 @@ public class GuiceVariableResolver extends VariableResolver {
 	
 	@Override
 	public Object resolveVariable(FacesContext facesContext, String varName)throws EvaluationException {
-		IGuicer guicer = Guicer.getInstance(Activator.BUNDLE);
+		IGuicer guicer = Guicer.getInstance(Activator.bundle);
 
 		Object o = null;
 

@@ -1,7 +1,9 @@
 /*
- * Copyright 2012 The Netty Project
+ * Original Work: Copyright 2012 The Netty Project
+ * 
+ * Modified Work: Copyright 2016 Tek Counsel LLC
  *
- * The Netty Project licenses this file to you under the Apache License,
+ * Both licenses this file to you under the Apache License,
  * version 2.0 (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at:
  *
@@ -17,18 +19,24 @@ package com.tc.websocket.server;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.FixedRecvByteBufAllocator;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpServerCodec;
-import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
+import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslHandler;
+import io.netty.util.ResourceLeakDetector;
+import io.netty.util.ResourceLeakDetector.Level;
 
 import javax.net.ssl.SSLEngine;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.tc.di.guicer.IGuicer;
 import com.tc.websocket.Config;
-import com.tc.websocket.SSLFactory;
+import com.tc.websocket.Const;
+import com.tc.websocket.IConfig;
+import com.tc.websocket.ISSLFactory;
+import com.tc.websocket.server.handler.ProxyFrontendHandler;
+import com.tc.websocket.server.pipeline.IPipelineBuilder;
 
 /**
  */
@@ -37,27 +45,64 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 	@Inject
 	private IGuicer guicer;
 	
+	@Inject
+	ISSLFactory factory;
+	
+	@Inject
+	@Named(Const.GUICE_WEBSOCKET_PIPELINE)
+	private IPipelineBuilder websocketBuilder;
+	
+	@Inject
+	@Named(Const.GUICE_REDIRECT_PIPELINE)
+	private IPipelineBuilder redirectBuilder;	
+
 	public WebSocketServerInitializer() {
 
 	}
 
 
-	
 	@Override
 	public void initChannel(SocketChannel ch) throws Exception {
+
+		IConfig cfg = Config.getInstance();
+		
+		//if we need to check for ByteBuf leaks.
+		if(cfg.isLeakDetector()){
+			ResourceLeakDetector.setLevel(Level.ADVANCED);
+		}
+		
+		
+		ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(1024));
+
 		ChannelPipeline pipeline = ch.pipeline();
-		if(Config.getInstance().isEncrypted()){
-			SSLEngine sslEngine = new SSLFactory().createSSLContext().createSSLEngine();
-			sslEngine.setUseClientMode(false);
-			pipeline.addLast("ssl", new SslHandler(sslEngine));
+
+		int incomingPort = ch.localAddress().getPort();
+		
+		
+		//if users are coming in on a different port than the proxy port, we need to redirect them.
+		if(cfg.isProxy() && cfg.getPort() != incomingPort){
+			redirectBuilder.apply(pipeline);
+	        return;
+		}
+		
+		if (cfg.isEncrypted()) {
+			SslContext sslContext = factory.createSslContext(Config.getInstance());
+			SSLEngine engine = sslContext.newEngine(ch.alloc());
+			engine.setUseClientMode(false);
+			ch.pipeline().addFirst("ssl",new SslHandler(engine));
 		}
 
-		pipeline.addLast(new HttpServerCodec());
-		pipeline.addLast(new HttpObjectAggregator(65536));
-		
-		if(Config.getInstance().isCompressionEnabled()){
-			pipeline.addLast(new WebSocketServerCompressionHandler());
+		if(cfg.isProxy()){
+			pipeline.channel().config().setAutoRead(false);
+			pipeline.addLast(guicer.inject(new ProxyFrontendHandler(cfg.getProxyBackendHost(),cfg.getProxyBackendPort())));
+			
+		}else{
+			websocketBuilder.apply(pipeline);
 		}
-		pipeline.addLast(guicer.inject(new WebSocketServerHandler()));
+
 	}
+
+
+
+
 }

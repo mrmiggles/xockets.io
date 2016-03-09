@@ -20,6 +20,7 @@ package com.tc.websocket.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
@@ -30,8 +31,9 @@ import io.netty.util.AttributeKey;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -59,11 +61,11 @@ import com.tc.websocket.runners.EventQueueProcessor;
 import com.tc.websocket.runners.QueueMessage;
 import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.valueobjects.IUser;
-import com.tc.websocket.valueobjects.MultiKeyMap;
 import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.websocket.valueobjects.SocketMessageLite;
-import com.tc.websocket.valueobjects.UniqueList;
-import com.tc.websocket.valueobjects.UriMap;
+import com.tc.websocket.valueobjects.structures.IMultiMap;
+import com.tc.websocket.valueobjects.structures.MultiMap;
+import com.tc.websocket.valueobjects.structures.UriMap;
 import com.tc.xpage.profiler.Stopwatch;
 
 
@@ -71,10 +73,11 @@ import com.tc.xpage.profiler.Stopwatch;
 public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 	private static final IConfig cfg = Config.getInstance();
-
 	private static final UriMap URI_MAP = new UriMap();
-	private static final MultiKeyMap<String,IUser> VALID_USERS = new MultiKeyMap<String,IUser>(cfg.getMaxConnections() / 2); //new ConcurrentHashMap<String,IUser>(cfg.getMaxConnections() / 2);
+	private static IMultiMap<String,IUser> VALID_USERS=new MultiMap<String, IUser>(Config.getInstance().getMaxConnections() / 2);
 	private static final Logger logger = Logger.getLogger(DominoWebSocketServer.class.getName());
+	
+
 
 	//set during server provisioning (see DominoWebSocketModule)
 	private IWebsocketFilter filter;
@@ -104,6 +107,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	private AtomicBoolean on = new AtomicBoolean(false);
 	private AtomicInteger socket_count = new AtomicInteger(0);
 
+	
 
 	@Override
 	public int getWebSocketCount(){
@@ -129,7 +133,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 	@Override
-
 	public void addUser(IUser user){
 
 		IUser storedUser = VALID_USERS.get(user.getSessionId());
@@ -144,7 +147,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			VALID_USERS.putWithKeys(user, user.getSessionId(),user.getUserId());
 
 		}else if(storedUser!=null && !user.isAnonymous()){
-			VALID_USERS.remove(storedUser.getUserId(),storedUser.getSessionId());
+			VALID_USERS.removeWithKeys(storedUser.getUserId(),storedUser.getSessionId());
 			storedUser.setUserId(user.getUserId());
 			VALID_USERS.putWithKeys(storedUser, storedUser.getSessionId(),storedUser.getUserId());
 
@@ -165,7 +168,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		//cleanup all references.
 		if(user!=null){
-			VALID_USERS.remove(user.getSessionId(), user.getUserId());
+			VALID_USERS.removeWithKeys(user.getSessionId(), user.getUserId());
 			//cleanup urimap
 			URI_MAP.remove(user);
 
@@ -197,7 +200,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 	@Override
-	@Stopwatch
+	@Stopwatch(time=20)
 	public Collection<IUser> getUsersOnThisServer(){
 		final Map<String,IUser> map = new HashMap<String,IUser>(VALID_USERS.size());
 		for(IUser user : VALID_USERS.values()){
@@ -269,7 +272,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 		//now that we have the user fully initialized, make sure they have at least reader access
-		if(!user.getUserId().startsWith("rhino") && !this.isReader(user)){
+		if(!user.getUserId().startsWith(Const.RHINO_PREFIX) && !this.isReader(user)){
 			user.getConn().close();
 			return;
 		}
@@ -280,7 +283,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 		//update the user data in the corresponding doc.
-		if(!user.getUserId().startsWith("rhino")){
+		if(!user.getUserId().startsWith(Const.RHINO_PREFIX)){
 			user.setGoingOffline(false);
 			TaskRunner.getInstance().add(new ApplyStatus(user));
 		}
@@ -297,9 +300,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	private boolean isReader(IUser user){
 		boolean b = true;
 		//make sure the user has access to the database referenced in the URI.
-		Session session = SessionFactory.openSession(cfg.getUsername(),cfg.getPassword());
+		Session session = SessionFactory.openSessionDefaultToTrusted(cfg.getUsername(),cfg.getPassword());
 		try{
-			if(user.getUri().toLowerCase().contains(".nsf")){
+			if(user.getUri().toLowerCase().contains(StringCache.DOT_NSF)){
 				Database target = this.db(session, new RoutingPath(user.getUri()));
 				int level = -1;
 				if(user.isAnonymous()){
@@ -353,7 +356,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		SocketMessage msg =JSONUtils.toObject(message, SocketMessageLite.class);
 
-		assert(msg.getData()==null) : "SocketMessageLite.class should not contain the data.";
+		assert(msg!=null && msg.getData()==null) : "SocketMessageLite.class should not contain the data.";
 
 
 		if(msg!=null && !msg.getTo().startsWith(StringCache.FORWARD_SLASH)){
@@ -382,9 +385,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
-		//msg.setDate(new Date());
-		String target = msg.getTo();
-
 		if(user == null) {
 			throw new IllegalArgumentException("User cannot be null");
 		}
@@ -402,7 +402,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			//only send direct if on the same host, else queue it up.
 			IUser targetUser = this.resolveUser(msg.getTo());
 			if(targetUser!=null && ServerInfo.getInstance().isCurrentServer(targetUser.getHost())){
-				this.send(target, message);
+				this.send(msg.getTo(), message);
 			}else{
 				//make sure we commit the full message.
 				this.queueMessage(JSONUtils.toObject(message, SocketMessage.class));
@@ -508,7 +508,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 	private String resolveUserId(IUser user){
-		if(user.getSessionId().startsWith("rhino")){
+		if(user.getSessionId().startsWith(Const.RHINO_PREFIX)){
 			return ServerInfo.getInstance().getServerName();
 		}
 		return user.getUserId();
@@ -522,8 +522,8 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	@Override
 	@SuppressWarnings("unchecked")
 	@Stopwatch
-	public List<IUser> getUsersByUri(String uri){
-		List<IUser> list = new UniqueList<IUser>();
+	public Collection<IUser> getUsersByUri(String uri){
+		Set<IUser> set = new HashSet<IUser>();
 
 		RoutingPath path = new RoutingPath(uri);
 
@@ -547,7 +547,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 				//check to see if its a direct user path
 				if(user.getUserPath().equals(uri)){
-					list.add(user);
+					set.add(user);
 					break; //if it is a direct path to user break out of the loop.
 				}
 
@@ -555,23 +555,23 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 					if(path.hasRoles()){
 						//role filters were supplied and the user is part of one of the roles
 						if(path.isMember(db.queryAccessRoles(this.resolveUserId(user)))){
-							list.add(user);
+							set.add(user);
 						}
 
 					}else{
 						//no role filters were supplied, just send to the uri
-						list.add(user);
+						set.add(user);
 					}
 
 				}else if(user.getUri().equals(path.getUri())){
 					if(path.hasRoles()){
 						if(path.isMember(db.queryAccessRoles(this.resolveUserId(user)))){
-							list.add(user);
+							set.add(user);
 						}
 
 					}else{
 						//just use the uri
-						list.add(user);
+						set.add(user);
 					}
 				}
 			}
@@ -585,7 +585,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			SessionFactory.closeSession(session);
 		}
 
-		return list;
+		return set;
 	}
 
 
@@ -633,17 +633,17 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+	@Stopwatch
 	private boolean sendToUri(String uri, String json){
 		boolean b = false;
-		List<IUser> list = this.getUsersByUri(uri);
+		Collection<IUser> list = this.getUsersByUri(uri);
 		if(list!=null && !list.isEmpty()){
 			for(IUser user : list){
 				//make sure we don't recurse forever
-				if(!user.getUserId().startsWith("/")){
+				if(!user.getUserId().startsWith(StringCache.FORWARD_SLASH)){
 					if(this.send(user.getUserId(), json)){
 						b = true; //if the message was sent to anyone in the uri we're consider it sent.
 					}
-
 				}
 			}
 		}
@@ -668,10 +668,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 	@Override
+	@Stopwatch
 	public void queueMessage(SocketMessage msg) {
 		QueueMessage queueMessage = guicer.createObject(QueueMessage.class);
 		queueMessage.setMsg(msg);
-		queueMessage.run();
+		TaskRunner.getInstance().add(queueMessage);
 	}
 
 
@@ -735,14 +736,23 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				boot.group(bossGroup, workerGroup)
 				.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
 				.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-				//.childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 32 * 1024)
-				//.childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 8 * 1024)
+				.childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 32 * 1024)
+				.childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 8 * 1024)
 				.childOption(ChannelOption.SO_SNDBUF, cfg.getSendBuffer())
 				.childOption(ChannelOption.SO_RCVBUF, cfg.getReceiveBuffer())
 				.childOption(ChannelOption.TCP_NODELAY, true)
 				.childHandler(init);
 
-				boot.bind(cfg.getPort()).sync().channel();
+
+				//bind to the main port
+				boot.bind(cfg.getPort()).sync();
+				
+				//bind to the redirect port (e.g. 80 will redirect to 443)
+				for(Integer port : cfg.getRedirectPorts()){
+					ChannelFuture f = boot.bind(port);
+					f.sync();
+				}
+				
 				this.on.set(true);
 
 				cfg.print("ready and listening on " + cfg.getPort());

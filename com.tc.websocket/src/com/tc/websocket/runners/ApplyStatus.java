@@ -94,7 +94,7 @@ public class ApplyStatus extends NotesOperation {
 
 				Document doc = this.getUserDoc(session, true);
 
-				doc.replaceItemValue("Form", "fmUser");
+				doc.replaceItemValue(Const.FIELD_FORM, Const.FIELD_VALUE_USER);
 
 				Item userId = doc.replaceItemValue(Const.FIELD_USERID, this.getUserId());
 				userId.setAuthors(true);
@@ -145,7 +145,7 @@ public class ApplyStatus extends NotesOperation {
 
 				this.user.setConn(null); //make sure we null this out, make available for gc.
 
-				doc.replaceItemValue("Form", "fmUser");
+				doc.replaceItemValue(Const.FIELD_FORM, Const.FIELD_VALUE_USER);
 				doc.replaceItemValue(Const.FIELD_SESSIONID, this.getSessionId());
 				doc.replaceItemValue(Const.FIELD_STATUS, this.getStatus());
 				doc.replaceItemValue(Const.FIELD_HOST, user.getHost());
@@ -226,10 +226,9 @@ public class ApplyStatus extends NotesOperation {
 
 		DocumentCollection col = view.getAllDocumentsByKey(keys,true);
 		if(col!=null && col.getCount() > 0){
-			col.stampAll("Form", "delete");
+			col.stampAll(Const.FIELD_FORM, Const.FIELD_VALUE_DELETE);
+			col.recycle();
 		}
-		col.recycle();
-
 	}
 
 

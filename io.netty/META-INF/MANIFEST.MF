@@ -4,7 +4,8 @@ Bundle-Name: io.netty
 Bundle-SymbolicName: io.netty
 Bundle-Version: 4.1.0
 Bundle-ClassPath: jzlib-1.1.2.jar,
- netty-all-4.1.0.CR2.jar
+ netty-all-4.1.0.CR2.jar,
+ netty-tcnative-openssl-static-1.1.33.Fork15-SNAPSHOT-windows-x86_64}.jar
 Bundle-Vendor: netty
 Export-Package: com.jcraft.jzlib,
  io.netty.bootstrap,
@@ -74,5 +75,8 @@ Export-Package: com.jcraft.jzlib,
  io.netty.util.concurrent,
  io.netty.util.internal,
  io.netty.util.internal.chmv8,
- io.netty.util.internal.logging
+ io.netty.util.internal.logging,
+ org.apache.tomcat,
+ org.apache.tomcat.jni,
+ org.apache.tomcat.jni.socket
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

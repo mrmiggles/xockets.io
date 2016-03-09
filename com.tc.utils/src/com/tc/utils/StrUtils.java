@@ -36,14 +36,14 @@ public final class StrUtils {
     }
     
     
-    public static final String EMPTY_STRING="";
+    public static final String EMPTY_STRING=StringCache.EMPTY;
     
 
     public static String right(String source, String searchFor) {
         int index = source.indexOf(searchFor) + searchFor.length();
 
         if (index < 0) {
-            return "";
+            return StringCache.EMPTY;
         }
         return source.substring(index);
     }
@@ -133,7 +133,7 @@ public final class StrUtils {
         int index = source.lastIndexOf(searchFor) + searchFor.length();
 
         if (index < 0) {
-            return "";
+            return StringCache.EMPTY;
         }
         return source.substring(index);
     }
@@ -143,7 +143,7 @@ public final class StrUtils {
         int index = source.indexOf(searchFor);
 
         if (index <= 0) {
-            return "";
+            return StringCache.EMPTY;
         }
         return source.substring(0, index);
     }
@@ -152,7 +152,7 @@ public final class StrUtils {
     public static String leftBack(String source, String searchFor) {
         int index = source.lastIndexOf(searchFor);
         if (index <= 0) {
-            return "";
+            return StringCache.EMPTY;
         }
         return source.substring(0, index);
     }
@@ -225,7 +225,7 @@ public final class StrUtils {
         if (split.length > wordNo - 1) {
             return split[wordNo - 1];
         }
-        return "";
+        return StringCache.EMPTY;
     }
     
     public static String remove(String source, char searchFor) {
@@ -235,12 +235,12 @@ public final class StrUtils {
 
 
     public static String remove(String source, String searchFor) {
-        return StrUtils.replace(source, searchFor, "");
+        return StrUtils.replace(source, searchFor, StringCache.EMPTY);
     }
 
 
     public static String remove(String source, String searchFor[]) {
-        return StrUtils.replace(source, searchFor, "");
+        return StrUtils.replace(source, searchFor, StringCache.EMPTY);
     }
 
     public static String getStackTrace(Throwable t) throws IOException {
@@ -255,7 +255,29 @@ public final class StrUtils {
         if (s == null) {
             return true;
         }
-        return s.equals("");
+        return s.equals(StringCache.EMPTY);
+    }
+    
+    public static boolean areEmpty(String ...s){
+    	boolean b = true;
+    	for(String str : s){
+    		if(!isEmpty(str)){
+    			b = false;
+    			break;
+    		}
+    	}
+    	return b;
+    }
+    
+    public static boolean hasEmpty(String ...s){
+    	boolean b = false;
+    	for(String str : s){
+    		if(isEmpty(str)){
+    			b = true;
+    			break;
+    		}
+    	}
+    	return b;
     }
 
 
@@ -411,12 +433,12 @@ public final class StrUtils {
 
     /* remove leading whitespace */
     public static String ltrim(String source) {
-        return source.replaceAll("^\\s+", "");
+        return source.replaceAll("^\\s+", StringCache.EMPTY);
     }
 
     /* remove trailing whitespace */
     public static String rtrim(String source) {
-        return source.replaceAll("\\s+$", "");
+        return source.replaceAll("\\s+$", StringCache.EMPTY);
     }
 
 

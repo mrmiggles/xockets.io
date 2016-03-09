@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: xockets.io
 Bundle-SymbolicName: com.tc.websocket;singleton:=true
-Bundle-Version: 2.0.1
+Bundle-Version: 2.0.2
 Bundle-Vendor: TekCounsel LLC
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.equinox.http.registry;bundle-version="1.0.100",
@@ -25,10 +25,10 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.4.0",
  com.jackson.library;bundle-version="1.0.0",
  org.apache.commons;bundle-version="2.1.0",
  com.ibm.wink,
- com.ibm.domino.das,
  com.ibm.domino.services,
  com.tc.scriptrunner;bundle-version="1.0.0",
- io.netty;bundle-version="4.1.0"
+ io.netty;bundle-version="4.1.0",
+ com.ibm.domino.das
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.tc.websocket,

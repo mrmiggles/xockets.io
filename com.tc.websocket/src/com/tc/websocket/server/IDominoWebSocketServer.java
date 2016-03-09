@@ -21,7 +21,6 @@ package com.tc.websocket.server;
 import io.netty.handler.codec.http.FullHttpRequest;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.tc.websocket.filter.IWebsocketFilter;
 import com.tc.websocket.valueobjects.IUser;
@@ -43,7 +42,7 @@ public interface IDominoWebSocketServer extends Runnable {
 	
 	public abstract Collection<IUser> getUsersOnThisServer();
 	
-	public abstract List<IUser> getUsersByUri(String uri);
+	public Collection<IUser> getUsersByUri(String uri);
 
 	public abstract void onOpen(ContextWrapper channel, FullHttpRequest handshake);
 

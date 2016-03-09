@@ -31,7 +31,7 @@ import org.osgi.framework.ServiceRegistration;
 public class Activator extends Plugin {
 
 	/** The plugin id. */
-	public static Bundle BUNDLE;
+	public static Bundle bundle;
 
 	/** The version. */
 	public static String VERSION;
@@ -45,7 +45,9 @@ public class Activator extends Plugin {
 
 	@Override
 	public void start(final BundleContext context) {
-		BUNDLE=context.getBundle(); 
+		
+		
+		bundle=context.getBundle(); 
 		commandLineReg=context.registerService(CommandProvider.class.getName(), new CommandLine(), null);
 		StartAndStop.getInstance().start();
 	}

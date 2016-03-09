@@ -18,7 +18,7 @@ package com.tc.websocket.runners;
 
 public class FutureRunnable implements IFutureRunnable{
 	
-	private int seconds=0;
+	private int seconds;
 	private Runnable runMe;
 	
 	

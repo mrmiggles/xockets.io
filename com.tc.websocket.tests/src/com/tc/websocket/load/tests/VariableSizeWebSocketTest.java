@@ -60,14 +60,12 @@ public class VariableSizeWebSocketTest implements Runnable{
 		try {
 			System.out.println("Test will run for " + RUN_TIME_MIN +  " minutes");
 			TestConfig cfg = TestConfig.getInstance();
-			cfg.overrideProperty("print.on.count", "1000");
-			cfg.overrideProperty("number.of.clients", "4000");
-			cfg.overrideProperty("enable.compression", "true");
-			cfg.overrideProperty("message.delay", "100");
-			
+			cfg.overrideProperty("print.on.count", "10");
+			cfg.overrideProperty("number.of.clients", "500");
+			cfg.overrideProperty("compression.enabled", "true");
 			
 			VariableSizeWebSocketTest loader=new VariableSizeWebSocketTest();
-			scheduled.scheduleAtFixedRate(loader, 0, 100, TimeUnit.MILLISECONDS);	
+			
 			
 			
 			scanner = new Scanner(System.in);
@@ -90,6 +88,10 @@ public class VariableSizeWebSocketTest implements Runnable{
 			NettyClientFactory factory = new NettyClientFactory();
 			clients.addAll(factory.buildClients(TestConfig.getInstance().getMaxPayload()));
 			this.buildSocketMessages();
+			
+			System.out.println("Scheduling test...");
+			scheduled.scheduleAtFixedRate(this, 0, 100, TimeUnit.MILLISECONDS);	
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -138,6 +140,7 @@ public class VariableSizeWebSocketTest implements Runnable{
 
 	public void testWebSocketServer() {
 
+		System.out.println("running testWebSocketServer...");
 		try{
 			//randomly select two clients from the collection.
 			for(int i =0;i<=1000;i++){

@@ -34,6 +34,7 @@ import lotus.domino.ViewEntryCollection;
 import org.apache.commons.io.IOUtils;
 
 import com.tc.utils.JSONUtils;
+import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
 import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.xpage.profiler.Stopwatch;
@@ -107,8 +108,8 @@ public class SocketMessageFactory implements ISocketMessageFactory {
 		}catch(Exception e){
 			logger.log(Level.SEVERE,null, e);
 			try{
-				doc.replaceItemValue("sentFlag", -1);
-				doc.replaceItemValue("error", e.getMessage());
+				doc.replaceItemValue(Const.FIELD_SENTFLAG, Const.FIELD_SENTFLAG_VALUE_ERROR);
+				doc.replaceItemValue(Const.FIELD_ERROR, e.getMessage());
 				doc.save();
 			}catch(NotesException n){
 				logger.log(Level.SEVERE,null, n);
@@ -124,13 +125,13 @@ public class SocketMessageFactory implements ISocketMessageFactory {
 		@SuppressWarnings("unchecked")
 		Vector<EmbeddedObject> objects = rtitem.getEmbeddedObjects();
 		for(EmbeddedObject eo: objects){
-			if(eo.getName().toLowerCase().endsWith(".json")){
+			if(eo.getName().toLowerCase().endsWith(StringCache.DOT_JSON)){
 				InputStream in = eo.getInputStream();
 				try {
-					json = IOUtils.toString(in,"UTF-8");
-					int start = json.indexOf('{');
-					int end = json.lastIndexOf('}');
-					json=json.substring(start,end) + "}";
+					json = IOUtils.toString(in,StringCache.UTF8);
+					int start = json.indexOf(StringCache.OPEN_CURLY_BRACE);
+					int end = json.lastIndexOf(StringCache.CLOSE_CURLY_BRACE);
+					json=json.substring(start,end) + StringCache.CLOSE_CURLY_BRACE;
 				} catch (IOException e) {
 					logger.log(Level.SEVERE,null,e);
 				}finally{

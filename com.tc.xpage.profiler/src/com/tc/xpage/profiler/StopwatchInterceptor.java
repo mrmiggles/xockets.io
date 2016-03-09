@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-
 import com.tc.utils.Stopwatch;
 
 public class StopwatchInterceptor implements MethodInterceptor {
@@ -32,15 +31,19 @@ public class StopwatchInterceptor implements MethodInterceptor {
 		Stopwatch watch = new Stopwatch();
 		Object value = null;
 		String methodname = invocation.getMethod().getName();
-		String clz = invocation.getThis().getClass().getName();
+		com.tc.xpage.profiler.Stopwatch stopwatch = invocation.getMethod().getAnnotation(com.tc.xpage.profiler.Stopwatch.class);
+		String clz = this.className(invocation.getThis().getClass().getName());
 		value = invocation.proceed();
 		long time = watch.elapsedTime(TimeUnit.MILLISECONDS);
-		if(time > 100){
+		if(time > stopwatch.time()){
 			System.out.println(clz + "." + methodname + " took " + time + " milliseconds");
 		}
 		return value;
 	}
 
+	private String className(String clz){
+		return clz.substring(0, clz.indexOf("$$"));
+	}
 
 }
 

@@ -3,6 +3,13 @@ package com.tc.websocket;
 import java.util.List;
 
 public interface IConfig {
+	
+	
+	public abstract int getProxyBackendPort();
+	
+	public abstract String getProxyBackendHost();
+	
+	public abstract boolean isProxy();
 
 	public abstract boolean isAllowAnonymous();
 
@@ -11,7 +18,9 @@ public interface IConfig {
 	public abstract boolean isEncrypted();
 
 	public abstract int getPort();
-
+	
+	public abstract List<Integer> getRedirectPorts();
+	
 	public abstract String getKeyStore();
 
 	public abstract String getKeyStorePassword();
@@ -83,5 +92,15 @@ public interface IConfig {
 	public abstract int getSendBuffer();
 
 	public abstract int getReceiveBuffer();
+	
+	public boolean isLeakDetector();
+	
+	public String getKeyFile();
+	
+	public String getCertFile();
+	
+	public boolean isKeyStore();
+	
+	public boolean isEmptyCredentials();
 
 }

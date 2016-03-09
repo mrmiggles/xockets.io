@@ -94,7 +94,7 @@ public class TaskRunner implements Runnable {
 			
 			scheduler = Executors.newScheduledThreadPool(Config.getInstance().getThreadCount());
 			
-			Guicer.getInstance(Activator.BUNDLE).inject(this);//inject the dependencies
+			Guicer.getInstance(Activator.bundle).inject(this);//inject the dependencies
 			
 			scheduler.scheduleAtFixedRate(this, 5, 500, TimeUnit.MILLISECONDS); 
 

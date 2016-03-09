@@ -357,4 +357,60 @@ public class TestConfig implements IConfig {
 		return false;
 	}
 
+
+	@Override
+	public int getProxyBackendPort() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String getProxyBackendHost() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isProxy() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isLeakDetector() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public List<Integer> getRedirectPorts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getKeyFile() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getCertFile() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isKeyStore() {
+
+		return false;
+	}
+
+	@Override
+	public boolean isEmptyCredentials() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

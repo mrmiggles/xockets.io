@@ -27,7 +27,7 @@ public class RoutingPath {
 	private String uri;
 	private String[] roles;
 	private String dbPath;
-	private boolean wild = false;
+	private boolean wild;
 
 
 	public RoutingPath(String uri){
@@ -40,22 +40,22 @@ public class RoutingPath {
 
 	private String extractDbPath(String uri){
 		uri = uri.toLowerCase();
-		if(!uri.contains(".nsf")) return Const.WEBSOCKET_PATH;//return the websocket.nsf as default.
-		int nsf = uri.indexOf(".nsf");
-		String dbPath=uri.substring(0,nsf) + ".nsf";
+		if(!uri.contains(StringCache.DOT_NSF)) return Const.WEBSOCKET_PATH;//return the websocket.nsf as default.
+		int nsf = uri.indexOf(StringCache.DOT_NSF);
+		String dbPath=uri.substring(0,nsf) + StringCache.DOT_NSF;
 		return dbPath;
 	}
 
 	private String[] extractRoles(String uri){
 
-		if(!uri.contains("[") && !uri.contains("]")) return null;
+		if(!uri.contains(StringCache.OPEN_BRACKET) && !uri.contains(StringCache.CLOSE_BRACKET)) return null;
 
 		String[] roles=null;
-		int start = uri.indexOf('[');
-		int end = uri.lastIndexOf(']');
+		int start = uri.indexOf(StringCache.OPEN_BRACKET);
+		int end = uri.lastIndexOf(StringCache.CLOSE_BRACKET);
 		String strRoles = uri.substring(start,end + 1);
-		if(strRoles.contains(",")){
-			roles = strRoles.split(",");
+		if(strRoles.contains(StringCache.COMMA)){
+			roles = strRoles.split(StringCache.COMMA);
 		}else{
 			roles = new String[1];
 			roles[0]=strRoles;

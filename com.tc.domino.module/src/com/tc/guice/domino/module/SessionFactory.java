@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import com.ibm.domino.xsp.module.nsf.NSFComponentModule;
 import com.ibm.domino.xsp.module.nsf.NotesContext;
 import com.ibm.domino.xsp.module.nsf.SessionCloner;
+import com.tc.utils.StrUtils;
 
 import lotus.domino.Database;
 import lotus.domino.Document;
@@ -56,6 +57,14 @@ public class SessionFactory {
 			logger.log(Level.SEVERE,null,e);
 		}
 		return s;
+	}
+	
+	
+	public static Session openSessionDefaultToTrusted(String username, String password){
+		if(StrUtils.hasEmpty(username, password)){
+			return openTrusted();
+		}
+		return openSession(username,password);
 	}
 
 

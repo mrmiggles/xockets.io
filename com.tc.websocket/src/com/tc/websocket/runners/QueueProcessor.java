@@ -47,23 +47,24 @@ public class QueueProcessor extends AbstractQueueProcessor implements Runnable {
 		try {
 			Database db = session.getDatabase(StringCache.EMPTY, Const.WEBSOCKET_PATH);
 			View view = db.getView(Const.VIEW_MSG_QUEUE);
-			view.setAutoUpdate(false);
-			Document doc = view.getFirstDocument();
-			Document temp = null;
-			while(doc!=null){
-				if(doc.isValid() && !doc.hasItem(StringCache.FIELD_CONFLICT)){
-					this.processDoc(doc);
+			if(view.getAllEntries().getCount() > 0){
+				view.setAutoUpdate(false);
+				Document doc = view.getFirstDocument();
+				Document temp = null;
+				while(doc!=null){
+					if(doc.isValid() && !doc.hasItem(StringCache.FIELD_CONFLICT)){
+						this.processDoc(doc);
 
-				}else if(doc.isValid() && doc.hasItem(StringCache.FIELD_CONFLICT)){
-					this.processConflict(doc);
+					}else if(doc.isValid() && doc.hasItem(StringCache.FIELD_CONFLICT)){
+						this.processConflict(doc);
+					}
+					temp = view.getNextDocument(doc);
+					doc.recycle();
+					doc = temp;	
 				}
 
-				temp = view.getNextDocument(doc);
-				doc.recycle();
-				doc = temp;	
+				view.setAutoUpdate(true);
 			}
-			
-			view.setAutoUpdate(true);
 		} catch (NotesException e) {
 			logger.log(Level.SEVERE,null,e);
 

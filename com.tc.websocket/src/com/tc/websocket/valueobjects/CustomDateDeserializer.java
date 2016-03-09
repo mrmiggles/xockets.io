@@ -14,6 +14,7 @@ import org.codehaus.jackson.map.JsonDeserializer;
 
 import com.tc.utils.DateUtils;
 import com.tc.utils.StrUtils;
+import com.tc.websocket.Const;
 
 /**
  *
@@ -30,7 +31,7 @@ public class CustomDateDeserializer extends JsonDeserializer<Date> {
             long l = Long.parseLong(date);
             return new Date(l); 
         } else {
-            Date dt = DateUtils.getDateByString("yyyy-MM-dd hh:mm a", date);
+            Date dt = DateUtils.getDateByString(Const.DATE_FORMAT, date);
             return dt;
         }
     }

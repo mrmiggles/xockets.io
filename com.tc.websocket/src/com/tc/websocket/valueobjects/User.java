@@ -25,6 +25,7 @@ import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
 import com.tc.websocket.server.ContextWrapper;
+import com.tc.xpage.profiler.Stopwatch;
 
 
 public class User implements IUser {
@@ -40,7 +41,7 @@ public class User implements IUser {
 	private boolean goingOffline;
 	private ContextWrapper conn;
 	private String host; //used for clustered environments.
-	private Queue<String> messages = new ConcurrentLinkedQueue<String>(); //used in case user is not writeable.
+	private Queue<String> messages = new ConcurrentLinkedQueue<String>(); //used in case user is not write-able.
 
 
 
@@ -225,11 +226,12 @@ public class User implements IUser {
 	}
 
 	@Override
+	@Stopwatch(time=10)
 	public void processQueue() {
-		while(this.getConn().channel().isWritable() && !this.messages.isEmpty()){
+		while(!this.messages.isEmpty() && this.getConn().channel().isWritable()){
 			String msg = messages.poll();
 			if(msg!=null){
-				this.getConn().send(msg);
+				this.getConn().sendAndFlush(msg);
 			}
 		}
 	}

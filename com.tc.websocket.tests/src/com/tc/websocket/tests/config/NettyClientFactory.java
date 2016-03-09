@@ -1,31 +1,33 @@
 package com.tc.websocket.tests.config;
 
+import io.netty.handler.ssl.SslContext;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLException;
 
 import com.tc.websocket.SSLFactory;
 import com.tc.websocket.tests.client.NettyTestClient;
 
 public class NettyClientFactory {
-	
-	private static List<NettyTestClient> clients  = new ArrayList<NettyTestClient>();
-	
 
-	public List<NettyTestClient> buildClients(int maxPayload) throws URISyntaxException, InterruptedException{
+	private static List<NettyTestClient> clients  = new ArrayList<NettyTestClient>();
+
+
+	public List<NettyTestClient> buildClients(int maxPayload) throws URISyntaxException, InterruptedException, SSLException{
 
 		if(!clients.isEmpty()) return clients;
 
 		System.out.println("building websocket clients...");
 
 		TestConfig cfg = TestConfig.getInstance();
-		
-		SSLContext sslContext = null;
+
+		SslContext sslContext = null;
 		if(cfg.isEncrypted()){
-			sslContext = new SSLFactory().createSSLContext(cfg);
+			sslContext = new SSLFactory().createClientSslCtx(cfg);
 		}
 
 		String url = null;
@@ -53,12 +55,12 @@ public class NettyClientFactory {
 			}
 
 			c = new NettyTestClient( new URI(url));
-			
+
 			//set the ssl engine if needed.
 			if(sslContext!=null) {
 				c.setSSLContext(sslContext);
 			}
-			
+
 			c.setMaxPayload(maxPayload);
 			c.setUsername(username);
 			c.setUuid(username);
@@ -68,8 +70,8 @@ public class NettyClientFactory {
 
 			Thread.sleep(cfg.getConnectionDelay());
 		}
-		
-		
+
+
 		//clean out the closed connections.
 		boolean hasClosed= false;
 		List<NettyTestClient> open = new ArrayList<NettyTestClient>();
@@ -80,17 +82,17 @@ public class NettyClientFactory {
 				hasClosed=true;
 			}
 		}
-		
+
 		if(hasClosed){
 			clients.clear();
 			clients.addAll(open);
 		}
-		
-		
+
+
 		return clients;
 	}
-	
-	
+
+
 	public void closeClients() throws InterruptedException{
 		for(NettyTestClient client : clients){
 			client.disconnect();

@@ -18,6 +18,7 @@
 
 package com.tc.websocket;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,20 +42,20 @@ import com.tc.websocket.valueobjects.IUser;
 
 public class CommandLine implements CommandProvider {
 	
-	private static final Logger logger = Logger.getLogger(CommandLine.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(CommandLine.class.getName());
 
 	public void _websocket(final CommandInterpreter out) {
 		try{
 			final String command=out.nextArgument();
-			StartAndStop startStop = StartAndStop.getInstance();
+			final StartAndStop startStop = StartAndStop.getInstance();
 
 
-			IGuicer guicer = Guicer.getInstance(Activator.BUNDLE);
+			final IGuicer guicer = Guicer.getInstance(Activator.bundle);
 			IDominoWebSocketServer server = null;
 
 			//check to see if guice has been initialized
 			if(guicer!=null){
-				server = Guicer.getInstance(Activator.BUNDLE).createObject(IDominoWebSocketServer.class);
+				server = Guicer.getInstance(Activator.bundle).createObject(IDominoWebSocketServer.class);
 			}
 			
 			if("start".equalsIgnoreCase(command) || "run".equalsIgnoreCase(command)){
@@ -97,18 +98,35 @@ public class CommandLine implements CommandProvider {
 				
 			}else if("queue-count".equals(command)){
 				this.showQueueCounts(server, out);
+				
+			}else if ("memory".equals(command)){
+				this.showAvailableMemory(out);
 			}
 			
 			else{
 				out.println(getHelp());
 			}
 		}catch(Exception e){
-			logger.log(Level.SEVERE, null, e);
+			LOGGER.log(Level.SEVERE, null, e);
 		}
 
 	}
 	
 	
+	private long toMb(long value){
+		return ((value / 1000) / 1000);
+	}
+	
+
+	private void showAvailableMemory(CommandInterpreter out){
+		long allocatedMemory  = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
+		long freeMemory = Runtime.getRuntime().maxMemory() - allocatedMemory;
+		
+	
+		out.println("Free Memory: " + NumberFormat.getInstance().format(toMb(freeMemory)) + "MByte");
+		out.println("Allocated Memory: " + NumberFormat.getInstance().format(toMb(allocatedMemory))  + "MByte");
+		
+	}
 	
 	private void showQueueCounts(IDominoWebSocketServer server, CommandInterpreter out){
 			out.println("show queue counts no longer supported.");
@@ -162,7 +180,7 @@ public class CommandLine implements CommandProvider {
 		
 		
 		//register the script
-		IScriptClientRegistry reg = Guicer.getInstance(Activator.BUNDLE).createObject(IScriptClientRegistry.class);
+		IScriptClientRegistry reg = Guicer.getInstance(Activator.bundle).createObject(IScriptClientRegistry.class);
 		reg.registerScriptClient(host, uri, event, scriptPath);
 		
 	}

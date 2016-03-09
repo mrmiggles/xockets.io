@@ -154,5 +154,40 @@ public class SocketMessage {
 		this.data = null;
 	}
 	
-
+	
+	@JsonIgnore
+	public SocketMessage to(String to){
+		this.setTo(to);
+		return this;
+	}
+	@JsonIgnore
+	public SocketMessage from(String from){
+		this.setFrom(from);
+		return this;
+	}
+	@JsonIgnore
+	public SocketMessage durable(boolean durable){
+		this.setDurable(durable);
+		return this;
+	}
+	@JsonIgnore
+	public SocketMessage text(String text){
+		this.setText(text);
+		return this;
+	}
+	@JsonIgnore
+	public SocketMessage data(Map<String,Object> data){
+		this.setData(data);
+		return this;
+	}
+	@JsonIgnore
+	public SocketMessage persisted(boolean p){
+		this.setPersisted(p);
+		return this;
+	}
+	@JsonIgnore
+	public SocketMessage date(Date date){
+		this.setDate(date);
+		return this;
+	}
 }

@@ -92,12 +92,13 @@ public class RestWebSocket implements IRestWebSocket {
 			cntr ++;
 		}
 
-		SocketMessage msg = new SocketMessage();
-		msg.setTo(XSPUtils.session().getEffectiveUserName());
-		msg.setFrom("server");
-		msg.setText(text);
-		msg.setData(map);
-
+		SocketMessage msg = new SocketMessage()
+				.to(XSPUtils.session().getEffectiveUserName())
+				.from(Const.FROM_SERVER)
+				.text(text)
+				.data(map);
+		
+		
 		return this.buildResponse(msg);
 
 	}
@@ -120,10 +121,10 @@ public class RestWebSocket implements IRestWebSocket {
 			IWebSocketBean bean = newBean();
 			bean.registerCurrentUser();
 			List<SelectItem> list = bean.getOnlineUsers();
-			res = this.buildMessage("INFO", "websocketUrl",bean.getWebSocketUrl(), "onlineUsers",list,"sessionId", req.getSession().getId());
+			res = this.buildMessage(Const.INFO, "websocketUrl",bean.getWebSocketUrl(), "onlineUsers",list,"sessionId", req.getSession().getId());
 		}catch(Exception e){
 			logger.log(Level.SEVERE,null,e);
-			res =  this.buildMessage("EXCEPTION", "exception",e.getMessage());
+			res =  this.buildMessage(Const.EXCEPTION, Const.EXCEPTION.toLowerCase(),e.getMessage());
 		}
 		return res;
 	}
@@ -135,10 +136,10 @@ public class RestWebSocket implements IRestWebSocket {
 		try{
 			IWebSocketBean bean = newBean();
 			bean.removeCurrentUser();
-			res= this.buildMessage("INFO", "unregister","true");
+			res= this.buildMessage(Const.INFO, "unregister","true");
 		}catch(Exception e){
 			logger.log(Level.SEVERE,null,e);
-			res =  this.buildMessage("EXCEPTION", "exception",e.getMessage());
+			res =  this.buildMessage(Const.EXCEPTION, Const.EXCEPTION.toLowerCase(),e.getMessage());
 		}
 		return res;
 	}
@@ -153,7 +154,7 @@ public class RestWebSocket implements IRestWebSocket {
 			res = this.buildResponse(list);
 		}catch(Exception e){
 			logger.log(Level.SEVERE,null,e);
-			res =  this.buildMessage("EXCEPTION", "exception",e.getMessage());
+			res =  this.buildMessage(Const.EXCEPTION, Const.EXCEPTION.toLowerCase(),e.getMessage());
 		}
 		return res;
 
@@ -165,10 +166,10 @@ public class RestWebSocket implements IRestWebSocket {
 		Response res = null;
 		try{
 			IWebSocketBean bean = newBean();
-			res = this.buildMessage("INFO", "websocketUrl", bean.getWebSocketUrl());
+			res = this.buildMessage(Const.INFO, "websocketUrl", bean.getWebSocketUrl());
 		}catch(Exception e){
 			logger.log(Level.SEVERE,null,e);
-			res =  this.buildMessage("EXCEPTION", "exception",e.getMessage());
+			res =  this.buildMessage(Const.EXCEPTION, Const.EXCEPTION.toLowerCase(),e.getMessage());
 		}
 		return res;
 
@@ -181,10 +182,10 @@ public class RestWebSocket implements IRestWebSocket {
 		try{
 			IWebSocketBean bean = newBean();
 			bean.sendMessage(msg);
-			res= this.buildMessage("INFO", "sendMessage","true");
+			res= this.buildMessage(Const.INFO, "sendMessage","true");
 		}catch(Exception e){
 			logger.log(Level.SEVERE,null,e);
-			res =  this.buildMessage("EXCEPTION", "exception",e.getMessage());
+			res =  this.buildMessage(Const.EXCEPTION, Const.EXCEPTION.toLowerCase(),e.getMessage());
 		}
 		return res;
 
@@ -215,7 +216,7 @@ public class RestWebSocket implements IRestWebSocket {
 		List<SocketMessage> list = msgFactory.buildMessages(col);
 
 		//mark the collection as sent
-		col.stampAll("sentFlag", 1);
+		col.stampAll(Const.FIELD_SENTFLAG, Const.FIELD_SENTFLAG_VALUE_SENT);
 
 		//cleanup db should cleanup view, and col
 		db.recycle();
@@ -242,7 +243,7 @@ public class RestWebSocket implements IRestWebSocket {
 				msg = msgFactory.buildMessage(entry.getDocument());
 
 				//mark as sent.
-				doc.replaceItemValue("sentFlag", 1);
+				doc.replaceItemValue(Const.FIELD_SENTFLAG, Const.FIELD_SENTFLAG_VALUE_SENT);
 				doc.save();
 			}
 		}

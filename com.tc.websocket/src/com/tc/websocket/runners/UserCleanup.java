@@ -24,7 +24,7 @@ public class UserCleanup implements Runnable {
 		for(IUser user : server.getUsers()){
 			if(!user.isOpen() && !user.isGoingOffline() && user.isOnServer()){
 				user.setGoingOffline(true);
-				batch.addRunner(new ApplyStatus(user));
+				batch.addRunner(guicer.inject(new ApplyStatus(user)));
 				server.decrementCount();
 			}
 		}

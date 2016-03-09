@@ -35,6 +35,7 @@ import com.tc.utils.StringCache;
 import com.tc.utils.XSPUtils;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
+import com.tc.websocket.IConfig;
 import com.tc.websocket.embeded.clients.IScriptClient;
 import com.tc.websocket.embeded.clients.IScriptClientRegistry;
 import com.tc.websocket.embeded.clients.RhinoClient;
@@ -139,8 +140,10 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	 */
 	public String getWebSocketUrl(HttpServletRequest req){
 
+		IConfig cfg = Config.getInstance();
+		
 		//for ajax requests as we don't want the uri of the service call, but the calling page.
-		String uri = req.getParameter("sourceUri");
+		String uri = req.getParameter(Const.SOURCE_URI);
 
 		if(uri == null){
 			uri = req.getRequestURI();
@@ -150,7 +153,14 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 			uri = uri + StringCache.FORWARD_SLASH;
 		}
 
-		String url = req.getServerName() + ":" + Config.getInstance().getPort() + "/" + Const.WEBSOCKET_URI + uri + req.getSession().getId();
+		String url = null;
+		if(cfg.getPort() == 80 || cfg.getPort() == 443){
+			url = req.getServerName() + StringCache.FORWARD_SLASH + Const.WEBSOCKET_URI + uri + req.getSession().getId();
+			
+		}else{
+			url = req.getServerName() + StringCache.COLON + Config.getInstance().getPort() + StringCache.FORWARD_SLASH + Const.WEBSOCKET_URI + uri + req.getSession().getId();
+		}
+		
 		if(Config.getInstance().isEncrypted()){
 			url = Const.WSS + url;
 		}else{
@@ -243,7 +253,7 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 			uri = uri + StringCache.FORWARD_SLASH;
 		}
 
-		String url = serverName + ":" + Config.getInstance().getPort() + "/" + Const.WEBSOCKET_URI + uri + sessionId;
+		String url = serverName + StringCache.COLON + Config.getInstance().getPort() + StringCache.FORWARD_SLASH + Const.WEBSOCKET_URI + uri + sessionId;
 		if(Config.getInstance().isEncrypted()){
 			url = Const.WSS + url;
 		}else{

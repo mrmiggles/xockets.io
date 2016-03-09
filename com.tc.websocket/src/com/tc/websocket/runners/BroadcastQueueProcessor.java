@@ -61,7 +61,7 @@ public class BroadcastQueueProcessor extends AbstractQueueProcessor implements R
 				while(doc!=null){
 					if(doc.isValid() && !doc.hasItem(StringCache.FIELD_CONFLICT)){
 						this.buildDirectMessages(doc);
-						doc.replaceItemValue("sentFlag", 1);
+						doc.replaceItemValue(Const.FIELD_SENTFLAG, Const.FIELD_SENTFLAG_VALUE_SENT);
 						doc.save();
 					}
 					temp = view.getNextDocument(doc);
@@ -95,14 +95,14 @@ public class BroadcastQueueProcessor extends AbstractQueueProcessor implements R
 					/*
 					 * all below should get recycled after session is recycled.
 					 */
-					Database db = s.getDatabase(StringCache.EMPTY, "names.nsf");
-					View view = db.getView("($Servers)");
-					Document docServer = view.getDocumentByKey(ServerInfo.getInstance().getServerName(), true);
-					String clusterName = docServer.getItemValueString("ClusterName");
-					DocumentCollection col = db.getView("($Clusters)").getAllDocumentsByKey(clusterName,true);
+					final Database db = s.getDatabase(StringCache.EMPTY, StringCache.NAMES_DOT_NSF);
+					final View view = db.getView(Const.VIEW_SERVERS);
+					final Document docServer = view.getDocumentByKey(ServerInfo.getInstance().getServerName(), true);
+					final String clusterName = docServer.getItemValueString(Const.FIELD_CLUSTERNAME);
+					final DocumentCollection col = db.getView(Const.VIEW_CLUSTERS).getAllDocumentsByKey(clusterName,true);
 					Document doc = col.getFirstDocument();
 					while(doc!=null){
-						clusterMates.add(doc.getItemValueString("ServerName"));
+						clusterMates.add(doc.getItemValueString(Const.FIELD_SERVERNAME));
 						doc = col.getNextDocument(doc);
 					}
 				}
@@ -119,7 +119,7 @@ public class BroadcastQueueProcessor extends AbstractQueueProcessor implements R
 		try{
 			for(String server : this.getClusterMates(doc.getParentDatabase().getParent())){
 				directMessage = doc.copyToDatabase(doc.getParentDatabase());
-				directMessage.replaceItemValue("to", server);
+				directMessage.replaceItemValue(Const.FIELD_TO, server);
 				directMessage.save();
 				directMessage.recycle();
 			}
@@ -127,12 +127,12 @@ public class BroadcastQueueProcessor extends AbstractQueueProcessor implements R
 			logger.log(Level.SEVERE,null, e);
 
 			try {
-				doc.replaceItemValue("error", e.getLocalizedMessage());
-				doc.replaceItemValue("sentFlag", -1);
+				doc.replaceItemValue(Const.FIELD_ERROR, e.getLocalizedMessage());
+				doc.replaceItemValue(Const.FIELD_SENTFLAG, Const.FIELD_SENTFLAG_VALUE_ERROR);
 				doc.save();
 
-				directMessage.replaceItemValue("error", e.getLocalizedMessage());
-				directMessage.replaceItemValue("sentFlag", -1);
+				directMessage.replaceItemValue(Const.FIELD_ERROR, e.getLocalizedMessage());
+				directMessage.replaceItemValue(Const.FIELD_SENTFLAG, Const.FIELD_SENTFLAG_VALUE_ERROR);
 				directMessage.save();
 
 			} catch (NotesException e1) {

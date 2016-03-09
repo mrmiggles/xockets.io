@@ -108,7 +108,7 @@ public class ScriptBuilder implements Runnable, IScriptBuilder {
 			client = new RhinoClient(URI.create(values.getWebsocketUrl()));
 
 			//inject dependencies.
-			IGuicer guicer = Guicer.getInstance(Activator.BUNDLE);
+			IGuicer guicer = Guicer.getInstance(Activator.bundle);
 			
 			guicer.inject(this);
 			

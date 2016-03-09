@@ -27,6 +27,7 @@ import com.tc.di.guicer.Guicer;
 import com.tc.di.guicer.IGuicer;
 import com.tc.utils.BundleUtils;
 import com.tc.utils.StrUtils;
+import com.tc.utils.StringCache;
 import com.tc.websocket.Activator;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
@@ -50,6 +51,8 @@ import com.tc.websocket.rest.RestWebSocketBean;
 import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.server.DominoWebSocketServer;
 import com.tc.websocket.server.IDominoWebSocketServer;
+import com.tc.websocket.valueobjects.IUser;
+import com.tc.websocket.valueobjects.User;
 
 
 public class DominoWebSocketModule extends AbstractModule {
@@ -59,10 +62,10 @@ public class DominoWebSocketModule extends AbstractModule {
 	private static IDominoWebSocketServer server;
 	private static IConfig config = Config.getInstance();
 	private static IWebsocketFilter filter;
-	private final Object lock = new Object();
+	//private final Object lock = new Object();
 
 
-	
+
 	@Override
 	protected void configure() {
 
@@ -73,9 +76,7 @@ public class DominoWebSocketModule extends AbstractModule {
 
 			bind(DominoWebSocketServer.class);
 
-
-
-			//do not put FutureRunnable here... wrapper class for taskrunner.
+			bind(IUser.class).to(User.class);
 
 			//bind the xpage/jsf bean
 			bind(IWebSocketBean.class).annotatedWith(Names.named(Const.GUICE_JSF_WEBSOCKET)).to(WebSocketBean.class).in(Singleton.class);
@@ -87,7 +88,7 @@ public class DominoWebSocketModule extends AbstractModule {
 			bind(IRestWebSocket.class).to(RestWebSocket.class);
 
 			bind(ISSLFactory.class).to(SSLFactory.class).in(Singleton.class);
-			
+
 			bind(IClientCache.class).to(ClientCache.class).in(Singleton.class);
 
 		}catch(Exception e){
@@ -100,7 +101,7 @@ public class DominoWebSocketModule extends AbstractModule {
 
 	@Provides
 	public IGuicer provideGuicer(){
-		return Guicer.getInstance(Activator.BUNDLE);
+		return Guicer.getInstance(Activator.bundle);
 	}
 
 
@@ -111,26 +112,22 @@ public class DominoWebSocketModule extends AbstractModule {
 
 
 	@Provides
-	public IWebsocketFilter provideFilter(){
-		//check to see if there's a filter
+	public synchronized IWebsocketFilter provideFilter(){
+
 		if(filter==null){
-			synchronized(lock){
-				if(filter==null){
-					String websocketFilter = config.getWebsocketFilter();
-					if(!StrUtils.isEmpty(websocketFilter)){
-						if(websocketFilter.contains(",")){
-							String[] arr  =  websocketFilter.split(",");
-							String bundle  = arr[0];
-							String className = arr[1];
-							filter = BundleUtils.load(bundle, className);
-						}else{
-							try {
-								filter = (IWebsocketFilter) Class.forName(websocketFilter).newInstance();
-							} catch (Exception e) {
-								logger.log(Level.SEVERE,null, e);
-							} 
-						}
-					}
+			String websocketFilter = config.getWebsocketFilter();
+			if(!StrUtils.isEmpty(websocketFilter)){
+				if(websocketFilter.contains(StringCache.COMMA)){
+					String[] arr  =  websocketFilter.split(StringCache.COMMA);
+					String bundle  = arr[0];
+					String className = arr[1];
+					filter = BundleUtils.load(bundle, className);
+				}else{
+					try {
+						filter = (IWebsocketFilter) Class.forName(websocketFilter).newInstance();
+					} catch (Exception e) {
+						logger.log(Level.SEVERE,null, e);
+					} 
 				}
 			}
 		}
@@ -150,32 +147,32 @@ public class DominoWebSocketModule extends AbstractModule {
 
 
 	@Provides
-	public IDominoWebSocketServer provideWebSocketServer(IConfig cfg, IWebsocketFilter filter){
+	public synchronized IDominoWebSocketServer provideWebSocketServer(IConfig cfg, IWebsocketFilter filter){
 		try{
+			//if(server==null){
+			//synchronized(lock){
 			if(server==null){
-				synchronized(lock){
-					if(server==null){
-						IDominoWebSocketServer domserver = Guicer.getInstance(Activator.BUNDLE).createObject(DominoWebSocketServer.class);
+				IDominoWebSocketServer domserver = Guicer.getInstance(Activator.bundle).createObject(DominoWebSocketServer.class);
 
 
-						//apply the filter
-						domserver.setFilter(filter);
-						
-						
-						if(config.isEncrypted()){
-							startSSLServer(domserver);
-						}else{
-							startServer(domserver);
-						}
+				//apply the filter
+				domserver.setFilter(filter);
 
 
-						//now lets init the taskrunner
-						TaskRunner.getInstance();
-
-						server = domserver;
-					}
+				if(config.isEncrypted()){
+					startSSLServer(domserver);
+				}else{
+					startServer(domserver);
 				}
+
+
+				//now lets init the taskrunner
+				TaskRunner.getInstance();
+
+				server = domserver;
 			}
+			//}
+			//}
 		}catch(Exception e){
 			logger.log(Level.SEVERE,null, e);
 		}
@@ -199,18 +196,19 @@ public class DominoWebSocketModule extends AbstractModule {
 		}
 
 		try{
-			if (StrUtils.isEmpty(config.getKeyStoreType())){
-				throw new IllegalArgumentException("WEBSOCKET_KEYSTORE_TYPE not configured in notes.ini");
+			if(config.isKeyStore()){
+				if (StrUtils.isEmpty(config.getKeyStoreType())){
+					throw new IllegalArgumentException("WEBSOCKET_KEYSTORE_TYPE not configured in notes.ini");
 
-			}else if(StrUtils.isEmpty(config.getKeyStore())){
-				throw new IllegalArgumentException("WEBSOCKET_KEYSTORE not configured in notes.ini. Please add the full path the key store file.");
+				}else if(StrUtils.isEmpty(config.getKeyStore())){
+					throw new IllegalArgumentException("WEBSOCKET_KEYSTORE not configured in notes.ini. Please add the full path the key store file.");
 
-			}else if(StrUtils.isEmpty(config.getKeyStorePassword())){
-				throw new IllegalArgumentException("WEBSOCKET_KEYSTORE_PASSWORD not configured in notes.ini.");
+				}else if(StrUtils.isEmpty(config.getKeyStorePassword())){
+					throw new IllegalArgumentException("WEBSOCKET_KEYSTORE_PASSWORD not configured in notes.ini.");
 
-			}else if(StrUtils.isEmpty(config.getKeyPassword())){
-				throw new IllegalArgumentException("WEBSOCKET_KEY_PASSWORD not configured in notes.ini.");
-
+				}else if(StrUtils.isEmpty(config.getKeyPassword())){
+					throw new IllegalArgumentException("WEBSOCKET_KEY_PASSWORD not configured in notes.ini.");
+				}
 			}
 			server.start();
 

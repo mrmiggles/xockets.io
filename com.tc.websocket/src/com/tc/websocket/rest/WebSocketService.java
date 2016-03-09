@@ -47,11 +47,11 @@ public class WebSocketService extends RestService {
 	    jaxbProvider.setMapper(mapper);
 	    singletons.add(jaxbProvider);
 
-		if(Activator.BUNDLE==null){
+		if(Activator.bundle==null){
 			throw new IllegalArgumentException("WebSocketService.BUNDLE is null!");
 		}
 		
-		IGuicer guicer = Guicer.getInstance(Activator.BUNDLE);
+		IGuicer guicer = Guicer.getInstance(Activator.bundle);
 		
 		//create the rest object make sure dependencies are injected via guice.
 		IRestWebSocket restWebSocket = guicer.createObject(IRestWebSocket.class);

@@ -1,18 +1,10 @@
 package com.tc.websocket;
 
-import java.net.Socket;
-
-import javax.net.ssl.SSLContext;
+import io.netty.handler.ssl.SslContext;
 
 public interface ISSLFactory {
 
-	public abstract Socket createSSLSocket();
-
-	public abstract SSLContext createSSLContext();
-	
-	
-	public abstract Socket createSSLSocket(IConfig cfg);
-
-	public abstract SSLContext createSSLContext(IConfig cfg);
-
+	public abstract SslContext createSslContext(IConfig cfg);
+	public abstract SslContext createClientSslCtx(IConfig cfg);
+	public abstract SslContext createInsecureClientSslCtx(IConfig cfg);
 }

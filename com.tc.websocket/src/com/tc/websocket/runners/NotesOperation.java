@@ -19,7 +19,7 @@ public abstract class NotesOperation implements Runnable {
 	
 	
 	public Session openSession(){
-		return SessionFactory.openSession(Config.getInstance().getUsername(), Config.getInstance().getPassword());
+		return SessionFactory.openSessionDefaultToTrusted(Config.getInstance().getUsername(), Config.getInstance().getPassword());
 	}
 	
 	public void closeSession(Session session){
@@ -41,10 +41,10 @@ public abstract class NotesOperation implements Runnable {
 			DocumentCollection col = db.search(search);
 			if(col!=null && col.getCount() > 0){
 				col.stampAll(field, value);
+				col.recycle();
 			}
 			
 			//cleanup
-			col.recycle();
 			db.recycle();
 			
 		} catch (NotesException e) {
@@ -63,10 +63,10 @@ public abstract class NotesOperation implements Runnable {
 			DocumentCollection col = db.search(search);
 			if(col!=null && col.getCount() > 0){
 				col.removeAll(true);
+				col.recycle();
 			}
 			
 			//cleanup
-			col.recycle();
 			db.recycle();
 			
 		} catch (NotesException e) {

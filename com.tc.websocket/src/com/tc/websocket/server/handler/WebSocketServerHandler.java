@@ -1,7 +1,9 @@
 /*
- * Copyright 2012 The Netty Project
+ * Original Work: Copyright 2012 The Netty Project
+ * 
+ * Modified Work: Copyright 2016 Tek Counsel LLC
  *
- * The Netty Project licenses this file to you under the Apache License,
+ * Both licenses this file to you under the Apache License,
  * version 2.0 (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at:
  *
@@ -13,7 +15,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.tc.websocket.server;
+package com.tc.websocket.server.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -31,8 +33,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.inject.Inject;
+import com.tc.di.guicer.IGuicer;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
+import com.tc.websocket.server.ContextWrapper;
+import com.tc.websocket.server.IDominoWebSocketServer;
 
 
 /**
@@ -44,9 +49,10 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
 	private WebSocketServerHandshaker handshaker;
 
-	private RequestValidator validator;
-
 	private IDominoWebSocketServer dominoServer;
+
+	@Inject
+	IGuicer guicer;
 
 
 	public IDominoWebSocketServer getDominoServer() {
@@ -54,22 +60,19 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 	}
 
 	@Inject
-	public void setDominoServer(IDominoWebSocketServer dominoServer, RequestValidator validator) {
+	public void setDominoServer(IDominoWebSocketServer dominoServer) {
 		this.dominoServer = dominoServer;
-		this.validator = validator;
+
 	}
 
 
 	@Override
 	public void channelRead0(ChannelHandlerContext ctx, Object msg) {
 		if (msg instanceof FullHttpRequest) {
-			if(validator.isValidRequest(ctx, (FullHttpRequest) msg)){
-				handleHandShake(ctx, (FullHttpRequest) msg);
-			}
+			handleHandShake(ctx, (FullHttpRequest) msg);
 		} else if (msg instanceof WebSocketFrame) {
 			handleWebSocketFrame(ctx, (WebSocketFrame) msg);
 		}
-		
 	}
 
 
@@ -110,8 +113,8 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
 		String message = ((TextWebSocketFrame) frame).text();
 		dominoServer.onMessage(new ContextWrapper(ctx), message);
-		
-	
+
+
 	}
 
 	@Override

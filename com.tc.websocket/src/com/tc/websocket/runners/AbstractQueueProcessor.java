@@ -25,10 +25,12 @@ import lotus.domino.NotesException;
 import com.google.inject.Inject;
 import com.tc.guice.domino.module.ServerInfo;
 import com.tc.utils.StringCache;
+import com.tc.websocket.Const;
 import com.tc.websocket.factories.ISocketMessageFactory;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
+import com.tc.xpage.profiler.Stopwatch;
 
 public abstract class AbstractQueueProcessor extends NotesOperation {
 
@@ -41,11 +43,11 @@ public abstract class AbstractQueueProcessor extends NotesOperation {
 	private static final Logger logger = Logger.getLogger(AbstractQueueProcessor.class.getName());
 
 
-	
+	@Stopwatch(time=50)
 	protected void processDoc(Document doc){
 		try{
 			ServerInfo info = ServerInfo.getInstance();
-			String to = doc.getItemValueString("to");
+			String to = doc.getItemValueString(Const.FIELD_TO);
 
 			IUser user = server.resolveUser(to);
 
@@ -59,12 +61,12 @@ public abstract class AbstractQueueProcessor extends NotesOperation {
 				if(msg.isValid()){
 					boolean b = server.send(to, msg.getJson());
 					if(b){
-						doc.replaceItemValue("sentFlag", 1);
+						doc.replaceItemValue(Const.FIELD_SENTFLAG, Const.FIELD_SENTFLAG_VALUE_SENT);
 						doc.save();
 					}
 				}else{
-					doc.replaceItemValue("sentFlag", -1);
-					doc.replaceItemValue("error", "Invalid message.  Please check field data.");
+					doc.replaceItemValue(Const.FIELD_SENTFLAG, Const.FIELD_SENTFLAG_VALUE_ERROR);
+					doc.replaceItemValue(Const.FIELD_ERROR, "Invalid message.  Please check field data.");
 					doc.save();
 				}
 			}
@@ -99,7 +101,7 @@ public abstract class AbstractQueueProcessor extends NotesOperation {
 	private void flagForDeletion(Document doc) throws NotesException{
 		doc.removeItem(StringCache.FIELD_REF);
 		doc.removeItem(StringCache.FIELD_CONFLICT);
-		doc.replaceItemValue(StringCache.FIELD_FORM, "delete");
+		doc.replaceItemValue(StringCache.FIELD_FORM, Const.FIELD_VALUE_DELETE);
 		doc.save();
 	}
 
