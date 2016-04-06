@@ -47,13 +47,16 @@ public class JSONUtils {
 		T t = null;
 		
 		try {
-			t = mapper.readValue(json, clz);	
+			t = mapper.readValue(json, clz);
 		} catch (JsonParseException e) {
 			logger.log(Level.SEVERE,null,e);
+			logger.log(Level.SEVERE,json);
 		} catch (JsonMappingException e) {
 			logger.log(Level.SEVERE,null,e);
+			logger.log(Level.SEVERE,json);
 		} catch (IOException e) {
 			logger.log(Level.SEVERE,null,e);
+			logger.log(Level.SEVERE,json);
 		}
 		
 		

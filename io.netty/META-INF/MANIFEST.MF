@@ -4,12 +4,14 @@ Bundle-Name: io.netty
 Bundle-SymbolicName: io.netty
 Bundle-Version: 4.1.0
 Bundle-ClassPath: jzlib-1.1.2.jar,
- netty-all-4.1.0.CR2.jar,
+ netty-all-4.1.0.CR6.jar,
  netty-tcnative-openssl-static-1.1.33.Fork15-SNAPSHOT-windows-x86_64}.jar
 Bundle-Vendor: netty
 Export-Package: com.jcraft.jzlib,
  io.netty.bootstrap,
  io.netty.buffer,
+ io.netty.build.checkstyle,
+ io.netty.build.junit,
  io.netty.channel,
  io.netty.channel.embedded,
  io.netty.channel.epoll,

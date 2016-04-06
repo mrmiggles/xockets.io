@@ -23,6 +23,7 @@ import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.WriteBufferWaterMark;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -733,11 +734,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 					boot.channel(NioServerSocketChannel.class);
 				}
 				
+	
 				boot.group(bossGroup, workerGroup)
 				.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
 				.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-				.childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 32 * 1024)
-				.childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 8 * 1024)
+				.childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(8 * 1024,  32 * 1024))
 				.childOption(ChannelOption.SO_SNDBUF, cfg.getSendBuffer())
 				.childOption(ChannelOption.SO_RCVBUF, cfg.getReceiveBuffer())
 				.childOption(ChannelOption.TCP_NODELAY, true)

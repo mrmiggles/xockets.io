@@ -350,7 +350,11 @@ public class RhinoClient extends AbstractClient implements IScriptClient {
 	}
 
 
-
+	@Override
+	public void connect() throws InterruptedException{
+		super.connect();
+		RhinoClient.clients.add(this);
+	}
 
 
 

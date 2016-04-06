@@ -43,7 +43,7 @@ import com.tc.websocket.valueobjects.IUser;
 public class CommandLine implements CommandProvider {
 	
 	private static final Logger LOGGER = Logger.getLogger(CommandLine.class.getName());
-
+	
 	public void _websocket(final CommandInterpreter out) {
 		try{
 			final String command=out.nextArgument();
@@ -80,6 +80,9 @@ public class CommandLine implements CommandProvider {
 			}else if ("gc".equalsIgnoreCase(command)){
 				System.out.println("requesting garbage collection");
 				System.gc();
+				
+			}else if("show-scripts".equalsIgnoreCase(command)){
+				this.showScripts(out);
 				
 			}else if("reload-scripts".equalsIgnoreCase(command)){
 				this.reloadScripts(out);

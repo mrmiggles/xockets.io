@@ -19,7 +19,7 @@ package com.tc.websocket.embeded.clients;
 
 public interface IScriptBuilder extends Runnable {
 
-	public abstract void addScript(String event, String script);
+	public abstract IScriptBuilder addScript(String event, String script);
 
 	@Override
 	public abstract void run();
@@ -28,16 +28,18 @@ public interface IScriptBuilder extends Runnable {
 
 	public abstract String getWebsocketUrl();
 
-	public abstract void setWebsocketUrl(String websocketUrl);
-
 	public abstract String getSessionId();
 
-	public abstract void setSessionId(String sessionId);
-
 	public abstract String getUserId();
-
-	public abstract void setUserId(String userId);
 	
-	public abstract void setRunAsCreds(String runAsUser, String runAsPassword);
+	public abstract IScriptBuilder setSessionId(String sessionId);
+	
+	public abstract IScriptBuilder setWebsocketUrl(String websocketUrl);
+
+	public abstract IScriptBuilder setUserId(String userId);
+	
+	public abstract IScriptBuilder setRunAsCreds(String runAsUser, String runAsPassword);
+	
+	public abstract IScriptBuilder setMaxPayload(int maxPayload);
 
 }

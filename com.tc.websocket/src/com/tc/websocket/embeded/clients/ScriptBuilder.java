@@ -46,6 +46,7 @@ public class ScriptBuilder implements Runnable, IScriptBuilder {
 	private String websocketUrl;
 	private String runAsUser;
 	private String runAsPassword;
+	private int maxPayload;
 	
 
 
@@ -69,11 +70,12 @@ public class ScriptBuilder implements Runnable, IScriptBuilder {
 	 * @see com.tc.websocket.embeded.clients.IScriptConfig#addScript(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void addScript(String event, String script){
+	public IScriptBuilder addScript(String event, String script){
 		if(StrUtils.isEmpty(event) || StrUtils.isEmpty(script)){
 			throw new IllegalArgumentException("Event and script cannot be null.");
 		}
 		scripts.put(event, script);
+		return this;
 	}
 
 
@@ -106,6 +108,8 @@ public class ScriptBuilder implements Runnable, IScriptBuilder {
 
 		try{
 			client = new RhinoClient(URI.create(values.getWebsocketUrl()));
+			
+			client.setMaxPayload(this.maxPayload);
 
 			//inject dependencies.
 			IGuicer guicer = Guicer.getInstance(Activator.bundle);
@@ -174,8 +178,9 @@ public class ScriptBuilder implements Runnable, IScriptBuilder {
 	 * @see com.tc.websocket.embeded.clients.IScriptConfig#setWebsocketUrl(java.lang.String)
 	 */
 	@Override
-	public void setWebsocketUrl(String websocketUrl) {
+	public IScriptBuilder setWebsocketUrl(String websocketUrl) {
 		this.websocketUrl = websocketUrl;
+		return this;
 	}
 
 
@@ -192,8 +197,9 @@ public class ScriptBuilder implements Runnable, IScriptBuilder {
 	 * @see com.tc.websocket.embeded.clients.IScriptConfig#setSessionId(java.lang.String)
 	 */
 	@Override
-	public void setSessionId(String sessionId) {
+	public IScriptBuilder setSessionId(String sessionId) {
 		this.sessionId = sessionId;
+		return this;
 	}
 
 
@@ -210,19 +216,25 @@ public class ScriptBuilder implements Runnable, IScriptBuilder {
 	 * @see com.tc.websocket.embeded.clients.IScriptConfig#setUserId(java.lang.String)
 	 */
 	@Override
-	public void setUserId(String userId) {
+	public IScriptBuilder setUserId(String userId) {
 		this.userId = userId;
+		return this;
 	}
 
 
 
 	@Override
-	public void setRunAsCreds(String runAsUser, String runAsPassword) {
+	public IScriptBuilder setRunAsCreds(String runAsUser, String runAsPassword) {
 		this.runAsUser=runAsUser;
 		this.runAsPassword=runAsPassword;
+		return this;
 	}
 
-	
+	@Override
+	public IScriptBuilder setMaxPayload(int maxPayload) {
+		this.maxPayload = maxPayload;
+		return this;
+	}
 
 
 }

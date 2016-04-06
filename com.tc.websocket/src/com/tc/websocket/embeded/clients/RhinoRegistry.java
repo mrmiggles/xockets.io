@@ -20,6 +20,7 @@ package com.tc.websocket.embeded.clients;
 import java.util.UUID;
 
 import com.tc.utils.StringCache;
+import com.tc.websocket.Config;
 import com.tc.websocket.Const;
 import com.tc.websocket.jsf.AbstractWebSocketBean;
 import com.tc.websocket.runners.TaskRunner;
@@ -29,17 +30,29 @@ public class RhinoRegistry implements IScriptClientRegistry {
 	
 	
 	@Override
-	public void registerScriptClient(String host, String uri, String event, String script, String runAsUser, String runAsPassword){
+	public void registerScriptClient(
+			String host, 
+			String uri, 
+			String event, 
+			String script, 
+			String runAsUser, 
+			String runAsPassword){ //start method
+		
+		
 		IScriptBuilder rhinoBuilder = new ScriptBuilder();
 		String sessionId = Const.RHINO_PREFIX + UUID.randomUUID().toString().trim();
 		String userId = Const.RHINO_PREFIX + script;
-		rhinoBuilder.setSessionId(sessionId);
-		rhinoBuilder.setUserId(userId);
-		rhinoBuilder.addScript(event, script);
-		rhinoBuilder.setRunAsCreds(runAsUser, runAsPassword);
-		rhinoBuilder.setWebsocketUrl(AbstractWebSocketBean.buildWebSocketUrl(host, sessionId, uri));
+		
+		rhinoBuilder.setSessionId(sessionId)
+		.setUserId(userId)
+		.setRunAsCreds(runAsUser, runAsPassword)
+		.setWebsocketUrl(AbstractWebSocketBean.buildWebSocketUrl(host, sessionId, uri))
+		.setMaxPayload((int) Config.getInstance().getMaxSize())
+		.addScript(event, script);
+		
 		TaskRunner.getInstance().add(rhinoBuilder);
-	}
+		
+	}//end method
 	
 	
 	@Override

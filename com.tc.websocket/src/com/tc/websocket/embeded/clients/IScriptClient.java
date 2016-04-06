@@ -53,5 +53,6 @@ public interface IScriptClient {
 	public abstract Collection<Script> getScripts();
 	
 	public abstract void runAsUser(String sessionUsername, String sessionPassword);
+	
 
 }

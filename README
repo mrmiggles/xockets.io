@@ -3,9 +3,16 @@ It leverages Netty.io websocket libraries to easily scale to a large number of u
 found in the webshell-xpages-ext-lib hence the 2.0.0 release.  Below is a list of the latest features available in xockets.io:
 
 
+xockets.io as of 2.0.3
+-Fixed embedded client's max message size.  It now uses the WEBSOCKET_MAX_MSG_SIZE value from the server
+-Fixed reload-scripts and show-scripts command line call from the console (last release I had disabled / removed accidentally)
+
+
+
 xockets.io as of 2.0.2
 -Enhanced to accomodate a simple proxy to allow the websocket server and Domino http server to run off of one port
--Setup xockets.io to use Netty's tc-native SSL feature.  It uses OpenSSL to handle network encryption.  I had to back-port the java code to 1.6 since and create a custom build.  
+-Setup xockets.io to use Netty's tc-native SSL feature.  It uses OpenSSL to handle network encryption.  
+I had to back-port the java code to 1.6 since and create a custom build.  
 Currently the OpenSSL feature is windows only, Linux is supported, I just haven't had time to create the build.
 -Code cleanup / refactoring
 

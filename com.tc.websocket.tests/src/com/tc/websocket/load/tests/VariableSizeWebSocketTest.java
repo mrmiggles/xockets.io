@@ -62,7 +62,7 @@ public class VariableSizeWebSocketTest implements Runnable{
 			TestConfig cfg = TestConfig.getInstance();
 			cfg.overrideProperty("print.on.count", "10");
 			cfg.overrideProperty("number.of.clients", "500");
-			cfg.overrideProperty("compression.enabled", "true");
+			cfg.overrideProperty("compression.enabled", "false");
 			
 			VariableSizeWebSocketTest loader=new VariableSizeWebSocketTest();
 			
@@ -140,7 +140,7 @@ public class VariableSizeWebSocketTest implements Runnable{
 
 	public void testWebSocketServer() {
 
-		System.out.println("running testWebSocketServer...");
+		
 		try{
 			//randomly select two clients from the collection.
 			for(int i =0;i<=1000;i++){
