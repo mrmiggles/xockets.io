@@ -339,7 +339,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		IUser user = this.resolveUser(conn);
 		if(user!=null && ServerInfo.getInstance().isCurrentServer(user.getHost())){
 			user.setGoingOffline(true);
-			TaskRunner.getInstance().add(new ApplyStatus(user), delay);//mark user as offline
+			TaskRunner.getInstance().add(new ApplyStatus(user).setRemoveUser(true), delay);//mark user as offline
 		}
 	}
 

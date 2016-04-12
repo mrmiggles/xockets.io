@@ -151,17 +151,15 @@ public class RhinoClient extends AbstractClient implements IScriptClient {
 
 	@Override
 	public void removeScriptByPath(String path) {
-		List<String> events = new ArrayList<String>();
 		for (Script script : scripts.values()) {
 			if (script.getSource().equals(path)) {
-				events.add(script.getEvent());
+				//we found the script, cleanup and disconnect.
+				this.scripts.clear();
+				this.disconnect();
+				System.out.println(path + " disconnected.");
+				return;
 			}
 		}
-
-		for (String event : events) {
-			this.removeScriptByEvent(event);
-		}
-
 	}
 
 

@@ -136,10 +136,16 @@ public class CommandLine implements CommandProvider {
 	}
 	
 	private void showScripts(CommandInterpreter out){
+		boolean b = false;
 		for(IScriptClient client : RhinoClient.getAllClients()){
 			for(Script script : client.getScripts()){
 				out.println("uri=" + client.getUser().getUri() + ", event=" + script.getEvent() + ", source=" + script.getSource());
+				b = true;
 			}
+		}
+		
+		if(!b){
+			out.println("No registered scripts found.");
 		}
 
 	}

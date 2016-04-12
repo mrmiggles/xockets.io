@@ -53,8 +53,9 @@ public class ApplyStatus extends NotesOperation {
 		this.user = user;
 	}
 
-	public void setRemoveUser(boolean removeUser){
+	public ApplyStatus setRemoveUser(boolean removeUser){
 		this.removeUser=removeUser;
+		return this;
 	}
 
 
