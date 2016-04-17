@@ -252,7 +252,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		//another anonymous check
 		if(!cfg.isAllowAnonymous() && (username==null || user.isAnonymous())){
-			logger.log(Level.SEVERE,"anonymous not allowed");
+			logger.log(Level.INFO,"anonymous not allowed");
 			conn.channel().close();
 			return;
 
@@ -313,7 +313,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				}
 				logger.log(Level.INFO,"ACL level is " + level + " for user " + user.getUserId() +  " in database " + target.getFilePath());
 				if(level<ACL.LEVEL_READER){
-					logger.log(Level.SEVERE, "User does not have permission to access " + target.getFilePath());
+					logger.log(Level.SEVERE, "User " + user.getUserId() + "  does not have permission to access " + target.getFilePath());
 					b = false;
 				}
 				target.recycle();
@@ -339,13 +339,12 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		IUser user = this.resolveUser(conn);
 		if(user!=null && ServerInfo.getInstance().isCurrentServer(user.getHost())){
 			user.setGoingOffline(true);
-			TaskRunner.getInstance().add(new ApplyStatus(user).setRemoveUser(true), delay);//mark user as offline
+			TaskRunner.getInstance().add(new ApplyStatus(user), delay);//mark user as offline
 		}
 	}
 
 
 	@Override
-
 	public void onMessage(ContextWrapper conn, String message) {
 
 		//we don't want to push a message that is too large

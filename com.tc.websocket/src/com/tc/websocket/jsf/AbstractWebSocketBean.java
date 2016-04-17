@@ -30,7 +30,6 @@ import lotus.domino.NotesException;
 import lotus.domino.Session;
 
 import com.google.inject.Inject;
-import com.tc.utils.JSONUtils;
 import com.tc.utils.StringCache;
 import com.tc.utils.XSPUtils;
 import com.tc.websocket.Config;
@@ -42,6 +41,7 @@ import com.tc.websocket.embeded.clients.RhinoClient;
 import com.tc.websocket.embeded.clients.ScriptBuilder;
 import com.tc.websocket.factories.IUserFactory;
 import com.tc.websocket.runners.ApplyStatus;
+import com.tc.websocket.runners.SendMessage;
 import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
@@ -195,11 +195,16 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	@Override
 	public void sendMessage(SocketMessage msg){
 		msg.setDate(new Date());
+		TaskRunner.getInstance().add(new SendMessage(msg));
+		
+		
+		/*
 		if(Const.BROADCAST.equalsIgnoreCase(msg.getTo())){
 			server.broadcast(msg);
 		}else{
 			server.send(msg.getTo(), JSONUtils.toJson(msg));
 		}
+		*/
 	}
 	
 	@Override
