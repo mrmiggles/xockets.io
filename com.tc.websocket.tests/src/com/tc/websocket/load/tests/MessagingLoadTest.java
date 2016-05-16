@@ -56,10 +56,12 @@ public class MessagingLoadTest{
 		while(scanner.hasNext()){
 			String cmd = scanner.next();
 			if("start".equals(cmd)){
+				loader.testMultipleTargets();
 				loader.testDurability();
 				loader.testSmallMessage();
 				loader.testLargeMessage();
 				loader.testRoutingPath();
+				
 			}
 			if(cmd.equals("stop")){
 				NettyTestClient.printStats();
@@ -224,6 +226,39 @@ public class MessagingLoadTest{
 			if(prior!=null){
 				String uri = "/uri" + random.nextInt(cfg.getNumberOfClients());
 				msg.setTo(uri);
+				msg.setText(text + " " + cntr);
+				msg.setFrom(c.getUuid());
+				msg.getData().put("testing", text);
+				msg.setDate(new Date());
+				String json = JSONUtils.toJson(msg);
+				c.send(json);
+				Thread.sleep(cfg.getMessageDelay());
+			}
+			prior = c;
+			cntr ++;
+		}
+		
+	}
+	
+	
+	public void testMultipleTargets() throws InterruptedException {
+		System.out.println("test multiple targets");
+		cfg.overrideProperty("message.delay", "1");
+		
+		Random random = new Random();
+		SocketMessage msg = new SocketMessage();
+		int cntr = 0;
+		String text = "all work and no play makes mark a dull boy.all work and no play makes mark a dull boy.all work and no play makes mark a dull boy.all work and no play makes mark a dull boy.";
+		
+		NettyTestClient prior = null;
+		for(NettyTestClient c: clients){
+			msg.getTargets().clear();
+			if(prior!=null){
+				
+				for(int i=0;i<4;i++){
+					String uri = "/uri" + random.nextInt(cfg.getNumberOfClients());
+					msg.addTarget(uri);
+				}
 				msg.setText(text + " " + cntr);
 				msg.setFrom(c.getUuid());
 				msg.getData().put("testing", text);

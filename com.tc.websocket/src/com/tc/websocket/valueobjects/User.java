@@ -16,15 +16,20 @@
 
 
 package com.tc.websocket.valueobjects;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Iterator;
+import java.util.List;
 
 import com.tc.guice.domino.module.ServerInfo;
+import com.tc.utils.JSONUtils;
 import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
 import com.tc.websocket.server.ContextWrapper;
+import com.tc.websocket.server.RoutingPath;
 import com.tc.xpage.profiler.Stopwatch;
 
 
@@ -36,13 +41,14 @@ public class User implements IUser {
 	private Date lastPing=new Date();
 	private String string;
 	private String status;
-
+	private Collection<ContextWrapper> connections = Collections.synchronizedCollection(new ArrayList<ContextWrapper>());
+	
 
 	private boolean goingOffline;
 	private ContextWrapper conn;
 	private String host; //used for clustered environments.
-	private Queue<String> messages = new ConcurrentLinkedQueue<String>(); //used in case user is not write-able.
-
+	
+	//private static final Logger logger = Logger.getLogger(User.class.getName());
 
 
 	@Override
@@ -143,6 +149,7 @@ public class User implements IUser {
 	@Override
 	public synchronized void setConn(ContextWrapper conn) {
 		this.conn = conn;
+		this.addConn(conn);
 	}
 
 
@@ -171,7 +178,7 @@ public class User implements IUser {
 
 	@Override
 	public boolean isOpen(){
-		return this.getConn()!=null && this.getConn().isOpen();
+		return this.count() > 0;
 	}
 
 	@Override
@@ -193,9 +200,13 @@ public class User implements IUser {
 	 */
 	@Override
 	public String getUri() {
+		return this.parseUri(this.getConn());
+	}
+	
+	private String parseUri(ContextWrapper wrapper){
 		String uri = StringCache.FORWARD_SLASH;
-		if(this.isOpen()){
-			uri = StrUtils.middle(this.getConn().getResourceDescriptor(), Const.WEBSOCKET_URI, this.getSessionId());
+		if(wrapper!=null && wrapper.isOpen()){
+			uri = StrUtils.middle(wrapper.getResourceDescriptor(), Const.WEBSOCKET_URI, this.getSessionId());
 			if(uri.endsWith(StringCache.FORWARD_SLASH)){
 				uri = uri.substring(0, uri.length() -1);
 			}
@@ -221,18 +232,41 @@ public class User implements IUser {
 
 	@Override
 	public void send(String message) {
-		this.messages.add(message);
-		this.processQueue();
+		SocketMessage msg = JSONUtils.toObject(message, SocketMessageLite.class);
+		RoutingPath path = new RoutingPath(msg.getTo());	
+		Collection<ContextWrapper> results = this.findConnection(path);
+		Iterator<ContextWrapper> iter = results.iterator();
+		while(iter.hasNext()){
+			iter.next().send(message);
+		}
+	}
+
+	
+	public Collection<ContextWrapper> findConnection(RoutingPath path){
+		List<ContextWrapper> results = new ArrayList<ContextWrapper>();
+		
+		if(path.getUri().equals(this.getUserId()) || path.getUri().equalsIgnoreCase(Const.BROADCAST)){
+			return this.getConnections();
+		}
+		
+		//we get here... find the uri match
+		for(ContextWrapper w : this.getConnections()){
+			String uri = this.parseUri(w);
+			if(path.isWild() && uri.contains(path.getUri())){
+				results.add(w);
+			}else if(uri.equals(path.getUri())){
+				results.add(w);
+			}
+		}
+		
+		return results;
 	}
 
 	@Override
 	@Stopwatch(time=10)
 	public void processQueue() {
-		while(!this.messages.isEmpty() && this.getConn().channel().isWritable()){
-			String msg = messages.poll();
-			if(msg!=null){
-				this.getConn().sendAndFlush(msg);
-			}
+		for(ContextWrapper w : this.getConnections()){
+			w.processQueue();
 		}
 	}
 
@@ -255,4 +289,77 @@ public class User implements IUser {
 	public void setDocId(String docId) {
 		this.docId = docId;
 	}
+
+	public Collection<ContextWrapper> getConnections() {
+		return connections;
+	}
+
+	public void setConnections(Collection<ContextWrapper> connections) {
+		this.connections = connections;
+	}
+	
+	private void addConn(ContextWrapper wrapper){
+		connections.add(wrapper);
+	}
+
+	@Override
+	public void close() {
+		for(ContextWrapper w : this.getConnections()){
+			if(w!=null && w.isOpen()){
+				w.close();
+			}
+		}
+		this.getConnections().clear();
+	}
+
+	@Override
+	public List<String> getUris() {
+		List<String> vec = new ArrayList<String>();
+		for(ContextWrapper wrapper : this.getConnections()){
+			vec.add(this.parseUri(wrapper));
+		}
+		return vec;
+	}
+
+	@Override
+	public void clear() {
+		List<ContextWrapper> list = new ArrayList<ContextWrapper>();
+		
+		for(ContextWrapper wrapper : this.getConnections()){
+			if(wrapper.isOpen()){
+				list.add(wrapper);
+			}
+		}
+		this.getConnections().clear();
+		this.getConnections().addAll(list);
+	}
+
+	@Override
+	public int count() {
+		int cntr = 0;
+		for(ContextWrapper w : this.getConnections()){
+			if(w!=null && w.isOpen()){
+				cntr ++;
+			}
+		}
+		return cntr;
+	}
+
+	@Override
+	public boolean containsUri(String uri) {
+		return this.getUris().contains(uri);
+	}
+	
+	@Override
+	public boolean startsWith(String uri) {
+		for(String str : this.getUris()){
+			if(str.startsWith(uri)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	
 }

@@ -89,16 +89,20 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 			WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
 		} else {
 			handshaker.handshake(ctx.channel(), req);
-			dominoServer.onOpen(new ContextWrapper(ctx), req);
+			dominoServer.onOpen(this.newWrapper(ctx), req);
 		}
-
+	}
+	
+	private ContextWrapper newWrapper(ChannelHandlerContext ctx){
+		ContextWrapper wrapper = guicer.createObject(ContextWrapper.class);
+		return wrapper.init(ctx);
 	}
 
 	private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
 
 		// Check for closing frame
 		if (frame instanceof CloseWebSocketFrame) {
-			dominoServer.onClose(new ContextWrapper(ctx));
+			dominoServer.onClose(this.newWrapper(ctx));
 			handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
 			return;
 		}
@@ -112,7 +116,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 		}
 
 		String message = ((TextWebSocketFrame) frame).text();
-		dominoServer.onMessage(new ContextWrapper(ctx), message);
+		dominoServer.onMessage(this.newWrapper(ctx), message);
 
 
 	}
@@ -121,12 +125,12 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 
 		if(Config.getInstance().isTestMode()){
-			logger.log(Level.SEVERE,new ContextWrapper(ctx).getResourceDescriptor() + " closed abruptly.");
+			logger.log(Level.SEVERE,this.newWrapper(ctx).getResourceDescriptor() + " closed abruptly.");
 		}else{
 			logger.log(Level.SEVERE,null,cause);
 		}
 
-		this.dominoServer.closeWithDelay(new ContextWrapper(ctx), 0);
+		this.dominoServer.closeWithDelay(this.newWrapper(ctx), 0);
 		//close it just in case
 		if(ctx.channel().isOpen()){
 			ctx.channel().close();

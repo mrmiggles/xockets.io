@@ -30,7 +30,6 @@ import com.tc.websocket.factories.ISocketMessageFactory;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
-import com.tc.xpage.profiler.Stopwatch;
 
 public abstract class AbstractQueueProcessor extends NotesOperation {
 
@@ -43,7 +42,7 @@ public abstract class AbstractQueueProcessor extends NotesOperation {
 	private static final Logger logger = Logger.getLogger(AbstractQueueProcessor.class.getName());
 
 
-	@Stopwatch(time=50)
+	//@Stopwatch(time=50)
 	protected void processDoc(Document doc){
 		try{
 			ServerInfo info = ServerInfo.getInstance();

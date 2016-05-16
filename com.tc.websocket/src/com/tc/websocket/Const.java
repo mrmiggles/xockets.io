@@ -149,6 +149,6 @@ public class Const {
 	public static final String SOURCE_URI="sourceUri";
 	
 	
-	
+	public static final String MULTI_TO="___to___";
 	
 }

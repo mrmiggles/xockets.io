@@ -196,15 +196,6 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	public void sendMessage(SocketMessage msg){
 		msg.setDate(new Date());
 		TaskRunner.getInstance().add(new SendMessage(msg));
-		
-		
-		/*
-		if(Const.BROADCAST.equalsIgnoreCase(msg.getTo())){
-			server.broadcast(msg);
-		}else{
-			server.send(msg.getTo(), JSONUtils.toJson(msg));
-		}
-		*/
 	}
 	
 	@Override

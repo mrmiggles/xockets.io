@@ -17,8 +17,10 @@
 
 package com.tc.websocket.valueobjects;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -30,6 +32,7 @@ public class SocketMessage {
 	private String id;
 	private String from;
 	private String to;
+	private List<String> targets= new ArrayList<String>();
 	protected String text;
 	protected Map<String,Object> data = new HashMap<String,Object>();
 	private Date date=new Date();
@@ -190,4 +193,24 @@ public class SocketMessage {
 		this.setDate(date);
 		return this;
 	}
+
+	public List<String> getTargets() {
+		return targets;
+	}
+
+	public void setTargets(List<String> targets) {
+		this.targets = targets;
+	}
+	
+	@JsonIgnore
+	public boolean hasMultipleTargets(){
+		return this.to== null && this.targets!=null && this.targets.isEmpty() == false;
+	}
+
+	public void addTarget(String target){
+		if(this.targets!=null && target!=null && !this.targets.contains(target)){
+			this.targets.add(target);
+		}
+	}
+	
 }

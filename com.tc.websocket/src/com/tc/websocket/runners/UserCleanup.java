@@ -22,6 +22,11 @@ public class UserCleanup implements Runnable {
 	public void run() {	
 		Batch batch = new Batch();
 		for(IUser user : server.getUsers()){
+			
+			//clear out any old connections
+			user.clear();
+			
+			//now check to see if the user needs to get dropped.
 			if(!user.isOpen() && !user.isGoingOffline() && user.isOnServer()){
 				user.setGoingOffline(true);
 				batch.addRunner(guicer.inject(new ApplyStatus(user)));

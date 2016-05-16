@@ -124,6 +124,5 @@ public class RoutingPath {
 		}
 		return b;
 	}
-
-
+	
 }

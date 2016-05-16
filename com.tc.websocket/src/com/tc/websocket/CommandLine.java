@@ -216,7 +216,7 @@ public class CommandLine implements CommandProvider {
 		ColUtils.sort(list, "getUserId", false);
 
 		for(IUser user : list){
-			out.println("userId=" + user.getUserId() + ", server=" + user.getHost() + ", connected=" + user.isOpen() + ", isGoingOffline=" + user.isGoingOffline());
+			out.println("userId=" + user.getUserId() + ", server=" + user.getHost() + " , count=" + user.count() + ", connected=" + user.isOpen() + ", isGoingOffline=" + user.isGoingOffline());
 		}
 
 	}

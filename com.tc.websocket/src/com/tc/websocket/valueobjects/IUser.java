@@ -18,13 +18,17 @@
 package com.tc.websocket.valueobjects;
 
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import com.tc.websocket.server.ContextWrapper;
+import com.tc.websocket.server.RoutingPath;
 
 public interface IUser {
 	
 	public abstract void setDocId(String docId);
+	
 	public abstract String getDocId();
 	
 	public abstract String getSessionId();
@@ -80,6 +84,10 @@ public interface IUser {
 	
 	public String getUserPath();
 	
+	public boolean containsUri(String uri);
+	
+	public boolean startsWith(String uri);
+	
 	public boolean isValid();
 	
 	public IUser copy();
@@ -87,6 +95,18 @@ public interface IUser {
 	public void send(String message);
 	
 	public void processQueue();
+	
+	public Collection<ContextWrapper> findConnection(RoutingPath path);
+	
+	public Collection<ContextWrapper> getConnections();
+	
+	public void close();
+	
+	public void clear();
+	
+	public int count();
+	
+	public List<String> getUris();
 	
 
 }

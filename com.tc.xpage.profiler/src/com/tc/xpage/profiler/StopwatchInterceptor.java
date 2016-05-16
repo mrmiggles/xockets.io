@@ -21,14 +21,14 @@ import java.util.concurrent.TimeUnit;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import com.tc.utils.Stopwatch;
+import com.tc.utils.StopWatch;
 
 public class StopwatchInterceptor implements MethodInterceptor {
 
 
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		Stopwatch watch = new Stopwatch();
+		StopWatch watch = new StopWatch();
 		Object value = null;
 		String methodname = invocation.getMethod().getName();
 		com.tc.xpage.profiler.Stopwatch stopwatch = invocation.getMethod().getAnnotation(com.tc.xpage.profiler.Stopwatch.class);

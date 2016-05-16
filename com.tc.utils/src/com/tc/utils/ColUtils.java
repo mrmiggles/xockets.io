@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 @SuppressWarnings("unchecked")
 public final class ColUtils {
@@ -213,7 +214,13 @@ public final class ColUtils {
     }
     
     
-    
+    public static <T> Vector<T> toVector(List<T> list){
+    	Vector<T> vec = new Vector<T>(list.size());
+    	for(T t : list){
+    		vec.add(t);
+    	}
+    	return vec;
+    }
 
     
     

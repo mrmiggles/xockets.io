@@ -83,7 +83,7 @@ public class SocketMessageFactory implements ISocketMessageFactory {
 	 * @see com.tc.websocket.factories.ISocketMessageFactory#buildMessage(lotus.domino.Document)
 	 */
 	@Override
-	@Stopwatch
+	@Stopwatch(time=50)
 	public SocketMessage buildMessage(Document doc){
 		SocketMessage msg = null;
 		try{

@@ -37,7 +37,7 @@ public class QueueWebSocketLoadTest{
 	 * after this class loads, go back to the websocket.nsf and manually invoke the broadcast many agent
 	 */
 	public static void main(String[] args) throws InterruptedException{
-		cfg.overrideProperty("number.of.clients", "5000");
+		cfg.overrideProperty("number.of.clients", "2000");
 		cfg.overrideProperty("print.on.count", "1000000");
 	
 		

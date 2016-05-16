@@ -31,14 +31,25 @@ import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.EventExecutor;
 
 import java.net.SocketAddress;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import com.tc.xpage.profiler.Stopwatch;
 
 public class ContextWrapper implements ChannelHandlerContext {
 	public static final String RESOURCE_DESC="resourceDescriptor";
 
 	private ChannelHandlerContext ctx;
+	private Queue<String> messages = new ConcurrentLinkedQueue<String>(); //used in case user is not write-able.
+	
+	public ContextWrapper(){
+		
+	}
+	
 
-	public ContextWrapper(ChannelHandlerContext ctx){
+	public ContextWrapper init(ChannelHandlerContext ctx){
 		this.ctx = ctx;
+		return this;
 	}
 
 
@@ -506,7 +517,7 @@ public class ContextWrapper implements ChannelHandlerContext {
 	 */
 
 	public boolean isClosed(){
-		return this.ctx.channel().isOpen() == false;
+		return !this.isOpen();
 	}
 
 	/* (non-Javadoc)
@@ -514,7 +525,7 @@ public class ContextWrapper implements ChannelHandlerContext {
 	 */
 
 	public boolean isOpen(){
-		return this.ctx.channel().isOpen();
+		return this.ctx!=null && this.ctx.channel()!=null && this.ctx.channel().isOpen();
 	}
 
 	/* (non-Javadoc)
@@ -522,11 +533,14 @@ public class ContextWrapper implements ChannelHandlerContext {
 	 */
 
 	public void send(final String message){
-		this.ctx.write(new TextWebSocketFrame(message), ctx.channel().voidPromise());
+		this.messages.add(message);
+		this.processQueue();
 	}
 	
+	
 	public void sendAndFlush(final String message){
-		this.ctx.writeAndFlush(new TextWebSocketFrame(message), ctx.channel().voidPromise());
+		this.messages.add(message);
+		this.processQueue();
 	}
 
 
@@ -538,6 +552,38 @@ public class ContextWrapper implements ChannelHandlerContext {
 	@Override
 	public ChannelHandlerInvoker invoker() {
 		return ctx.invoker();
+	}
+	
+	public int hashCode(){
+		return this.ctx.hashCode();
+	}
+	
+	public String toString(){
+		return this.ctx.toString() + "." + this.getResourceDescriptor();
+	}
+	
+	public boolean equals(Object o){
+		boolean b= false;
+		
+		if(o instanceof ContextWrapper){
+			ContextWrapper wrapper = (ContextWrapper)o;
+			b = wrapper.ctx.equals(this.ctx);
+		}
+		
+		return b;
+	}
+	
+	@Stopwatch(time=50)
+	public void processQueue() {
+		boolean written = false;
+		while(!this.messages.isEmpty() && ctx.channel().isWritable()){
+			String msg = messages.poll();
+			if(msg!=null){
+				written = true;
+				this.ctx.write(new TextWebSocketFrame(msg), ctx.channel().voidPromise());
+			}
+		}
+		if(written) ctx.flush();
 	}
 
 }

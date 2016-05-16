@@ -6,6 +6,8 @@ found in the webshell-xpages-ext-lib hence the 2.0.0 release.  Below is a list o
 xockets.io as of 2.0.3
 -Fixed embedded client's max message size.  It now uses the WEBSOCKET_MAX_MSG_SIZE value from the server
 -Fixed reload-scripts and show-scripts command line call from the console (last release I had disabled / removed accidentally)
+-Added enhancement to allow multiple targets in a SocketMessage.  New attribute introduced "targets".  Use instead of "to" field when sending to multiple
+-Added enhancement to allow multiple websocket connections per user based on URI.
 
 
 

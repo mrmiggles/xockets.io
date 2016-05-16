@@ -3,12 +3,18 @@ package com.tc.utils;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class Stopwatch {
+public class StopWatch {
 	
 	private Date start;
 	private Date end;
+	private String label;
 	
-	public Stopwatch(){
+	public StopWatch(){
+		this.start();
+	}
+	
+	public StopWatch(String label){
+		this.label = label;
 		this.start();
 	}
 	
@@ -41,5 +47,11 @@ public class Stopwatch {
 		return elapsed;
 	}
 	
+	public void print(TimeUnit timeUnit, long max){
+		long time = this.elapsedTime(timeUnit);
+		if(time >=max){
+			System.out.println(this.label + " in " + this.elapsedTime(timeUnit) + " " + timeUnit.name());
+		}
+	}
 
 }

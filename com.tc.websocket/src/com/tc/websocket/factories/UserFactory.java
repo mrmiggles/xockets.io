@@ -30,7 +30,6 @@ import com.tc.guice.domino.module.ServerInfo;
 import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
 import com.tc.websocket.valueobjects.IUser;
-import com.tc.websocket.valueobjects.User;
 
 public class UserFactory implements IUserFactory {
 	private static final Logger logger = Logger.getLogger(UserFactory.class.getName());
@@ -71,7 +70,7 @@ public class UserFactory implements IUserFactory {
 	//this method is used to create a user from a different server in a cluster
 	@Override
 	public IUser createUser(Document doc) {
-		IUser user = new User();
+		IUser user = guicer.createObject(IUser.class);
 
 		try {
 			

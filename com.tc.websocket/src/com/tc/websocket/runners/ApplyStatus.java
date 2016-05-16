@@ -30,6 +30,7 @@ import lotus.domino.View;
 
 import com.google.inject.Inject;
 import com.tc.guice.domino.module.ServerInfo;
+import com.tc.utils.ColUtils;
 import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
@@ -53,10 +54,12 @@ public class ApplyStatus extends NotesOperation {
 		this.user = user;
 	}
 
+	
 	public ApplyStatus setRemoveUser(boolean removeUser){
 		this.removeUser=removeUser;
 		return this;
 	}
+	
 
 
 	@Override
@@ -103,7 +106,8 @@ public class ApplyStatus extends NotesOperation {
 				doc.replaceItemValue(Const.FIELD_SESSIONID, this.getSessionId());
 				doc.replaceItemValue(Const.FIELD_STATUS, this.getStatus());
 				doc.replaceItemValue(Const.FIELD_HOST, user.getHost());
-				doc.replaceItemValue(Const.FIELD_URI, user.getUri());
+				doc.replaceItemValue(Const.FIELD_URI, ColUtils.toVector(user.getUris()));
+				
 				doc.save();
 
 				user.setDocId(doc.getUniversalID());
@@ -139,17 +143,16 @@ public class ApplyStatus extends NotesOperation {
 				Document doc = this.getUserDoc(session, false);
 
 				if(doc==null) return;
-
-				this.user.setStatus(Const.STATUS_OFFLINE);
-
-				assert(user.getConn().isClosed()) : "user.getConn() should be closed prior to setting offline!";
-
-				this.user.setConn(null); //make sure we null this out, make available for gc.
+				
+				if(user.isOpen()==false){
+					this.user.setStatus(Const.STATUS_OFFLINE);
+				}
 
 				doc.replaceItemValue(Const.FIELD_FORM, Const.FIELD_VALUE_USER);
 				doc.replaceItemValue(Const.FIELD_SESSIONID, this.getSessionId());
 				doc.replaceItemValue(Const.FIELD_STATUS, this.getStatus());
 				doc.replaceItemValue(Const.FIELD_HOST, user.getHost());
+				doc.replaceItemValue(Const.FIELD_URI, ColUtils.toVector(user.getUris()));
 				doc.save();
 
 				user.setDocId(doc.getUniversalID());

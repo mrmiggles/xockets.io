@@ -30,9 +30,11 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -58,6 +60,7 @@ import com.tc.websocket.IConfig;
 import com.tc.websocket.factories.IUserFactory;
 import com.tc.websocket.filter.IWebsocketFilter;
 import com.tc.websocket.runners.ApplyStatus;
+import com.tc.websocket.runners.BatchSend;
 import com.tc.websocket.runners.EventQueueProcessor;
 import com.tc.websocket.runners.QueueMessage;
 import com.tc.websocket.runners.TaskRunner;
@@ -141,8 +144,8 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		//lets only add the user if they aren't present...
 		if(user.isValid() && storedUser == null){
 
-			//remove the user first, make sure any prior references from an older sessionId are gone.
-			this.removeUser(user);
+			//clear out any closed connections.
+			user.clear();
 
 			//store a reference in the map for sessionId, and userId.
 			VALID_USERS.putWithKeys(user, user.getSessionId(),user.getUserId());
@@ -160,12 +163,12 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	public void removeUser(String key){
 		IUser user = VALID_USERS.get(key);
 
-		//be sure to close the socket connection as the user's Domino session expires.
-		if(user!=null && user.getConn()!=null){
-			user.setGoingOffline(true);
-			user.getConn().close();
-		}
 
+		//be sure to close the socket connection as the user's Domino session expires.
+		if(user!=null && user.count() == 0){
+			user.setGoingOffline(true);
+			user.clear();
+		}
 
 		//cleanup all references.
 		if(user!=null){
@@ -174,7 +177,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			URI_MAP.remove(user);
 
 		}
-
 	}
 
 	@Override
@@ -199,10 +201,13 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		return map.values();
 	}
 
+	
+	
 
 	@Override
-	@Stopwatch(time=20)
+	@Stopwatch(time=10)
 	public Collection<IUser> getUsersOnThisServer(){
+
 		final Map<String,IUser> map = new HashMap<String,IUser>(VALID_USERS.size());
 		for(IUser user : VALID_USERS.values()){
 			if(user.canReceive()){
@@ -213,7 +218,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
-	
 	public DominoWebSocketServer() {
 	}
 
@@ -355,16 +359,28 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		IUser user = VALID_USERS.get(sessionId);
 
 		SocketMessage msg =JSONUtils.toObject(message, SocketMessageLite.class);
+		
+		if(msg.hasMultipleTargets()){
+			SocketMessage fullMsg =JSONUtils.toObject(message, SocketMessage.class);
+			List<String> targets = new ArrayList<String>();
+			targets.addAll(fullMsg.getTargets());
+			for(String target : targets){
+				fullMsg.setTo(target);
+				fullMsg.getTargets().clear();
+				this.processMessage(user, fullMsg, JSONUtils.toJson(fullMsg));
+			}
+		}else{
+			this.processMessage(user, msg, message);
+		}
 
-		assert(msg!=null && msg.getData()==null) : "SocketMessageLite.class should not contain the data.";
-
-
+	}
+	
+	
+	private void processMessage(IUser user, SocketMessage msg , String message){
 		if(msg!=null && !msg.getTo().startsWith(StringCache.FORWARD_SLASH)){
 			if(user == null || user.isAnonymous()) {
 				if(!cfg.isAllowAnonymous()){
-					//should never get here.. but added just in case :).  onopen should
-					//catch this.
-					user.getConn().close();
+					user.close();
 					return;
 				}
 			}
@@ -382,7 +398,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			this.queueMessage(JSONUtils.toObject(message, SocketMessage.class));
 			return;
 		}
-
 
 
 		if(user == null) {
@@ -427,7 +442,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		receiveEvent.setTarget(msg.getTo());
 		guicer.inject(receiveEvent);//inject dependencies.
 		receiveEvent.run(); //we don't want to execute in a separate thread.
-
 	}
 
 
@@ -546,12 +560,12 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				if(user.isGoingOffline() || user.isOpen()==false) continue;
 
 				//check to see if its a direct user path
-				if(user.getUserPath().equals(uri)){
+				if(user.containsUri(uri)){
 					set.add(user);
 					break; //if it is a direct path to user break out of the loop.
 				}
 
-				if(path.isWild() && user.getUri().startsWith(path.getUri())){
+				if(path.isWild() && user.startsWith(path.getUri())){
 					if(path.hasRoles()){
 						//role filters were supplied and the user is part of one of the roles
 						if(path.isMember(db.queryAccessRoles(this.resolveUserId(user)))){
@@ -563,7 +577,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 						set.add(user);
 					}
 
-				}else if(user.getUri().equals(path.getUri())){
+				}else if(user.containsUri(path.getUri())){
 					if(path.hasRoles()){
 						if(path.isMember(db.queryAccessRoles(this.resolveUserId(user)))){
 							set.add(user);
@@ -589,9 +603,15 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+	private int calcBatchSize(int users){
+		int size = users / 2;
+		if (size < 500){
+			size = 500;
+		}
+		return size;
+	}
 
 	@Override
-	@Stopwatch
 	public boolean send(String target, String json){
 
 		boolean sent = false;
@@ -608,15 +628,34 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			json = this.filter.applyFilter(json);
 		}
 
-		//send to all users on this server.
+		//send to all users on this server if target === current server.
 		if(ServerInfo.getInstance().isCurrentServer(target)){
-			for(IUser user : this.getUsersOnThisServer()){
+			int cntr = 0;
+			Collection<IUser> col = this.getUsersOnThisServer();
+			int batchSize = this.calcBatchSize(col.size());
+			BatchSend batchSend = new BatchSend();
+			batchSend.setMessage(json);
+			for(IUser user : col){
 				if(user!=null && user.canReceive()){
-					user.send(json);
+					batchSend.addUser(user);
+					if(cntr % batchSize ==0){
+						TaskRunner.getInstance().add(batchSend);
+						batchSend =new BatchSend();
+						batchSend.setMessage(json);
+					}
+
+					//user.send(json);
 					sent = true;
-				}
-			}
-		}else{
+					cntr ++;
+				}//end if
+				
+			}//end of for loop.
+			
+			if(batchSend.count() < batchSize){
+				TaskRunner.getInstance().add(batchSend);
+			}//end if
+		}
+		else{
 			IUser user = VALID_USERS.get(target);
 			if(user!=null && user.canReceive()){
 				sent = true;
@@ -628,6 +667,8 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				this.queueMessage(JSONUtils.toObject(json, SocketMessage.class));
 			}
 		}
+		
+		
 		return sent;
 	}
 
