@@ -94,7 +94,7 @@ public class CommandLine implements CommandProvider {
 				this.showScripts(out);
 				
 			}else if("remove-script".startsWith(command)){
-				this.removeScript(out);
+				this.removeScript(server, out);
 				
 			}else if("purge".equals(command)){
 				this.purge(out);
@@ -151,12 +151,19 @@ public class CommandLine implements CommandProvider {
 	}
 	
 
-	private void removeScript(CommandInterpreter out){
+	private void removeScript(IDominoWebSocketServer server, CommandInterpreter out){
 		String path = out.nextArgument();
 		for(IScriptClient client : RhinoClient.getAllClients()){
 			client.removeScriptByPath(path);
+			
+			if(client.getUser().getUserId().equals(Const.RHINO_PREFIX + path)){
+				out.println("removing " + client.getUser().getUserId() + "...");
+				server.removeUser(client.getUser());
+			}
 		}
 		
+		out.println("remove-script operation complete");
+
 	}
 	
 	private void registerScript(CommandInterpreter out){
