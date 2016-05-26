@@ -105,11 +105,19 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 			dominoServer.onClose(this.newWrapper(ctx));
 			handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
 			return;
+			
 		}
 		if (frame instanceof PingWebSocketFrame) {
 			ctx.channel().write(new PongWebSocketFrame(frame.content().retain()));
 			return;
 		}
+		
+		
+		if(frame instanceof PongWebSocketFrame){
+			return;//do nothing.
+		}
+		
+		
 		if (!(frame instanceof TextWebSocketFrame)) {
 			throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass()
 					.getName()));
