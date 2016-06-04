@@ -674,4 +674,9 @@ public class Config implements Runnable, IConfig {
 		return StrUtils.hasEmpty(this.getUsername(),this.getPassword());
 	}
 
+	@Override
+	public String getVersion() {
+		return "";
+	}
+
 }

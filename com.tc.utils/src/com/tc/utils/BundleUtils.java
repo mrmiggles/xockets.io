@@ -1,7 +1,10 @@
 package com.tc.utils;
 
+import java.util.Dictionary;
+
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.Constants;
 
 public class BundleUtils {
 	
@@ -19,5 +22,18 @@ public class BundleUtils {
 		}
 		return t;
 	}
+	
+	@SuppressWarnings("rawtypes")
+	public static String getVersion(Bundle bundle){
+		Dictionary dict = bundle.getHeaders();
+		return String.valueOf(dict.get(Constants.BUNDLE_VERSION));
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static String getName(Bundle bundle){
+		Dictionary dict = bundle.getHeaders();
+		return String.valueOf(dict.get(Constants.BUNDLE_NAME));
+	}
+	
 
 }

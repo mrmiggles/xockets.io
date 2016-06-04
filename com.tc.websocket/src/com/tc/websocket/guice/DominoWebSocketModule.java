@@ -62,8 +62,6 @@ public class DominoWebSocketModule extends AbstractModule {
 	private static IDominoWebSocketServer server;
 	private static IConfig config = Config.getInstance();
 	private static IWebsocketFilter filter;
-	//private final Object lock = new Object();
-
 
 
 	@Override
@@ -149,8 +147,6 @@ public class DominoWebSocketModule extends AbstractModule {
 	@Provides
 	public synchronized IDominoWebSocketServer provideWebSocketServer(IConfig cfg, IWebsocketFilter filter){
 		try{
-			//if(server==null){
-			//synchronized(lock){
 			if(server==null){
 				IDominoWebSocketServer domserver = Guicer.getInstance(Activator.bundle).createObject(DominoWebSocketServer.class);
 
@@ -171,8 +167,6 @@ public class DominoWebSocketModule extends AbstractModule {
 
 				server = domserver;
 			}
-			//}
-			//}
 		}catch(Exception e){
 			logger.log(Level.SEVERE,null, e);
 		}

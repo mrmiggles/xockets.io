@@ -44,6 +44,10 @@ public class CommandLine implements CommandProvider {
 	
 	private static final Logger LOGGER = Logger.getLogger(CommandLine.class.getName());
 	
+	public void _xockets(final CommandInterpreter out){
+		this._websocket(out);
+	}
+	
 	public void _websocket(final CommandInterpreter out) {
 		try{
 			final String command=out.nextArgument();

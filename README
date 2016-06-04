@@ -3,12 +3,17 @@ It leverages Netty.io websocket libraries to easily scale to a large number of u
 found in the webshell-xpages-ext-lib hence the 2.0.0 release.  Below is a list of the latest features available in xockets.io:
 
 
+xockets.io as of 2.0.4
+-Fixed issue with IE11 disconnecting after 30 seconds of inactivity
+-Updated underlying Netty server to the final release of 4.1.0
+-Fixed issue with remove-script command not working from console
+
+
 xockets.io as of 2.0.3
 -Fixed embedded client's max message size.  It now uses the WEBSOCKET_MAX_MSG_SIZE value from the server
 -Fixed reload-scripts and show-scripts command line call from the console (last release I had disabled / removed accidentally)
 -Added enhancement to allow multiple targets in a SocketMessage.  New attribute introduced "targets".  Use instead of "to" field when sending to multiple
 -Added enhancement to allow multiple websocket connections per user based on URI.
-
 
 
 xockets.io as of 2.0.2

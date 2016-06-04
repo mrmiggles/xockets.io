@@ -46,7 +46,6 @@ public class Activator extends Plugin {
 	@Override
 	public void start(final BundleContext context) {
 		
-		
 		bundle=context.getBundle(); 
 		commandLineReg=context.registerService(CommandProvider.class.getName(), new CommandLine(), null);
 		StartAndStop.getInstance().start();

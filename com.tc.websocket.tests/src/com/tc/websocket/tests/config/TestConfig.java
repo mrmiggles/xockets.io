@@ -413,4 +413,9 @@ public class TestConfig implements IConfig {
 		return false;
 	}
 
+	@Override
+	public String getVersion() {
+		return "N/A";
+	}
+
 }

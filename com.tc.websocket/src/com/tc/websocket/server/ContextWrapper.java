@@ -21,7 +21,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelHandlerInvoker;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.ChannelProgressivePromise;
 import io.netty.channel.ChannelPromise;
@@ -54,12 +53,12 @@ public class ContextWrapper implements ChannelHandlerContext {
 
 
 	public void setResourceDescriptor(String resourceDescriptor){
-		Attribute<Object> attr = this.ctx.attr(AttributeKey.valueOf(RESOURCE_DESC));
+		Attribute<Object> attr = this.ctx.channel().attr(AttributeKey.valueOf(RESOURCE_DESC));
 		attr.set(resourceDescriptor);
 	}
 
 	public String getResourceDescriptor(){
-		Attribute<Object> attr = this.ctx.attr(AttributeKey.valueOf(RESOURCE_DESC));
+		Attribute<Object> attr = this.ctx.channel().attr(AttributeKey.valueOf(RESOURCE_DESC));
 		return (String) attr.get();
 	}
 
@@ -70,7 +69,7 @@ public class ContextWrapper implements ChannelHandlerContext {
 
 	@Override
 	public <T> Attribute<T> attr(AttributeKey<T> attKey) {
-		return ctx.attr(attKey);
+		return ctx.channel().attr(attKey);
 	}
 
 
@@ -80,7 +79,7 @@ public class ContextWrapper implements ChannelHandlerContext {
 
 	@Override
 	public <T> boolean hasAttr(AttributeKey<T> attKey) {
-		return ctx.hasAttr(attKey);
+		return ctx.channel().hasAttr(attKey);
 	}
 
 
@@ -549,10 +548,12 @@ public class ContextWrapper implements ChannelHandlerContext {
 	 */
 
 
+	/*
 	@Override
 	public ChannelHandlerInvoker invoker() {
 		return ctx.invoker();
 	}
+	*/
 	
 	public int hashCode(){
 		return this.ctx.hashCode();

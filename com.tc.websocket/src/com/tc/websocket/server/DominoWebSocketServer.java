@@ -52,8 +52,10 @@ import com.google.inject.name.Named;
 import com.tc.di.guicer.IGuicer;
 import com.tc.guice.domino.module.ServerInfo;
 import com.tc.guice.domino.module.SessionFactory;
+import com.tc.utils.BundleUtils;
 import com.tc.utils.JSONUtils;
 import com.tc.utils.StringCache;
+import com.tc.websocket.Activator;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
 import com.tc.websocket.IConfig;
@@ -796,7 +798,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				
 				this.on.set(true);
 
-				cfg.print("ready and listening on " + cfg.getPort());
+				String version = BundleUtils.getVersion(Activator.bundle);
+				String name = BundleUtils.getName(Activator.bundle);
+				cfg.print(name + " ready and listening on " + cfg.getPort() + " running version " + version);
 
 			} finally {
 

@@ -102,5 +102,7 @@ public interface IConfig {
 	public boolean isKeyStore();
 	
 	public boolean isEmptyCredentials();
+	
+	public String getVersion();
 
 }
