@@ -204,7 +204,7 @@ public class SocketMessage {
 	
 	@JsonIgnore
 	public boolean hasMultipleTargets(){
-		return this.to== null && this.targets!=null && this.targets.isEmpty() == false;
+		return this.targets!=null && this.targets.isEmpty() == false;
 	}
 
 	public void addTarget(String target){

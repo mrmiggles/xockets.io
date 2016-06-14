@@ -363,6 +363,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		SocketMessage msg =JSONUtils.toObject(message, SocketMessageLite.class);
 		
 		if(msg.hasMultipleTargets()){
+			//just in case use also set the to field
+			msg.addTarget(msg.getTo());
+			
 			SocketMessage fullMsg =JSONUtils.toObject(message, SocketMessage.class);
 			List<String> targets = new ArrayList<String>();
 			targets.addAll(fullMsg.getTargets());
@@ -560,12 +563,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			for(IUser user : col){
 
 				if(user.isGoingOffline() || user.isOpen()==false) continue;
-
-				//check to see if its a direct user path
-				if(user.containsUri(uri)){
-					set.add(user);
-					break; //if it is a direct path to user break out of the loop.
-				}
 
 				if(path.isWild() && user.startsWith(path.getUri())){
 					if(path.hasRoles()){

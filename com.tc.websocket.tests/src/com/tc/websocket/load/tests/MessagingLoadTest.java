@@ -57,10 +57,13 @@ public class MessagingLoadTest{
 			String cmd = scanner.next();
 			if("start".equals(cmd)){
 				loader.testMultipleTargets();
+				
+				/*
 				loader.testDurability();
 				loader.testSmallMessage();
 				loader.testLargeMessage();
 				loader.testRoutingPath();
+				*/
 				
 			}
 			if(cmd.equals("stop")){
