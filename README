@@ -2,6 +2,11 @@ xockets.io (pronounced zockets.io, for XPages websockets) plugin adds support fo
 It leverages Netty.io websocket libraries to easily scale to a large number of users.  This plugin replaces the websocket implementation 
 found in the webshell-xpages-ext-lib hence the 2.0.0 release.  Below is a list of the latest features available in xockets.io:
 
+
+xockets.io as of 2.0.6
+-Fix applied for multiple targets in a message targeting URIs
+
+
 xockets.io as of 2.0.5
 -Updated the underlying Netty server to 4.1.1 due to security vulnerability in 4.1.0
 
