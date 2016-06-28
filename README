@@ -3,6 +3,10 @@ It leverages Netty.io websocket libraries to easily scale to a large number of u
 found in the webshell-xpages-ext-lib hence the 2.0.0 release.  Below is a list of the latest features available in xockets.io:
 
 
+xockets.io as of 2.0.7
+-New feature added to allow a collection of messages to be sent in one call
+
+
 xockets.io as of 2.0.6
 -Fix applied for multiple targets in a message targeting URIs
 

@@ -68,7 +68,6 @@ import com.tc.websocket.runners.QueueMessage;
 import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
-import com.tc.websocket.valueobjects.SocketMessageLite;
 import com.tc.websocket.valueobjects.structures.IMultiMap;
 import com.tc.websocket.valueobjects.structures.MultiMap;
 import com.tc.websocket.valueobjects.structures.UriMap;
@@ -82,7 +81,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	private static final UriMap URI_MAP = new UriMap();
 	private static IMultiMap<String,IUser> VALID_USERS=new MultiMap<String, IUser>(Config.getInstance().getMaxConnections() / 2);
 	private static final Logger logger = Logger.getLogger(DominoWebSocketServer.class.getName());
-	
+
 
 
 	//set during server provisioning (see DominoWebSocketModule)
@@ -100,7 +99,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	//netty WebSocketServerInitializer
 	@Inject
 	private WebSocketServerInitializer init;
-	
+
 
 	@Inject
 	private IGuicer guicer;
@@ -113,7 +112,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	private AtomicBoolean on = new AtomicBoolean(false);
 	private AtomicInteger socket_count = new AtomicInteger(0);
 
-	
+
 
 	@Override
 	public int getWebSocketCount(){
@@ -203,8 +202,8 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		return map.values();
 	}
 
-	
-	
+
+
 
 	@Override
 	@Stopwatch(time=10)
@@ -351,36 +350,49 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 	@Override
-	public void onMessage(ContextWrapper conn, String message) {
+	public void onMessage(ContextWrapper conn, String json) {
 
 		//we don't want to push a message that is too large
-		if(!isValidSize(message)) return;
+		if(!isValidSize(json)) return;
 
 		String sessionId = this.resolveSessionId(conn);
 
 		IUser user = VALID_USERS.get(sessionId);
 
-		SocketMessage msg =JSONUtils.toObject(message, SocketMessageLite.class);
-		
-		if(msg.hasMultipleTargets()){
-			//just in case use also set the to field
-			msg.addTarget(msg.getTo());
-			
-			SocketMessage fullMsg =JSONUtils.toObject(message, SocketMessage.class);
-			List<String> targets = new ArrayList<String>();
-			targets.addAll(fullMsg.getTargets());
-			for(String target : targets){
-				fullMsg.setTo(target);
-				fullMsg.getTargets().clear();
-				this.processMessage(user, fullMsg, JSONUtils.toJson(fullMsg));
-			}
+		List<SocketMessage> messages = new ArrayList<SocketMessage>();
+
+		if(this.isMessageCollection(json)){
+			try {
+				messages = JSONUtils.toList(json, SocketMessage.class);
+				
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, null, e);
+			} 
 		}else{
-			this.processMessage(user, msg, message);
+			messages.add(JSONUtils.toObject(json, SocketMessage.class));
 		}
 
+
+		for(SocketMessage msg : messages){
+			if(msg.hasMultipleTargets()){
+				msg.addTarget(msg.getTo());
+				List<String> targets = new ArrayList<String>();
+				targets.addAll(msg.getTargets());
+				for(String target : targets){
+					msg.setTo(target);
+					msg.getTargets().clear();
+					this.processMessage(user, msg, JSONUtils.toJson(msg));
+				}
+			}else{
+				this.processMessage(user, msg, JSONUtils.toJson(msg));
+			}
+		}
 	}
-	
-	
+
+	private boolean isMessageCollection(String json){
+		return json.startsWith(StringCache.OPEN_BRACKET) && json.endsWith(StringCache.CLOSE_BRACKET);
+	}
+
 	private void processMessage(IUser user, SocketMessage msg , String message){
 		if(msg!=null && !msg.getTo().startsWith(StringCache.FORWARD_SLASH)){
 			if(user == null || user.isAnonymous()) {
@@ -398,7 +410,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			logger.log(Level.SEVERE,"Socket Message could not be created.");
 			return;
 		}
-		
+
 		if(msg.isDurable()){
 			this.queueMessage(JSONUtils.toObject(message, SocketMessage.class));
 			return;
@@ -647,9 +659,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 					sent = true;
 					cntr ++;
 				}//end if
-				
+
 			}//end of for loop.
-			
+
 			if(batchSend.count() < batchSize){
 				TaskRunner.getInstance().add(batchSend);
 			}//end if
@@ -666,8 +678,8 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				this.queueMessage(JSONUtils.toObject(json, SocketMessage.class));
 			}
 		}
-		
-		
+
+
 		return sent;
 	}
 
@@ -766,14 +778,14 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		try{
 			try {
 				ServerBootstrap boot = new ServerBootstrap();
-				
+
 				if(cfg.isNativeTransport()){
-					 boot.channel(EpollServerSocketChannel.class);
+					boot.channel(EpollServerSocketChannel.class);
 				}else{
 					boot.channel(NioServerSocketChannel.class);
 				}
-				
-	
+
+
 				boot.group(bossGroup, workerGroup)
 				.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
 				.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
@@ -786,13 +798,13 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 				//bind to the main port
 				boot.bind(cfg.getPort()).sync();
-				
+
 				//bind to the redirect port (e.g. 80 will redirect to 443)
 				for(Integer port : cfg.getRedirectPorts()){
 					ChannelFuture f = boot.bind(port);
 					f.sync();
 				}
-				
+
 				this.on.set(true);
 
 				String version = BundleUtils.getVersion(Activator.bundle);

@@ -56,16 +56,16 @@ public class MessagingLoadTest{
 		while(scanner.hasNext()){
 			String cmd = scanner.next();
 			if("start".equals(cmd)){
+				loader.testBatchSend();
 				loader.testMultipleTargets();
+				loader.testRoutingPath();	
 				
-				/*
+				Thread.sleep(10000);
 				loader.testDurability();
 				loader.testSmallMessage();
 				loader.testLargeMessage();
-				loader.testRoutingPath();
-				*/
-				
 			}
+			
 			if(cmd.equals("stop")){
 				NettyTestClient.printStats();
 				loader.closeClients();
@@ -178,6 +178,40 @@ public class MessagingLoadTest{
 			prior = c;
 			cntr ++;
 			Thread.sleep(TestConfig.getInstance().getMessageDelay());
+		}
+
+	}
+	
+	public void testBatchSend() throws InterruptedException{
+		System.out.println("testing batch message");
+		cfg.overrideProperty("message.delay", "1");
+		SocketMessage msg = new SocketMessage();
+		List<SocketMessage> list = new ArrayList<SocketMessage>();
+
+		int cntr = 0;
+		String text = "All work and no play makes Mark a dull boy\n\r.";
+
+		NettyTestClient prior = null;
+		for(NettyTestClient c: clients){
+
+			if(prior!=null){
+				msg.setText(text + " " + cntr);
+				msg.setFrom(c.getUuid());
+				msg.setTo(prior.getUuid());
+				msg.setDate(new Date());
+				msg.getData().put("test", "testing testing 123");
+				msg.setText(text);
+				list.add(msg);
+			}
+			cntr ++;
+			prior = c;
+
+			if(!list.isEmpty() && (list.size() % 100 == 0)){
+				c.send(JSONUtils.toJson(list));
+				list.clear();
+				Thread.sleep(TestConfig.getInstance().getMessageDelay());
+				
+			}
 		}
 
 	}
