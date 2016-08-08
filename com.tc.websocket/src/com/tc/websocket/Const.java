@@ -114,6 +114,7 @@ public class Const {
 	public static final String EVENT_ONSEND="onsend";
 	public static final String EVENT_ONRECEIVE="onreceive";
 	
+	
 	//guice keys
 	public static final String GUICE_REST_WEBSOCKET="GUICE_REST_WEBSOCKET";
 	public static final String GUICE_JSF_WEBSOCKET="GUICE_JSF_WEBSOCKET";
@@ -131,6 +132,7 @@ public class Const {
 	public static final String DATE_FORMAT="yyyy-MM-dd hh:mm a";
 	public static final String EXCEPTION="EXCEPTION";
 	public static final String INFO = "INFO";
+	public static final String FUNCTION="function";
 	
 	
 	//RhinoClient scoped variable names.

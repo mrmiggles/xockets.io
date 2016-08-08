@@ -41,9 +41,8 @@ public class RhinoClientMap {
 	
 	public synchronized List<RhinoClient> getAll(){
 		List<RhinoClient> list = new ArrayList<RhinoClient>();
-		for(String key : map.keySet()){
-			List<RhinoClient> clients = map.get(key);
-			list.addAll(clients);
+		for(List<RhinoClient> mylist : map.values()){
+			list.addAll(mylist);
 		}
 		return list;
 	}

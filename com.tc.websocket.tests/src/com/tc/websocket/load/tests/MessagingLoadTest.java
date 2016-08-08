@@ -56,15 +56,24 @@ public class MessagingLoadTest{
 		while(scanner.hasNext()){
 			String cmd = scanner.next();
 			if("start".equals(cmd)){
+				loader.testLargeMessage();
+				System.gc();
+				Thread.sleep(10000);
+				
+				
 				loader.testBatchSend();
 				loader.testMultipleTargets();
 				loader.testRoutingPath();	
-				
+				System.gc();
 				Thread.sleep(10000);
+				
+
 				loader.testDurability();
 				loader.testSmallMessage();
-				loader.testLargeMessage();
+				
 			}
+			
+			
 			
 			if(cmd.equals("stop")){
 				NettyTestClient.printStats();

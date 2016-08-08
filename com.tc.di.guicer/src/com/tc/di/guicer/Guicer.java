@@ -46,7 +46,7 @@ public class Guicer implements IGuicer {
 
 
 	//singleton.
-	private Guicer(){
+	protected Guicer(){
 
 	}
 
@@ -170,6 +170,14 @@ public class Guicer implements IGuicer {
 	@Override
 	public String getPluginId() {
 		return pluginId;
+	}
+
+
+
+
+	@Override
+	public <T> T build(Class cls) {
+		return this.createObject(cls);
 	}
 
 

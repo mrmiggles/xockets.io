@@ -3,6 +3,7 @@ package com.tc.websocket.valueobjects.structures;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tc.websocket.Config;
@@ -50,11 +51,24 @@ public class UriMap {
 		users.addAll(this.get(path.getUri()));
 		
 		if(path.isWild()){
+			
+			for(Entry<String, Collection<IUser>> entry : map.entrySet()){
+				String uri = entry.getKey();
+				if(path.getUri().contains(uri) || uri.contains(path.getUri())){
+					users.addAll(entry.getValue());
+				}
+			}
+			
+			/*
 			for(String uri : map.keySet()){
 				if(path.getUri().contains(uri) || uri.contains(path.getUri())){
 					users.addAll(map.get(uri));
 				}
 			}
+			*/
+			
+			
+			
 		}
 		
 		return users;

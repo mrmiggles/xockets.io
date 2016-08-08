@@ -30,13 +30,16 @@ import lotus.domino.NotesException;
 import lotus.domino.Session;
 
 import com.google.inject.Inject;
+import com.tc.di.guicer.Guicer;
 import com.tc.utils.StringCache;
 import com.tc.utils.XSPUtils;
+import com.tc.websocket.Activator;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
 import com.tc.websocket.IConfig;
 import com.tc.websocket.embeded.clients.IScriptClient;
 import com.tc.websocket.embeded.clients.IScriptClientRegistry;
+import com.tc.websocket.embeded.clients.JavaScript;
 import com.tc.websocket.embeded.clients.RhinoClient;
 import com.tc.websocket.embeded.clients.ScriptBuilder;
 import com.tc.websocket.factories.IUserFactory;
@@ -237,6 +240,48 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 		registry.registerScriptClient(proxy);
 	}
 	
+	
+	public void addEventObserver(final String function, final String source){
+
+		if(!this.containsObserver(function, source)){
+			TaskRunner.getInstance().add(new Runnable(){
+
+				@Override
+				public void run() {
+					JavaScript script = Guicer.getInstance(Activator.bundle).createObject(JavaScript.class);
+					script.setSource(source);
+					script.setFunction(function);
+					script.recompile();
+					server.addEventObserver(script);
+				}
+			});
+		}
+	}
+	
+	public boolean containsObserver(final String function, final String source){
+		JavaScript script = new JavaScript();
+		script.setSource(source);
+		script.setFunction(function);
+		return server.containsObserver(script);
+	}
+	
+	
+	public void removeObserver(final String function, final String source){
+		
+		TaskRunner.getInstance().add(new Runnable(){
+
+			@Override
+			public void run() {
+				JavaScript script = Guicer.getInstance(Activator.bundle).createObject(JavaScript.class);
+				script.setSource(source);
+				script.setFunction(function);
+				server.removeEventObserver(script);
+			}
+			
+			
+		});
+		
+	}
 
 	
 	public static String buildWebSocketUrl(String serverName, String sessionId, String sourceUri){

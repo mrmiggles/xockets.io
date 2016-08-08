@@ -22,6 +22,7 @@ import io.netty.handler.codec.http.FullHttpRequest;
 
 import java.util.Collection;
 
+import com.tc.websocket.embeded.clients.JavaScript;
 import com.tc.websocket.filter.IWebsocketFilter;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
@@ -50,6 +51,8 @@ public interface IDominoWebSocketServer extends Runnable {
 	
 	public abstract void closeWithDelay(ContextWrapper conn, int delay);
 
+	public abstract boolean onMessage(String to, String json);
+	
 	public abstract void onMessage(ContextWrapper conn, String message);
 
 	public abstract void onError(ContextWrapper conn, Exception ex);
@@ -62,7 +65,7 @@ public interface IDominoWebSocketServer extends Runnable {
 	
 	public abstract void pingUsers();
 
-	public abstract boolean send(String target, String json);
+	//public abstract boolean send(String target, String json);
 
 	public abstract void broadcast(SocketMessage msg);
 	
@@ -83,5 +86,18 @@ public interface IDominoWebSocketServer extends Runnable {
 	public int getWebSocketCount();
 	
 	public int decrementCount();
+	
+	public boolean containsObserver(JavaScript script);
+	
+	public void addEventObserver(JavaScript script);
+	
+	public void removeEventObserver(JavaScript script);
+	
+	public void reloadEventObservers();
+	
+	public void notifyEventObservers(String event, Object ...args);
+	
+	public Collection<JavaScript> getEventListeners();
+	
 	
 }

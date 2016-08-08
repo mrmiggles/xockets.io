@@ -26,6 +26,8 @@ public interface IGuicer {
 
 	public <T> T createObject(Class cls);
 	
+	public <T> T build(Class cls);
+	
 	public abstract <T> T createObject(Class cls, String name);
 
 	public abstract <T> T createObject( Class cls, String name, boolean inject);

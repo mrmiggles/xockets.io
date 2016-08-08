@@ -54,7 +54,7 @@ public class Script {
 	
 	@Override
 	public String toString(){
-		return this.getEvent() + "." + this.getScript();
+		return this.getEvent() + "." + this.getSource();
 	}
 	
 	@Override
@@ -63,13 +63,16 @@ public class Script {
 		return this.toString().equals(o.toString());
 	}
 	
+	
 	@Override
 	public int hashCode(){
-		return this.toString().hashCode() * this.compiled.hashCode();
+		return this.toString().hashCode();
 	}
 	public CompiledScript getCompiled() {
 		return compiled;
 	}
+	
+	
 	public void setCompiled(CompiledScript compiled) {
 		this.compiled = compiled;
 	}

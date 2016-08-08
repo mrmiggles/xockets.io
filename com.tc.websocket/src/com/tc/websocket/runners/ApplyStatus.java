@@ -74,9 +74,11 @@ public class ApplyStatus extends NotesOperation {
 
 			if(user.isGoingOffline()){
 				this.offline();
+				
 
 			}else {
 				this.online();
+				
 
 			}
 		}
@@ -117,6 +119,8 @@ public class ApplyStatus extends NotesOperation {
 				}
 
 				doc.recycle();
+				
+				
 			}
 
 
@@ -161,12 +165,13 @@ public class ApplyStatus extends NotesOperation {
 					server.removeUser(user);
 				}
 
-
 				//make sure if user transitioned from anonymous that doc is cleaned up
 				this.deleteAnonymousDoc(session);
 
 
 				doc.recycle();
+				
+				
 			}
 
 		} catch (NotesException e) {

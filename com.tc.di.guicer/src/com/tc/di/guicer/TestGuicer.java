@@ -122,6 +122,11 @@ public class TestGuicer implements IGuicer {
 		return pluginId;
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	public <T> T build(Class cls){
+		return (T)this.createObject(cls);
+	}
 
 }
 

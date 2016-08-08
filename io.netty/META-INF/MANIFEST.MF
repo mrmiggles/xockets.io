@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: io.netty
 Bundle-SymbolicName: io.netty
-Bundle-Version: 4.1.1
+Bundle-Version: 4.1.4
 Bundle-ClassPath: jzlib-1.1.2.jar,
- netty-tcnative-openssl-static-1.1.33.Fork15-SNAPSHOT-windows-x86_64}.jar,
- netty-all-4.1.1.Final.jar
+ netty-all-4.1.4.Final.jar,
+ netty-tcnative-openssl-static-1.1.33.Fork15-SNAPSHOT-windows-x86_64}.jar
 Bundle-Vendor: netty
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.jcraft.jzlib,
@@ -63,6 +63,7 @@ Export-Package: com.jcraft.jzlib,
  io.netty.handler.codec.string,
  io.netty.handler.codec.xml,
  io.netty.handler.flow,
+ io.netty.handler.flush,
  io.netty.handler.ipfilter,
  io.netty.handler.logging,
  io.netty.handler.proxy,
@@ -79,6 +80,9 @@ Export-Package: com.jcraft.jzlib,
  io.netty.util.internal,
  io.netty.util.internal.chmv8,
  io.netty.util.internal.logging,
+ io.netty.util.internal.shaded.org.jctools.queues,
+ io.netty.util.internal.shaded.org.jctools.queues.atomic,
+ io.netty.util.internal.shaded.org.jctools.util,
  org.apache.tomcat,
  org.apache.tomcat.jni,
  org.apache.tomcat.jni.socket

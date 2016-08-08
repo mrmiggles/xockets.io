@@ -27,6 +27,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+import com.tc.utils.JSONUtils;
+
 public class SocketMessage {
 	
 	private String id;
@@ -115,7 +117,13 @@ public class SocketMessage {
 
 
 	
-	
+	@JsonIgnore
+	public String toJson(){
+		if(this.getJson() == null){
+			this.setJson(JSONUtils.toJson(this));
+		}
+		return this.getJson();
+	}
 
 	@JsonIgnore
 	public String getJson() {

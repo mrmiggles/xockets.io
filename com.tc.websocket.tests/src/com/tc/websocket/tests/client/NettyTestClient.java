@@ -5,6 +5,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -82,21 +83,37 @@ public class NettyTestClient extends AbstractClient implements Runnable{
 		return this.isOpen() == false;
 	}
 
-	public static double calcAvg(){
+	public static double calcAvg(Collection<Double> values){
 		double sum =0;
-		for(Double i : seconds){
+		for(Double i : values){
 			sum = sum + i;
 		}
 		
 		if(sum == 0) return 0;
 		
-		return round( sum / (double)seconds.size(),2);
+		return round( sum / (double)values.size(),2);
+	}
+	
+	public static double avgDropHigh(){
+		List<Double> myseconds = new ArrayList<Double>();
+		myseconds.addAll(seconds);
+		Collections.sort(myseconds);
+		myseconds.remove(myseconds.size() -1);
+		return calcAvg(myseconds);
+	}
+	
+	public static double avgDropLow(){
+		List<Double> myseconds = new ArrayList<Double>();
+		myseconds.addAll(seconds);
+		Collections.sort(myseconds);
+		myseconds.remove(0);
+		return calcAvg(myseconds);
 	}
 	
 	public static double messagesPerSecond(){
-		double avg = calcAvg();
+		double avg = calcAvg(seconds);
 		if(avg == 0) return 0;
-		return round(TestConfig.getInstance().getPrintOnCount() / calcAvg(),2);
+		return round(TestConfig.getInstance().getPrintOnCount() / calcAvg(seconds),2);
 	}
 	
 	private static double round(double value, int places){
@@ -126,7 +143,7 @@ public class NettyTestClient extends AbstractClient implements Runnable{
 	}
 	
 	public static void printAvg(){
-		System.out.println("Avg Sec: " + NettyTestClient.calcAvg());
+		System.out.println("Avg Sec: " + NettyTestClient.calcAvg(seconds));
 		
 	}
 	
@@ -138,10 +155,20 @@ public class NettyTestClient extends AbstractClient implements Runnable{
 		System.out.println("Total Msgs: " + counter.get());
 	}
 	
+	public static void printAvgDropHigh(){
+		System.out.println("Avg remove highest: " + NettyTestClient.avgDropHigh());
+	}
+	
+	public static void printAvgDropLow(){
+		System.out.println("Avg remove lowest: " + NettyTestClient.avgDropLow());
+	}
+	
 	public static void printStats(){
 		
 		printDataVolume();
 		printAvg();
+		printAvgDropHigh();
+		printAvgDropLow();
 		printMsgPerSec();
 		printTotalMsgs();
 	}

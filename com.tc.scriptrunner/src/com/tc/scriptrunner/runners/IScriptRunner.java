@@ -20,12 +20,15 @@ package com.tc.scriptrunner.runners;
 import java.util.logging.Logger;
 
 import javax.script.CompiledScript;
+import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 
 public interface IScriptRunner {
 
 	public void addToScope(String varName, Object o);
+	public void addToScope(ScriptEngine engine, Object...args);
+	
 	public void removeFromScope(String varName);
 	
 	public void setLogger(Logger logger);

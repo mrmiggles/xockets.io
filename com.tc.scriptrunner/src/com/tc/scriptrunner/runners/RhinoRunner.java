@@ -111,10 +111,25 @@ public class RhinoRunner implements IScriptRunner {
 	public void addToScope(String varName, Object o) {
 		engine.getBindings(ScriptContext.ENGINE_SCOPE).put(varName, o);
 	}
+	
+	
+	public void addToScope(ScriptEngine engine, Object...args){
+		int cntr =0;
+		String name = null;
+		for(Object o : args){
+			if(cntr % 2 ==0){
+				name = (String)o;
+			}else{
+				engine.getContext().setAttribute(name, o, ScriptContext.ENGINE_SCOPE);
+			}
+			cntr++;
+		}
+	}
 
 	@Override
 	public void removeFromScope(String varName) {
-		engine.getBindings(ScriptContext.ENGINE_SCOPE).remove(varName);
+		//engine.getBindings(ScriptContext.ENGINE_SCOPE).remove(varName);
+		engine.getContext().removeAttribute(varName, ScriptContext.ENGINE_SCOPE);
 	}
 
 	@Override

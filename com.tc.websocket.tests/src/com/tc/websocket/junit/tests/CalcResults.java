@@ -10,7 +10,7 @@ public class CalcResults {
 	@Test
 	public void test() throws InterruptedException {
 		Thread.sleep(8000); //let last few messages make it through.
-		System.out.println("Avg: " + NettyTestClient.calcAvg());
+		System.out.println("Avg: " + NettyTestClient.calcAvg(NettyTestClient.seconds));
 		System.out.println("Msg/Sec: " + NettyTestClient.messagesPerSecond());
 		System.out.println("Total Time : " + NettyTestClient.elapsedSeconds() + " seconds");
 

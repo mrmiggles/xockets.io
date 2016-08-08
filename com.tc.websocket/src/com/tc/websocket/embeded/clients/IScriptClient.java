@@ -30,6 +30,7 @@ public interface IScriptClient {
 	public static final String ON_CLOSE = "onClose";
 	public static final String ON_ERROR = "onError";
 
+	
 	public abstract void setUser(IUser user);
 
 	public abstract IUser getUser();

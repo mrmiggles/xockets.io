@@ -32,6 +32,7 @@ import io.netty.util.AttributeKey;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -59,6 +60,8 @@ import com.tc.websocket.Activator;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
 import com.tc.websocket.IConfig;
+import com.tc.websocket.embeded.clients.IScriptClient;
+import com.tc.websocket.embeded.clients.JavaScript;
 import com.tc.websocket.factories.IUserFactory;
 import com.tc.websocket.filter.IWebsocketFilter;
 import com.tc.websocket.runners.ApplyStatus;
@@ -82,7 +85,8 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	private static IMultiMap<String,IUser> VALID_USERS=new MultiMap<String, IUser>(Config.getInstance().getMaxConnections() / 2);
 	private static final Logger logger = Logger.getLogger(DominoWebSocketServer.class.getName());
 
-
+	private static List<JavaScript> OBSERVERS = Collections.synchronizedList(new ArrayList<JavaScript>());
+	
 
 	//set during server provisioning (see DominoWebSocketModule)
 	private IWebsocketFilter filter;
@@ -285,7 +289,10 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 		//break out since the anonymous user was already added previously.
-		if(anonymousAdded) return;
+		if(anonymousAdded){
+			this.notifyEventObservers(IScriptClient.ON_OPEN, user);
+			return;
+		}
 
 
 		//update the user data in the corresponding doc.
@@ -300,6 +307,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		openEvent.setTarget(username);
 		guicer.inject(openEvent);//inject dependencies.
 		openEvent.run(); //run it in this thread
+		
+		
+		this.notifyEventObservers(IScriptClient.ON_OPEN, user);
+		
+		
 	}
 
 
@@ -341,13 +353,31 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	@Override
 	public void closeWithDelay(ContextWrapper conn, int delay) {
 		socket_count.decrementAndGet();
-		IUser user = this.resolveUser(conn);
+		final IUser user = this.resolveUser(conn);
 		if(user!=null && ServerInfo.getInstance().isCurrentServer(user.getHost())){
 			user.setGoingOffline(true);
 			TaskRunner.getInstance().add(new ApplyStatus(user), delay);//mark user as offline
+			
+			
+			//run the close event with the same delay.
+			TaskRunner.getInstance().add(new Runnable(){
+
+				@Override
+				public void run() {
+					notifyEventObservers(IScriptClient.ON_CLOSE, user);
+				}
+				
+				
+			}, delay);
 		}
 	}
-
+	
+	public boolean onMessage(String to, String json){
+		
+		boolean b = this.send(to, json);
+		this.notifyEventObservers(IScriptClient.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
+		return b;
+	}
 
 	@Override
 	public void onMessage(ContextWrapper conn, String json) {
@@ -382,17 +412,21 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 					msg.setTo(target);
 					msg.getTargets().clear();
 					this.processMessage(user, msg, JSONUtils.toJson(msg));
+					this.notifyEventObservers(IScriptClient.ON_MESSAGE, msg);
 				}
 			}else{
 				this.processMessage(user, msg, JSONUtils.toJson(msg));
+				this.notifyEventObservers(IScriptClient.ON_MESSAGE, msg);
 			}
 		}
 	}
 
+	
 	private boolean isMessageCollection(String json){
 		return json.startsWith(StringCache.OPEN_BRACKET) && json.endsWith(StringCache.CLOSE_BRACKET);
 	}
 
+	
 	private void processMessage(IUser user, SocketMessage msg , String message){
 		if(msg!=null && !msg.getTo().startsWith(StringCache.FORWARD_SLASH)){
 			if(user == null || user.isAnonymous()) {
@@ -402,8 +436,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				}
 			}
 		}
-
-
 
 		//if msg fails to be created by json parser handle the null object
 		if(msg == null){
@@ -622,8 +654,8 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		return size;
 	}
 
-	@Override
-	public boolean send(String target, String json){
+
+	private boolean send(String target, String json){
 
 		boolean sent = false;
 
@@ -678,8 +710,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				this.queueMessage(JSONUtils.toObject(json, SocketMessage.class));
 			}
 		}
-
-
+		
 		return sent;
 	}
 
@@ -838,6 +869,54 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		bossGroup.shutdownGracefully();
 		workerGroup.shutdownGracefully();
 		this.on.set(false);
+	}
+
+
+	@Override
+	public void addEventObserver(JavaScript script) {
+		if(!OBSERVERS.contains(script)){
+			OBSERVERS.add(script);
+		}
+	}
+	
+	public void removeEventObserver(JavaScript script) {
+		OBSERVERS.remove(script);
+	}
+	
+	
+	public boolean containsObserver(JavaScript script){
+		return OBSERVERS.contains(script);
+	}
+
+
+	@Override
+	public synchronized void notifyEventObservers(String event, Object ...args) {
+		for(JavaScript script : OBSERVERS){
+			if(script.getCompiled() == null){
+				script.recompile();
+			}
+			
+			if(script.getFunction().equalsIgnoreCase(event)){
+				script.setArgs(args);
+
+				//pass a copy so the args are thread safe.
+				TaskRunner.getInstance().add(script.copy());
+			}
+		}
+	}
+
+
+	@Override
+	public void reloadEventObservers() {
+		for(JavaScript script : OBSERVERS){
+			script.recompile();
+		}
+	}
+
+
+	@Override
+	public Collection<JavaScript> getEventListeners() {
+		return OBSERVERS;
 	}
 
 

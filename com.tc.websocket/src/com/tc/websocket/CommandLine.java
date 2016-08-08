@@ -34,6 +34,7 @@ import com.tc.utils.ColUtils;
 import com.tc.utils.StrUtils;
 import com.tc.websocket.embeded.clients.IScriptClient;
 import com.tc.websocket.embeded.clients.IScriptClientRegistry;
+import com.tc.websocket.embeded.clients.JavaScript;
 import com.tc.websocket.embeded.clients.RhinoClient;
 import com.tc.websocket.embeded.clients.Script;
 import com.tc.websocket.runners.PurgeDocuments;
@@ -86,16 +87,19 @@ public class CommandLine implements CommandProvider {
 				System.gc();
 				
 			}else if("show-scripts".equalsIgnoreCase(command)){
-				this.showScripts(out);
+				this.showScripts(server, out);
 				
 			}else if("reload-scripts".equalsIgnoreCase(command)){
-				this.reloadScripts(out);
+				this.reloadScripts(out, server);
 				
 			}else if("register-script".startsWith(command)){
 				this.registerScript(out);
 				
+			}else if("register-observer".startsWith(command)){
+				this.registerObserver(server, out);
+				
 			}else if("show-scripts".startsWith(command)){
-				this.showScripts(out);
+				this.showScripts(server, out);
 				
 			}else if("remove-script".startsWith(command)){
 				this.removeScript(server, out);
@@ -139,13 +143,19 @@ public class CommandLine implements CommandProvider {
 			out.println("show queue counts no longer supported.");
 	}
 	
-	private void showScripts(CommandInterpreter out){
+	private void showScripts(IDominoWebSocketServer server, CommandInterpreter out){
 		boolean b = false;
 		for(IScriptClient client : RhinoClient.getAllClients()){
 			for(Script script : client.getScripts()){
 				out.println("uri=" + client.getUser().getUri() + ", event=" + script.getEvent() + ", source=" + script.getSource());
 				b = true;
 			}
+		}
+		
+		
+		for(JavaScript script : server.getEventListeners()){
+			out.println("event observer source=" + script.getSource() + ", event=" + script.getFunction());
+			b = true;
 		}
 		
 		if(!b){
@@ -204,11 +214,45 @@ public class CommandLine implements CommandProvider {
 		reg.registerScriptClient(host, uri, event, scriptPath);
 		
 	}
+	
+	private void registerObserver(IDominoWebSocketServer server, CommandInterpreter out){
+		
+		String func = out.nextArgument();
+		String scriptPath = out.nextArgument();
 
-	private void reloadScripts(CommandInterpreter out){
+		
+		if(StrUtils.isEmpty(func)){
+			out.println("func/event is missing (i.e. onMessage, onOpen, onClose)");
+			return;
+		}
+		
+		if(StrUtils.isEmpty(scriptPath)){
+			out.println("invalid path to script.");
+			return;
+		}
+		
+		
+		JavaScript script = new JavaScript();
+		script.setFunction(func);
+		script.setSource(scriptPath);
+		Guicer.getInstance(Activator.bundle).inject(script);
+		script.recompile();
+		server.addEventObserver(script);
+		
+		
+		out.println(script.toString() + " added to the server's observers.");
+		
+	}
+
+	private void reloadScripts(CommandInterpreter out, IDominoWebSocketServer server){
+		out.println("reloading RhinoClients...");
 		for(IScriptClient client : RhinoClient.getAllClients()){
 			client.reloadScripts();
 		}
+		
+		out.println("reloading event observers...");
+		server.reloadEventObservers();
+		
 		out.println("scripts have been reloaded / recompiled");
 	}
 	

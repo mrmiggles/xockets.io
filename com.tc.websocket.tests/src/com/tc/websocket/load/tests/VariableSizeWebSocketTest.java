@@ -67,7 +67,6 @@ public class VariableSizeWebSocketTest implements Runnable{
 			VariableSizeWebSocketTest loader=new VariableSizeWebSocketTest();
 			
 			
-			
 			scanner = new Scanner(System.in);
 			while(scanner.hasNext()){
 				String cmd = scanner.next();
