@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.tc.utils.DateUtils;
-import com.tc.websocket.embeded.clients.AbstractClient;
+import com.tc.websocket.clients.AbstractClient;
 import com.tc.websocket.tests.config.TestConfig;
 
 public class NettyTestClient extends AbstractClient implements Runnable{

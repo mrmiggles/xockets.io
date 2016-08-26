@@ -5,12 +5,10 @@ Bundle-SymbolicName: com.tc.websocket.tests;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: TC
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: com.tc.websocket;bundle-version="1.1.3",
- com.tc.utils;bundle-version="1.1.3",
+Require-Bundle: com.tc.utils;bundle-version="1.1.3",
  org.apache.commons;bundle-version="2.1.0",
  com.tc.rest.client;bundle-version="1.0.0",
  javax.servlet;bundle-version="2.4.0",
- com.tc.scriptrunner,
  org.openntf.junit.libraries;bundle-version="1.1.0",
  com.ibm.domino.osgi.core,
  com.ibm.commons,
@@ -21,7 +19,10 @@ Require-Bundle: com.tc.websocket;bundle-version="1.1.3",
  com.ibm.xsp.dojo,
  com.ibm.xsp.domino,
  com.ibm.designer.runtime,
- io.netty
+ io.netty,
+ com.jackson.library;bundle-version="1.0.0",
+ com.tc.websocket;bundle-version="2.0.9",
+ com.tc.websocket.client;bundle-version="2.0.9"
 Export-Package: com.tc.websocket.junit.tests,
  com.tc.websocket.load.tests,
  com.tc.websocket.tests.client,

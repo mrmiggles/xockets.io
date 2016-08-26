@@ -115,6 +115,14 @@ public class Const {
 	public static final String EVENT_ONRECEIVE="onreceive";
 	
 	
+	//server-side events
+	public static final String ON_OPEN="onOpen";
+	public static final String ON_CLOSE="onClose";
+	public static final String ON_MESSAGE="onMessage";
+	public static final String ON_ERROR="onError";
+	public static final String[] ALL_EVENTS={ON_OPEN,ON_CLOSE,ON_MESSAGE,ON_ERROR};
+	
+	
 	//guice keys
 	public static final String GUICE_REST_WEBSOCKET="GUICE_REST_WEBSOCKET";
 	public static final String GUICE_JSF_WEBSOCKET="GUICE_JSF_WEBSOCKET";

@@ -19,8 +19,10 @@ package com.tc.utils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 @SuppressWarnings("unchecked")
@@ -222,6 +224,21 @@ public final class ColUtils {
     	return vec;
     }
 
+    public static Map<String,Object> toMap(Object ...args){
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	
+    		int cntr =0;
+    		String name = null;
+    		for(Object o : args){
+    			if(cntr % 2 ==0){
+    				name = (String)o;
+    			}else{
+    				map.put(name, o);
+    			}
+    			cntr++;
+    		}
+    	return map;
+    }
     
     
     

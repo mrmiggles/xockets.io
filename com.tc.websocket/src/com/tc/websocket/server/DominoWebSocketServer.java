@@ -60,20 +60,21 @@ import com.tc.websocket.Activator;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
 import com.tc.websocket.IConfig;
-import com.tc.websocket.embeded.clients.IScriptClient;
-import com.tc.websocket.embeded.clients.JavaScript;
 import com.tc.websocket.factories.IUserFactory;
 import com.tc.websocket.filter.IWebsocketFilter;
 import com.tc.websocket.runners.ApplyStatus;
+import com.tc.websocket.runners.Batch;
 import com.tc.websocket.runners.BatchSend;
 import com.tc.websocket.runners.EventQueueProcessor;
 import com.tc.websocket.runners.QueueMessage;
 import com.tc.websocket.runners.TaskRunner;
+import com.tc.websocket.scripts.Script;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.websocket.valueobjects.structures.IMultiMap;
 import com.tc.websocket.valueobjects.structures.MultiMap;
-import com.tc.websocket.valueobjects.structures.UriMap;
+import com.tc.websocket.valueobjects.structures.UriScriptMap;
+import com.tc.websocket.valueobjects.structures.UriUserMap;
 import com.tc.xpage.profiler.Stopwatch;
 
 
@@ -81,13 +82,13 @@ import com.tc.xpage.profiler.Stopwatch;
 public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 	private static final IConfig cfg = Config.getInstance();
-	private static final UriMap URI_MAP = new UriMap();
+	private static final UriUserMap URI_MAP = new UriUserMap();
+	private static final UriScriptMap SCRIPT_MAP = new UriScriptMap();
 	private static IMultiMap<String,IUser> VALID_USERS=new MultiMap<String, IUser>(Config.getInstance().getMaxConnections() / 2);
 	private static final Logger logger = Logger.getLogger(DominoWebSocketServer.class.getName());
+	private static Set<Script> OBSERVERS = Collections.synchronizedSet(new HashSet<Script>());
 
-	private static List<JavaScript> OBSERVERS = Collections.synchronizedList(new ArrayList<JavaScript>());
 	
-
 	//set during server provisioning (see DominoWebSocketModule)
 	private IWebsocketFilter filter;
 
@@ -121,6 +122,10 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	@Override
 	public int getWebSocketCount(){
 		return socket_count.get();
+	}
+	
+	public int getWebSocketAndObserverCount(){
+		return socket_count.get() + OBSERVERS.size();
 	}
 
 
@@ -290,7 +295,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		//break out since the anonymous user was already added previously.
 		if(anonymousAdded){
-			this.notifyEventObservers(IScriptClient.ON_OPEN, user);
+			//this.notifyEventObservers(Const.ON_OPEN, user);
 			return;
 		}
 
@@ -309,7 +314,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		openEvent.run(); //run it in this thread
 		
 		
-		this.notifyEventObservers(IScriptClient.ON_OPEN, user);
+		this.notifyEventObservers(Const.ON_OPEN, user);
 		
 		
 	}
@@ -359,25 +364,26 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			TaskRunner.getInstance().add(new ApplyStatus(user), delay);//mark user as offline
 			
 			
-			//run the close event with the same delay.
+			
 			TaskRunner.getInstance().add(new Runnable(){
 
 				@Override
 				public void run() {
-					notifyEventObservers(IScriptClient.ON_CLOSE, user);
+					notifyEventObservers(Const.ON_CLOSE, user);
 				}
-				
-				
+
 			}, delay);
+			
+			
 		}
 	}
 	
 	public boolean onMessage(String to, String json){
-		
 		boolean b = this.send(to, json);
-		this.notifyEventObservers(IScriptClient.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
+		//this.notifyEventObservers(Const.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
 		return b;
 	}
+	
 
 	@Override
 	public void onMessage(ContextWrapper conn, String json) {
@@ -412,11 +418,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 					msg.setTo(target);
 					msg.getTargets().clear();
 					this.processMessage(user, msg, JSONUtils.toJson(msg));
-					this.notifyEventObservers(IScriptClient.ON_MESSAGE, msg);
 				}
 			}else{
 				this.processMessage(user, msg, JSONUtils.toJson(msg));
-				this.notifyEventObservers(IScriptClient.ON_MESSAGE, msg);
 			}
 		}
 	}
@@ -427,6 +431,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 	
+
 	private void processMessage(IUser user, SocketMessage msg , String message){
 		if(msg!=null && !msg.getTo().startsWith(StringCache.FORWARD_SLASH)){
 			if(user == null || user.isAnonymous()) {
@@ -491,6 +496,10 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		receiveEvent.setTarget(msg.getTo());
 		guicer.inject(receiveEvent);//inject dependencies.
 		receiveEvent.run(); //we don't want to execute in a separate thread.
+		
+		
+		//notify the observers.
+		this.notifyEventObservers(Const.ON_MESSAGE, msg);
 	}
 
 
@@ -504,6 +513,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		}
 
 		logger.log(Level.SEVERE,null, ex);
+		
+		
+		this.notifyEventObservers(Const.ON_ERROR, ex);
 	}
 
 
@@ -646,6 +658,8 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+	
+
 	private int calcBatchSize(int users){
 		int size = users / 2;
 		if (size < 500){
@@ -654,13 +668,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		return size;
 	}
 
-
 	private boolean send(String target, String json){
 
 		boolean sent = false;
 
 		if(target.startsWith(StringCache.FORWARD_SLASH)){
-			sent = true;
 			return this.sendToUri(target, json);
 		}
 
@@ -730,6 +742,19 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				}
 			}
 		}
+
+		//now lets notify the scripts
+		try{
+			Collection<Script> scripts = SCRIPT_MAP.get(new RoutingPath(uri));
+			for(Script script : scripts){
+				TaskRunner.getInstance().add(script.copy(JSONUtils.toObject(json, SocketMessage.class)));
+				b = true;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+
 		return b;
 	}
 
@@ -745,6 +770,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	@Override
 	public void broadcast( SocketMessage msg ) {
 		this.queueMessage(msg);
+		this.notifyEventObservers(Const.ON_MESSAGE, msg);
 	}
 
 
@@ -808,6 +834,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		try{
 			try {
+			
 				ServerBootstrap boot = new ServerBootstrap();
 
 				if(cfg.isNativeTransport()){
@@ -865,58 +892,92 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		VALID_USERS.clear();
 		URI_MAP.clear();
+		OBSERVERS.clear();
 
 		bossGroup.shutdownGracefully();
 		workerGroup.shutdownGracefully();
+
 		this.on.set(false);
 	}
 
 
 	@Override
-	public void addEventObserver(JavaScript script) {
+	public void addEventObserver(Script script) {
+		System.out.println("adding " + script.getSource() + " observer.");
 		if(!OBSERVERS.contains(script)){
 			OBSERVERS.add(script);
 		}
 	}
 	
-	public void removeEventObserver(JavaScript script) {
+	public void removeEventObserver(Script script) {
 		OBSERVERS.remove(script);
 	}
 	
 	
-	public boolean containsObserver(JavaScript script){
+	public boolean containsObserver(Script script){
 		return OBSERVERS.contains(script);
 	}
 
 
 	@Override
 	public synchronized void notifyEventObservers(String event, Object ...args) {
-		for(JavaScript script : OBSERVERS){
-			if(script.getCompiled() == null){
-				script.recompile();
-			}
-			
+		//System.out.println("notifyEventObservers");
+		
+		Batch batch = new Batch();
+		for(Script script : OBSERVERS){
 			if(script.getFunction().equalsIgnoreCase(event)){
-				script.setArgs(args);
-
-				//pass a copy so the args are thread safe.
-				TaskRunner.getInstance().add(script.copy());
+				batch.addRunner(guicer.inject(script.copy(args)));
 			}
 		}
+		TaskRunner.getInstance().add(batch);
+		
 	}
 
 
 	@Override
-	public void reloadEventObservers() {
-		for(JavaScript script : OBSERVERS){
-			script.recompile();
-		}
+	public void reloadScripts() {
+		for(Script script : this.getAllScripts()){script.recompile(true);}
 	}
 
 
 	@Override
-	public Collection<JavaScript> getEventListeners() {
+	public Collection<Script> getEventObservers() {
 		return OBSERVERS;
+	}
+
+	@Override
+	public void addUriListener(Script script) {
+		SCRIPT_MAP.add(script);
+	}
+
+	@Override
+	public Script findUriListener(String source) {
+		Script script = null;
+		for(Script s : SCRIPT_MAP.all()){
+			if(source.equalsIgnoreCase(s.getSource())){
+				script = s;
+				break;
+			}
+		}
+		return script;
+	}
+
+	@Override
+	public void removeUriListener(Script script) {
+		SCRIPT_MAP.remove(script);
+	}
+
+	@Override
+	public Collection<Script> getUriListeners() {
+		return SCRIPT_MAP.all();
+	}
+
+	@Override
+	public Collection<Script> getAllScripts() {
+		List<Script> list = new ArrayList<Script>(OBSERVERS.size());
+		list.addAll(OBSERVERS);
+		list.addAll(getUriListeners());
+		return list;
 	}
 
 

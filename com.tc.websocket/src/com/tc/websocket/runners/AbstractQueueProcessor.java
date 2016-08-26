@@ -51,7 +51,10 @@ public abstract class AbstractQueueProcessor extends NotesOperation {
 			IUser user = server.resolveUser(to);
 
 			//only process if we're on the correct host, and that the user has an open connection.
-			if(to.startsWith(StringCache.FORWARD_SLASH) || info.isCurrentServer(to) || (user!=null && user.isOpen() && user.isOnServer())){
+			if((to.startsWith(StringCache.FORWARD_SLASH) 
+					|| info.isCurrentServer(to) 
+					|| (user!=null && user.isOpen() 
+					&& user.isOnServer()))){
 
 				//validate the fields
 				SocketMessage msg = msgFactory.buildMessage(doc);

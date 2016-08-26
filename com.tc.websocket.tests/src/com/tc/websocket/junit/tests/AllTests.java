@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({RhinoClientTest.class, TestRestServices.class})
+@SuiteClasses({TestRestServices.class})
 public class AllTests {
 
 }

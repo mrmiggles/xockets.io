@@ -31,6 +31,14 @@ public class JSONUtils {
 	}
 	
 	
+	public static void bind(Object o, String json){
+		try{
+			mapper.readerForUpdating(o).readValue(json);
+		}catch(Exception e){
+			logger.log(Level.SEVERE, null, e);
+		}
+	}
+	
 	public static File write(Object o){
 		File file=null;
 		try {

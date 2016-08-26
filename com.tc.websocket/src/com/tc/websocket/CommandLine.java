@@ -32,14 +32,11 @@ import com.tc.di.guicer.Guicer;
 import com.tc.di.guicer.IGuicer;
 import com.tc.utils.ColUtils;
 import com.tc.utils.StrUtils;
-import com.tc.websocket.embeded.clients.IScriptClient;
-import com.tc.websocket.embeded.clients.IScriptClientRegistry;
-import com.tc.websocket.embeded.clients.JavaScript;
-import com.tc.websocket.embeded.clients.RhinoClient;
-import com.tc.websocket.embeded.clients.Script;
 import com.tc.websocket.runners.PurgeDocuments;
+import com.tc.websocket.scripts.Script;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
+import com.tc.websocket.valueobjects.structures.UriScriptMap;
 
 public class CommandLine implements CommandProvider {
 	
@@ -74,6 +71,8 @@ public class CommandLine implements CommandProvider {
 
 			}else if("count-all".equals(command)){
 				out.println(server.getUsers().size());
+			}else if("show-engines".equals(command)){
+				Script.printEngines();
 			}
 			
 			else if("show-all-users".equalsIgnoreCase(command)){
@@ -82,7 +81,11 @@ public class CommandLine implements CommandProvider {
 			}else if("show-users".equalsIgnoreCase(command)){
 				this.printUsers(server.getUsersOnThisServer(), out);
 				
-			}else if ("gc".equalsIgnoreCase(command)){
+			}else if("show-listeners".equalsIgnoreCase(command)){
+				this.showListeners();
+			}
+			
+			else if ("gc".equalsIgnoreCase(command)){
 				System.out.println("requesting garbage collection");
 				System.gc();
 				
@@ -128,6 +131,9 @@ public class CommandLine implements CommandProvider {
 		return ((value / 1000) / 1000);
 	}
 	
+	private void showListeners(){
+		new UriScriptMap().print();
+	}
 
 	private void showAvailableMemory(CommandInterpreter out){
 		long allocatedMemory  = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
@@ -145,15 +151,7 @@ public class CommandLine implements CommandProvider {
 	
 	private void showScripts(IDominoWebSocketServer server, CommandInterpreter out){
 		boolean b = false;
-		for(IScriptClient client : RhinoClient.getAllClients()){
-			for(Script script : client.getScripts()){
-				out.println("uri=" + client.getUser().getUri() + ", event=" + script.getEvent() + ", source=" + script.getSource());
-				b = true;
-			}
-		}
-		
-		
-		for(JavaScript script : server.getEventListeners()){
+		for(Script script : server.getEventObservers()){
 			out.println("event observer source=" + script.getSource() + ", event=" + script.getFunction());
 			b = true;
 		}
@@ -166,52 +164,13 @@ public class CommandLine implements CommandProvider {
 	
 
 	private void removeScript(IDominoWebSocketServer server, CommandInterpreter out){
-		String path = out.nextArgument();
-		for(IScriptClient client : RhinoClient.getAllClients()){
-			client.removeScriptByPath(path);
-			
-			if(client.getUser().getUserId().equals(Const.RHINO_PREFIX + path)){
-				out.println("removing " + client.getUser().getUserId() + "...");
-				server.removeUser(client.getUser());
-			}
-		}
 		
-		out.println("remove-script operation complete");
-
+		throw new IllegalArgumentException("No longer supported.");
+	
 	}
 	
 	private void registerScript(CommandInterpreter out){
-		
-		String host = out.nextArgument();
-		String uri = out.nextArgument();
-		String event = out.nextArgument();
-		String scriptPath = out.nextArgument();
-		
-		
-		if(StrUtils.isEmpty(host)){
-			out.println("host is empty");
-		}
-		
-		
-		if(StrUtils.isEmpty(uri)){
-			out.println("uri is empty.");
-			return;
-		}
-		
-		if(StrUtils.isEmpty(event)){
-			out.println("event is missing (i.e. onMessage, onOpen, onClose)");
-			return;
-		}
-		
-		if(StrUtils.isEmpty(scriptPath)){
-			out.println("invalid path to script.");
-			return;
-		}
-		
-		
-		//register the script
-		IScriptClientRegistry reg = Guicer.getInstance(Activator.bundle).createObject(IScriptClientRegistry.class);
-		reg.registerScriptClient(host, uri, event, scriptPath);
+		throw new IllegalArgumentException("No longer supported.");
 		
 	}
 	
@@ -232,11 +191,11 @@ public class CommandLine implements CommandProvider {
 		}
 		
 		
-		JavaScript script = new JavaScript();
+		Script script = Script.newScript(scriptPath);
 		script.setFunction(func);
 		script.setSource(scriptPath);
 		Guicer.getInstance(Activator.bundle).inject(script);
-		script.recompile();
+		script.recompile(true);
 		server.addEventObserver(script);
 		
 		
@@ -245,14 +204,8 @@ public class CommandLine implements CommandProvider {
 	}
 
 	private void reloadScripts(CommandInterpreter out, IDominoWebSocketServer server){
-		out.println("reloading RhinoClients...");
-		for(IScriptClient client : RhinoClient.getAllClients()){
-			client.reloadScripts();
-		}
-		
 		out.println("reloading event observers...");
-		server.reloadEventObservers();
-		
+		server.reloadScripts();
 		out.println("scripts have been reloaded / recompiled");
 	}
 	

@@ -25,7 +25,6 @@ import org.osgi.framework.Constants;
 import com.google.inject.Module;
 import com.tc.di.guicer.Guicer;
 import com.tc.guice.domino.module.ServerInfo;
-import com.tc.scriptrunner.guice.ScriptRunnerModule;
 import com.tc.websocket.guice.DominoWebSocketModule;
 import com.tc.websocket.guice.NettyModule;
 import com.tc.websocket.guice.RunnablesModule;
@@ -122,8 +121,6 @@ public class StartAndStop {
 		modules.add(new RunnablesModule());
 		modules.add(new NettyModule());
 		modules.add(new DominoWebSocketModule());
-		modules.add(new ScriptRunnerModule());
-		
 		
 		if(Config.getInstance().isProfiled()){
 			modules.add(new ProfilerModule());

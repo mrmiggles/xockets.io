@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import lotus.domino.NotesException;
 
-import com.tc.websocket.embeded.clients.ScriptBuilder;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.SocketMessage;
 
@@ -46,21 +45,25 @@ public interface IWebSocketBean {
 	public abstract void sendMessage(SocketMessage msg);
 	
 	public void setRequest(HttpServletRequest req);
-	
-	public void addSocketEventListener(String uri, String event, String script, String runAsUser, String runAsPassword);
-	
-	public void addSocketEventListener(String uri, String event, String script);
-	
-	public void addSocketEventListener(ScriptBuilder proxy);
-	
-	public boolean containsSocketListener(String uri);
-	
-	public boolean containsScript(String scriptPath);
-	
-	public void removeSocketListeners(String uri);
-	
-	public void removeSocketListener(String scriptPath);
+
+	public boolean containsScript(String source);
 	
 	public String getCustomWebSocketUrl(HttpServletRequest req, String sessionId, String sourceUri);
+
+	
+	//URI listeners
+	public void addListeners(final String uri, final String[] sources);
+	public void addUriListener(String uri, String source, String runAsUser, String runAsPassword);
+	public void addUriListener(String uri, String source);
+	public boolean containsUriListener(String uri);
+	public void removeUriListener(String source);
+	
+	
+	//observers
+	public void addObservers(String[] resources);
+	public void addEventObserver(final String function, final String source);
+	public boolean containsObserver(final String function, final String source);
+	public void removeObserver(final String function, final String source);
+	
 
 }

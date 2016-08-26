@@ -43,7 +43,7 @@ public class TaskRunner implements Runnable {
 
 	//in memory data structure for queued up runnables.
 	private final Queue<IFutureRunnable> RUN_QUEUE = new ConcurrentLinkedQueue<IFutureRunnable>();
-
+	
 	//service to process state changes for users, and other future tasks.
 	private ScheduledExecutorService scheduler;
 
@@ -59,7 +59,7 @@ public class TaskRunner implements Runnable {
 	}
 
 	private TaskRunner(){
-		
+			
 	}
 
 
@@ -67,7 +67,7 @@ public class TaskRunner implements Runnable {
 		guicer.inject(runMe);//make sure all dependencies are there.
 		RUN_QUEUE.add(new FutureRunnable(runMe));//queue it up to run as a future runnable with zero seconds.
 	}
-
+	
 
 	//run sometime in the future.
 	public void add(Runnable runMe, int seconds){
@@ -96,8 +96,8 @@ public class TaskRunner implements Runnable {
 			
 			Guicer.getInstance(Activator.bundle).inject(this);//inject the dependencies
 			
-			scheduler.scheduleAtFixedRate(this, 5, 500, TimeUnit.MILLISECONDS); 
-
+			scheduler.scheduleAtFixedRate(this, 5, 100, TimeUnit.MILLISECONDS); 
+			
 
 			if(Config.getInstance().isClustered()){
 				//monitor users coming in from a different server and add them to the local in memory ConcurrentHashMap

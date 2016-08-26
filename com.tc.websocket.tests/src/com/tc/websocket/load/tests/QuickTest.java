@@ -1,10 +1,46 @@
 package com.tc.websocket.load.tests;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
+import org.apache.commons.io.IOUtils;
+
+import com.tc.websocket.valueobjects.SocketMessage;
+
 public class QuickTest {
 	
 	public static void main(String[] args){
-		String json = "{\"from\":\"system\",\"to\":\"broadcast\",\"text\":\"An agent sent me! 1. Adding more data to make it more real. More text to get closer to a reasonable amount of data.  All work and no play makes Mark a dull boy.\",\"date\":\"2016-05-12 12:00 AM\",\"durable\":\"false\",\"persisted\":\"true\"}";
-		System.out.println(parseTo(json));
+		
+		SocketMessage msg = new SocketMessage().to("test").from("test").text("test");
+		
+		try {
+			ScriptEngine engine = new ScriptEngineManager().getEngineByName("python");
+			InputStream in = QuickTest.class.getResourceAsStream("observer.py");
+			String code = IOUtils.toString(in);
+			
+			
+		
+			engine.eval(code);
+			Invocable inv = (Invocable) engine;
+			inv.invokeFunction("onMessage", msg);
+			
+			
+			IOUtils.closeQuietly(in);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 	

@@ -27,7 +27,9 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+import com.google.inject.Inject;
 import com.tc.utils.JSONUtils;
+import com.tc.websocket.server.IDominoWebSocketServer;
 
 public class SocketMessage {
 	
@@ -42,6 +44,9 @@ public class SocketMessage {
 	private String json;//serialized form of this object.
 	private boolean durable;
 	private boolean persisted;
+
+	@Inject
+	private IDominoWebSocketServer server;
 
 	public void setValid(boolean valid){
 		//do nothing.
@@ -220,5 +225,12 @@ public class SocketMessage {
 			this.targets.add(target);
 		}
 	}
+
 	
+	public void send(){
+		server.onMessage(this.getTo(),this.toJson());
+	}
+	
+	
+
 }

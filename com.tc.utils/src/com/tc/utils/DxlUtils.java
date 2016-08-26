@@ -18,14 +18,20 @@
 package com.tc.utils;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.io.IOUtils;
 
 import lotus.domino.Database;
 import lotus.domino.Document;
@@ -71,7 +77,7 @@ public class DxlUtils {
 		simpleCache.put(properties, props); //cache it until http restart.
 		return props;
 	}
-
+	
 	public static byte[] findFileResource(Database db, String resourceName){
 		Document docLib=null;
 		byte[] byteMe = null;
@@ -117,6 +123,64 @@ public class DxlUtils {
 		return byteMe;
 	}
 
+	private static void write(File dir, String fileName, byte[] byteMe){
+		OutputStream out = null;
+		try {
+			out = new FileOutputStream(dir.getPath() + IOUtils.DIR_SEPARATOR + fileName);
+			IOUtils.write(byteMe, out);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			IOUtils.closeQuietly(out);
+		}
+		
+	}
+	
+	public static void exportFiles(File dir, Database db, String ext){
+		Document docLib=null;
+		byte[] byteMe = null;
+		NoteCollection nc=null;
+		try {
+
+			if(db==null) throw new IllegalArgumentException("Database cannot be null");
+			if(!dir.isDirectory()) throw new IllegalArgumentException("dir must be a directory");
+
+			nc = db.createNoteCollection(false);
+			nc.setSelectDocuments(false);
+			nc.setSelectScriptLibraries(false);
+			nc.setSelectMiscFormatElements(true);
+
+			nc.buildCollection();
+			docLib= null;
+
+			//now lets find the lib that matches the name
+			String noteId = nc.getFirstNoteID();
+			while(!"".equals(noteId)){
+				docLib = db.getDocumentByID(noteId);
+				String fileName = docLib.getItemValueString("$Title");
+				if(docLib!=null && fileName.endsWith(ext)){
+					byteMe = extractData(docLib,FILE_DATA_START,FILE_DATA_END);
+					DxlUtils.write(dir, fileName, byteMe);
+				}
+				noteId = nc.getNextNoteID(noteId);
+				if(docLib!=null){
+					docLib.recycle();
+				}
+			}
+
+		} catch (NotesException e) {
+			logger.log(Level.SEVERE,null, e);
+		}finally{
+			try {
+				nc.recycle();
+			} catch (NotesException e) {
+				logger.log(Level.SEVERE,null, e);
+			}
+		}
+		
+	}
 
 
 	public static byte[] findSSJS(Database db, String resourceName){

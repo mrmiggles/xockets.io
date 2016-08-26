@@ -34,10 +34,6 @@ import com.tc.websocket.Const;
 import com.tc.websocket.IConfig;
 import com.tc.websocket.ISSLFactory;
 import com.tc.websocket.SSLFactory;
-import com.tc.websocket.embeded.clients.ClientCache;
-import com.tc.websocket.embeded.clients.IClientCache;
-import com.tc.websocket.embeded.clients.IScriptClientRegistry;
-import com.tc.websocket.embeded.clients.RhinoRegistry;
 import com.tc.websocket.factories.ISocketMessageFactory;
 import com.tc.websocket.factories.IUserFactory;
 import com.tc.websocket.factories.SocketMessageFactory;
@@ -68,9 +64,9 @@ public class DominoWebSocketModule extends AbstractModule {
 	protected void configure() {
 
 		try{
+	        
 			bind(IUserFactory.class).to(UserFactory.class).in(Singleton.class);
 			bind(ISocketMessageFactory.class).to(SocketMessageFactory.class).in(Singleton.class);
-			bind(IScriptClientRegistry.class).to(RhinoRegistry.class).in(Singleton.class);
 
 			bind(DominoWebSocketServer.class);
 
@@ -86,8 +82,6 @@ public class DominoWebSocketModule extends AbstractModule {
 			bind(IRestWebSocket.class).to(RestWebSocket.class);
 
 			bind(ISSLFactory.class).to(SSLFactory.class).in(Singleton.class);
-
-			bind(IClientCache.class).to(ClientCache.class).in(Singleton.class);
 
 		}catch(Exception e){
 			logger.log(Level.SEVERE,null,e);

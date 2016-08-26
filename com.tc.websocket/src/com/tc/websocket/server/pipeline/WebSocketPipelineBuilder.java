@@ -8,8 +8,8 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketSe
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 import com.tc.websocket.Config;
-import com.tc.websocket.server.handler.WebSocketValidationHandler;
 import com.tc.websocket.server.handler.WebSocketServerHandler;
+import com.tc.websocket.server.handler.WebSocketValidationHandler;
 
 public class WebSocketPipelineBuilder implements IPipelineBuilder {
 	

@@ -39,9 +39,8 @@ public class QueueProcessor extends AbstractQueueProcessor implements Runnable {
 		if(TaskRunner.getInstance().isClosing()){
 			return;
 		}
-
-		//exit if nobody on.
-		if(server.getWebSocketCount() == 0) return;
+		
+		if(server.getWebSocketAndObserverCount() == 0)return;
 
 		Session session = this.openSession();
 		try {

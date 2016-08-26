@@ -20,12 +20,11 @@ package com.tc.websocket.valueobjects;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import com.tc.websocket.server.ContextWrapper;
 import com.tc.websocket.server.RoutingPath;
 
-public interface IUser {
+public interface IUser extends IUri {
 	
 	public abstract void setDocId(String docId);
 	
@@ -79,15 +78,9 @@ public interface IUser {
 	public abstract Date getLastPing();
 	
 	public void setLastPing(Date date);
-	
-	public String getUri();
-	
+
 	public String getUserPath();
-	
-	public boolean containsUri(String uri);
-	
-	public boolean startsWith(String uri);
-	
+
 	public boolean isValid();
 	
 	public IUser copy();
@@ -106,7 +99,7 @@ public interface IUser {
 	
 	public int count();
 	
-	public List<String> getUris();
+	
 	
 
 }

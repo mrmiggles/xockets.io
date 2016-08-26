@@ -2,7 +2,7 @@
 <feature
       id="com.tc.websocket.feature"
       label="xockets.io"
-      version="2.0.8.qualifier"
+      version="3.0.0.qualifier"
       provider-name="Tek Counsel LLC">
 
    <description url="http://www.example.com/description">
@@ -56,13 +56,6 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
-   <plugin
-         id="com.tc.scriptrunner"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="io.netty"

@@ -68,7 +68,6 @@ public class RhinoRunner implements IScriptRunner {
 	@Override
 	public CompiledScript compile(String ssjs) throws ScriptException {
 		CompiledScript compiled=null;
-
 		Compilable compilingEngine = (Compilable)engine;
 		compiled = compilingEngine.compile(ssjs);
 

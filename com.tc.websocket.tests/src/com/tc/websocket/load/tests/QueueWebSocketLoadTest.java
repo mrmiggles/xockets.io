@@ -47,7 +47,7 @@ public class QueueWebSocketLoadTest{
 		scanner = new Scanner(System.in);
 		while(scanner.hasNext()){
 			String cmd = scanner.next();
-			if(cmd.equals("runningcount")){
+			if(cmd.equals("runningcount")){	
 				System.out.println("Running count is : " + NettyTestClient.counter.get());
 			}
 			else if(cmd.equals("stop")){
