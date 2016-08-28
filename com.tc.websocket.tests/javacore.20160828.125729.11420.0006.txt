@@ -1,0 +1,454 @@
+NULL           ------------------------------------------------------------------------
+0SECTION       TITLE subcomponent dump routine
+NULL           ===============================
+1TISIGINFO     Dump Event "gpf" (00002000) received 
+1TIDATETIME    Date:                 2016/08/28 at 12:57:37
+1TIFILENAME    Javacore filename:    C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.websocket.tests\javacore.20160828.125729.11420.0006.txt
+1TIREQFLAGS    Request Flags: 0x81 (exclusive+preempt)
+1TIPREPSTATE   Prep State: 0x100 ()
+1TIPREPINFO    Exclusive VM access not taken: data may not be consistent across javacore sections
+NULL           ------------------------------------------------------------------------
+0SECTION       GPINFO subcomponent dump routine
+NULL           ================================
+2XHOSLEVEL     OS Level         : Windows 8 6.2 build 9200
+2XHCPUS        Processors -
+3XHCPUARCH       Architecture   : amd64
+3XHNUMCPUS       How Many       : 8
+3XHNUMASUP       NUMA is either not supported or has been disabled by user
+NULL           
+1XHEXCPCODE    Windows_ExceptionCode: C0000005
+1XHEXCPCODE    J9Generic_Signal: 00000004
+1XHEXCPCODE    ExceptionAddress: 00007FFB905C3B2F
+1XHEXCPCODE    ContextFlags: 0010005F
+1XHEXCPCODE    Handler1: 000007FFFF67DD80
+1XHEXCPCODE    Handler2: 000007FFFF64EB00
+NULL           
+1XHEXCPMODULE  Module: C:\WINDOWS\system32\msvcrt.dll
+1XHEXCPMODULE  Module_base_address: 00007FFB90550000
+1XHEXCPMODULE  Offset_in_DLL: 0000000000073B2F
+NULL           
+1XHREGISTERS   Registers:
+2XHREGISTER      RDI: 0000000000000FE9
+2XHREGISTER      RSI: 000007FFFF1CAF14
+2XHREGISTER      RAX: 0000000002DE6FD0
+2XHREGISTER      RBX: 00007FF57D87D14E
+2XHREGISTER      RCX: 0000000000008020
+2XHREGISTER      RDX: 00000002238A67C8
+2XHREGISTER      R8: 0000000000000009
+2XHREGISTER      R9: 000000000000007F
+2XHREGISTER      R10: 00000002238AE7C8
+2XHREGISTER      R11: 0000000000008000
+2XHREGISTER      R12: 0000000000008000
+2XHREGISTER      R13: 0000000000000FE9
+2XHREGISTER      R14: 000007FFFF6E7500
+2XHREGISTER      R15: 000000000419E040
+2XHREGISTER      XMM0: 000000000000027F
+2XHREGISTER      XMM1: 0000000000000000
+2XHREGISTER      XMM2: 0000000000000000
+2XHREGISTER      XMM3: 0000000000000000
+2XHREGISTER      XMM4: 0000000000000000
+2XHREGISTER      XMM5: 0000000000000000
+2XHREGISTER      XMM6: 0000000000000000
+2XHREGISTER      XMM7: 0000000000000000
+2XHREGISTER      XMM8: 0000000000000000
+2XHREGISTER      XMM9: 0000000000000000
+2XHREGISTER      XMM10: 206F742061746164
+2XHREGISTER      XMM11: 6165722065726F6D
+2XHREGISTER      XMM12: 0000000000000000
+2XHREGISTER      XMM13: 0000000000000000
+2XHREGISTER      XMM14: 0000000000000000
+2XHREGISTER      XMM15: 0000000000000000
+2XHREGISTER      RIP: 00007FFB905C3B2F
+2XHREGISTER      RSP: 00000001DBBFF918
+2XHREGISTER      RBP: 00000001DBBFFC60
+2XHREGISTER      GS: 002B
+2XHREGISTER      FS: 0053
+2XHREGISTER      ES: 002B
+2XHREGISTER      DS: 002B
+NULL           
+1XHFLAGS       VM flags:0000000000000000
+NULL           
+NULL           ------------------------------------------------------------------------
+0SECTION       ENVINFO subcomponent dump routine
+NULL           =================================
+1CIJAVAVERSION JRE 1.6.0 Windows 8 amd64-64 build jvmwa6460sr16fp15-20151020_272943 (pwa6460sr16fp15-20151106_01(SR16 FP15))
+1CIVMVERSION   VM build 20151020_272943
+1CIJITVERSION  r9_20151019_103450
+1CIGCVERSION   GC - GA24_Java6_SR16_20151020_1627_B272943
+1CIJITMODES    JIT enabled, AOT enabled, FSD disabled, HCR disabled
+1CIRUNNINGAS   Running as a standalone JVM
+1CICMDLINE     c:\Domino\jvm\bin\javaw.exe -Xmx2048m -Xms256m -Dfile.encoding=Cp1252 -classpath C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.osgi_3.4.3.R34x_v20081215-1030-RCP20130829-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.cds_2.0.4.200802251155.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.eclipse.osgi.nl_9.0.1.20130829-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.rcp.core.logger.frameworkhook_9.0.1.20131002-1404.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.rds_1.0.0.20130829-1400.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.runtime_9.0.1.20151122-0905\lwpd.runtime.designer.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.commons_9.0.1.20151122-0905\lwpd.commons.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.core_9.0.1.20151122-0905\lwpd.xsp.core.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.pvc.servlet_2.5.0.20131002-1404.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\jsf-api.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\jsf-impl.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\commons-beanutils.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\commons-collections.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\commons-digester.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\commons-logging.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.domino.services_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.domino.xsp.adapter_9.0.1.20151122-0905\lwpd.domino.adapter.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.core_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.controls_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.mobile_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.oneui_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.domino_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.domino_9.0.1.20151122-0905\lwpd.xsp.domino.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.domino.server_9.0.1.20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.designer_9.0.1.20151122-0905\lwpd.xsp.designer.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extsn_9.0.1.20151122-0905\lwpd.xsp.extsn.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.commons.xml_9.0.1.20151122-0905\lwpd.commons.xml.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.jscript_9.0.1.20151122-0905\lib\lwpd.commons.ibmjs.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.ibm.notes.java.api\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.ibm.notes.java.api\Notes.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.domino.osgi.core_9.0.1.20151122-0905.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.http.registry_1.0.100.v20080427-0830.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-io-2.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-codec-1.6.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-net-3.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-lang3-3.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-fileupload-1.3.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.jackson.library\jackson-all-1.9.9.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.osgi.util_3.1.300.v20080303.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.core.runtime_3.4.0.v20080512.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.common_3.4.0.v20080421-2006.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.registry_3.4.0.v20080516-0950.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.eclipse.equinox.registry.nl_9.0.1.20130829-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.core.runtime.compatibility.registry_3.2.200.v20080610\runtime_registry_compatibility.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.utils\bin;C:\Domino\osgi\rcp\eclipse\plugins\javax.servlet_2.4.0.v200806031604-RCP20130829-1400.jar;C:\jars\plugins\org.openntf.junit.libraries_1.1.0.201409021259.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\junit-4.11.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\hamcrest-core-1.3.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\powermock-easymock-1.5.5-full.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\easymock-3.2.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\cglib-nodep-2.2.2.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\javassist-3.18.2-GA.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\objenesis-2.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.rest.client\bin;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.dojo_9.0.1.20151122-0905\xsp.dojo.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\io.netty\netty-all-4.1.4.Final.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\io.netty\netty-tcnative-openssl-static-1.1.33.Fork15-SNAPSHOT-windows-x86_64}.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\io.netty\jzlib-1.1.2.jar;C:\Domino\jvm\lib\ext\jython-standalone-2.5.4-rc1.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.core.jobs_3.4.1.R34x_v20081128.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.preferences_3.2.201.R34x_v20080709-RCP20130829-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.core.contenttype_3.3.0.v20080604-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.app_1.1.0.v20080421-2006.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.google.guice\guice-3.0.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.google.guice\guice-assistedinject-3.0.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.google.guice\javax.inject.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.google.guice\aopalliance.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.di.guicer\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.domino.module\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.xpage.profiler\bin;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.wink_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\httpclient-4.0.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\httpcore-4.0.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\jaxb-api-2.2.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\jaxb-impl-2.2.1.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\jsr311-api-1.1.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\slf4j-api-1.6.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\slf4j-simple-1.6.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\stax-api-1.0-2.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\wink-client-1.1.2-incubating.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\wink-common-1.1.2-incubating.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\wink-server-1.1.2-incubating.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.domino.das_9.0.1.v00_00_20151122-0905.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.websocket\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.websocket.client\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.websocket.tests\bin;C:\Domino\jvm\lib\ext\groovy-2.4.7.jar;C:\Domino\jvm\lib\ext\jruby-complete-1.7.25.jar;C:\Domino\jvm\lib\ext\groovy-jsr223-2.4.7.jar com.tc.websocket.load.tests.QueueWebSocketLoadTest
+1CIJAVAHOMEDIR Java Home Dir:   c:\Domino\jvm
+1CIJAVADLLDIR  Java DLL Dir:    c:\Domino\jvm\bin
+1CISYSCP       Sys Classpath:   c:\Domino\jvm\bin\default\jclSC160\vm.jar;c:\Domino\jvm\lib\annotation.jar;c:\Domino\jvm\lib\beans.jar;c:\Domino\jvm\lib\java.util.jar;c:\Domino\jvm\lib\jndi.jar;c:\Domino\jvm\lib\logging.jar;c:\Domino\jvm\lib\security.jar;c:\Domino\jvm\lib\sql.jar;c:\Domino\jvm\lib\ibmorb.jar;c:\Domino\jvm\lib\ibmorbapi.jar;c:\Domino\jvm\lib\ibmcfw.jar;c:\Domino\jvm\lib\rt.jar;c:\Domino\jvm\lib\charsets.jar;c:\Domino\jvm\lib\resources.jar;c:\Domino\jvm\lib\ibmpkcs.jar;c:\Domino\jvm\lib\ibmcertpathfw.jar;c:\Domino\jvm\lib\ibmjgssfw.jar;c:\Domino\jvm\lib\ibmjssefw.jar;c:\Domino\jvm\lib\ibmsaslfw.jar;c:\Domino\jvm\lib\ibmjcefw.jar;c:\Domino\jvm\lib\ibmjgssprovider.jar;c:\Domino\jvm\lib\ibmjsseprovider2.jar;c:\Domino\jvm\lib\ibmcertpathprovider.jar;c:\Domino\jvm\lib\management-agent.jar;c:\Domino\jvm\lib\xml.jar;c:\Domino\jvm\lib\jlm.jar;c:\Domino\jvm\lib\javascript.jar;
+1CIUSERARGS    UserArgs:
+2CIUSERARG               -Xjcl:jclscar_24
+2CIUSERARG               -Dcom.ibm.oti.vm.bootstrap.library.path=c:\Domino\jvm\bin\default;c:\Domino\jvm\bin
+2CIUSERARG               -Dsun.boot.library.path=c:\Domino\jvm\bin\default;c:\Domino\jvm\bin
+2CIUSERARG               -Djava.library.path=c:\Domino\jvm\bin\default;c:\Domino\jvm\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/java/jdk1.8.0_65/bin/../jre/bin/server;C:/java/jdk1.8.0_65/bin/../jre/bin;C:/java/jdk1.8.0_65/bin/../jre/lib/amd64;C:\java\jdk1.8.0_65\bin;C:\Strawberry\perl\bin;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;C:\Program Files\Microsoft SDKs\Windows\v7.1\Include;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Program Files\VideoLAN\VLC;C:\Program Files\Adobe\Adobe PDF iFilter 11 for 64-bit platforms\bin;C:\apache-maven\bin;C:\Program Files (x86)\IguanaIR;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files (x86)\CMake\bin;C:\ant\bin;C:\Program Files (x86)\Symantec\VIP Access Client\;C:\Domino;C:\Windows\System32;C:\Program Files\Mercurial\;C:\nodejs\;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI\wbin;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files\Microsoft SQL Server\120\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\120\Tools\Binn\ManagementStudio\;C:\Program Files (x86)\Microsoft SQL Server\120\DTS\Binn\;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Users\Mark\Documents\kepler\;C:\Program Files\Microsoft Windows Performance Toolkit\;C:\Strawberry\c\bin;C:\Strawberry\perl\site\bin;C:\netty-tcnative\apr-1.5.2-dist\bin;C:\WINDOWS\system32\config\systemprofile\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\OpenSSL-Win64\bin;C:\Program Files (x86)\Git\bin\;C:\Users\Mark\.dnx\bin;C:\ffmpeg\bin;C:\Users\Mark\AppData\Roaming\npm;C:\Users\Mark\AppData\Local\atom\bin;C:\Users\Mark\Documents\kepler;;.
+2CIUSERARG               -Djava.home=c:\Domino\jvm
+2CIUSERARG               -Djava.ext.dirs=c:\Domino\jvm\lib\ext
+2CIUSERARG               -Duser.dir=C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.websocket.tests
+2CIUSERARG               _j2se_j9=1119744 0x000007FFFF2E0120
+2CIUSERARG               -Djava.runtime.version=pwa6460sr16fp15-20151106_01 (SR16 FP15)
+2CIUSERARG               -Xdump
+2CIUSERARG               -Djava.class.path=.
+2CIUSERARG               -Xmx2048m
+2CIUSERARG               -Xms256m
+2CIUSERARG               -Dfile.encoding=Cp1252
+2CIUSERARG               -Djava.class.path=C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.osgi_3.4.3.R34x_v20081215-1030-RCP20130829-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.cds_2.0.4.200802251155.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.eclipse.osgi.nl_9.0.1.20130829-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.rcp.core.logger.frameworkhook_9.0.1.20131002-1404.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.rds_1.0.0.20130829-1400.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.runtime_9.0.1.20151122-0905\lwpd.runtime.designer.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.commons_9.0.1.20151122-0905\lwpd.commons.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.core_9.0.1.20151122-0905\lwpd.xsp.core.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.pvc.servlet_2.5.0.20131002-1404.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\jsf-api.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\jsf-impl.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\commons-beanutils.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\commons-collections.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\commons-digester.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\commons-logging.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.domino.services_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.domino.xsp.adapter_9.0.1.20151122-0905\lwpd.domino.adapter.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.core_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.controls_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.mobile_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.oneui_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.domino_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.domino_9.0.1.20151122-0905\lwpd.xsp.domino.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.domino.server_9.0.1.20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.designer_9.0.1.20151122-0905\lwpd.xsp.designer.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extsn_9.0.1.20151122-0905\lwpd.xsp.extsn.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.commons.xml_9.0.1.20151122-0905\lwpd.commons.xml.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.jscript_9.0.1.20151122-0905\lib\lwpd.commons.ibmjs.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.ibm.notes.java.api\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.ibm.notes.java.api\Notes.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.domino.osgi.core_9.0.1.20151122-0905.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.http.registry_1.0.100.v20080427-0830.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-io-2.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-codec-1.6.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-net-3.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-lang3-3.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-fileupload-1.3.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.jackson.library\jackson-all-1.9.9.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.osgi.util_3.1.300.v20080303.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.core.runtime_3.4.0.v20080512.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.common_3.4.0.v20080421-2006.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.registry_3.4.0.v20080516-0950.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.eclipse.equinox.registry.nl_9.0.1.20130829-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.core.runtime.compatibility.registry_3.2.200.v20080610\runtime_registry_compatibility.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.utils\bin;C:\Domino\osgi\rcp\eclipse\plugins\javax.servlet_2.4.0.v200806031604-RCP20130829-1400.jar;C:\jars\plugins\org.openntf.junit.libraries_1.1.0.201409021259.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\junit-4.11.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\hamcrest-core-1.3.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\powermock-easymock-1.5.5-full.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\easymock-3.2.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\cglib-nodep-2.2.2.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\javassist-3.18.2-GA.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\objenesis-2.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.rest.client\bin;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.dojo_9.0.1.20151122-0905\xsp.dojo.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\io.netty\netty-all-4.1.4.Final.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\io.netty\netty-tcnative-openssl-static-1.1.33.Fork15-SNAPSHOT-windows-x86_64}.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\io.netty\jzlib-1.1.2.jar;C:\Domino\jvm\lib\ext\jython-standalone-2.5.4-rc1.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.core.jobs_3.4.1.R34x_v20081128.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.preferences_3.2.201.R34x_v20080709-RCP20130829-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.core.contenttype_3.3.0.v20080604-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.app_1.1.0.v20080421-2006.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.google.guice\guice-3.0.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.google.guice\guice-assistedinject-3.0.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.google.guice\javax.inject.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.google.guice\aopalliance.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.di.guicer\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.domino.module\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.xpage.profiler\bin;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.wink_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\httpclient-4.0.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\httpcore-4.0.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\jaxb-api-2.2.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\jaxb-impl-2.2.1.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\jsr311-api-1.1.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\slf4j-api-1.6.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\slf4j-simple-1.6.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\stax-api-1.0-2.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\wink-client-1.1.2-incubating.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\wink-common-1.1.2-incubating.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\wink-server-1.1.2-incubating.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.domino.das_9.0.1.v00_00_20151122-0905.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.websocket\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.websocket.client\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.websocket.tests\bin;C:\Domino\jvm\lib\ext\groovy-2.4.7.jar;C:\Domino\jvm\lib\ext\jruby-complete-1.7.25.jar;C:\Domino\jvm\lib\ext\groovy-jsr223-2.4.7.jar
+2CIUSERARG               -Dsun.java.command=com.tc.websocket.load.tests.QueueWebSocketLoadTest
+2CIUSERARG               -Dsun.java.launcher=SUN_STANDARD
+2CIUSERARG               _port_library 0x000007FFFF2DEF80
+2CIUSERARG               _org.apache.harmony.vmi.portlib 0x00000000005871B8
+NULL
+1CIUSERLIMITS  User Limits (in bytes except for NOFILE and NPROC)
+NULL           ------------------------------------------------------------------------
+2CIULIMITERR   Not supported on this platform
+NULL
+1CIENVVARS     Environment Variables (may include system defined environment variables)
+NULL           ------------------------------------------------------------------------
+2CIENVVAR      $CATALINA_HOME=c:\tomee
+2CIENVVAR      =::=::\
+2CIENVVAR      ALLUSERSPROFILE=C:\ProgramData
+2CIENVVAR      APPDATA=C:\Users\Mark\AppData\Roaming
+2CIENVVAR      AppsRoot=D
+2CIENVVAR      APR_INCLUDE_DIR=C:\netty-tcnative\apr-1.5.2\include
+2CIENVVAR      APR_LIB_DIR=C:\netty-tcnative\apr-1.5.2-dist\lib
+2CIENVVAR      CMAKE_MAKE_PROGRAM=C:\Program Files (x86)\CMake\
+2CIENVVAR      CommonProgramFiles=C:\Program Files\Common Files
+2CIENVVAR      CommonProgramFiles(x86)=C:\Program Files (x86)\Common Files
+2CIENVVAR      CommonProgramW6432=C:\Program Files\Common Files
+2CIENVVAR      COMPUTERNAME=MAMBLER-MAC-WIN
+2CIENVVAR      ComSpec=C:\WINDOWS\system32\cmd.exe
+2CIENVVAR      DNX_HOME=%USERPROFILE%\.dnx
+2CIENVVAR      FPS_BROWSER_APP_PROFILE_STRING=Internet Explorer
+2CIENVVAR      FPS_BROWSER_USER_PROFILE_STRING=Default
+2CIENVVAR      FP_NO_HOST_CHECK=NO
+2CIENVVAR      HOMEDRIVE=C:
+2CIENVVAR      HOMEPATH=\Users\Mark
+2CIENVVAR      IBM_JAVA_COMMAND_LINE=c:\Domino\jvm\bin\javaw.exe -Xmx2048m -Xms256m -Dfile.encoding=Cp1252 -classpath C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.osgi_3.4.3.R34x_v20081215-1030-RCP20130829-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.cds_2.0.4.200802251155.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.eclipse.osgi.nl_9.0.1.20130829-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.rcp.core.logger.frameworkhook_9.0.1.20131002-1404.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.rds_1.0.0.20130829-1400.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.runtime_9.0.1.20151122-0905\lwpd.runtime.designer.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.commons_9.0.1.20151122-0905\lwpd.commons.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.core_9.0.1.20151122-0905\lwpd.xsp.core.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.pvc.servlet_2.5.0.20131002-1404.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\jsf-api.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\jsf-impl.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\commons-beanutils.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\commons-collections.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\commons-digester.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.designer.lib.jsf_9.0.1.20151122-0905\lib\commons-logging.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.domino.services_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.domino.xsp.adapter_9.0.1.20151122-0905\lwpd.domino.adapter.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.core_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.controls_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.mobile_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.oneui_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extlib.domino_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.domino_9.0.1.20151122-0905\lwpd.xsp.domino.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.domino.server_9.0.1.20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.designer_9.0.1.20151122-0905\lwpd.xsp.designer.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.extsn_9.0.1.20151122-0905\lwpd.xsp.extsn.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.commons.xml_9.0.1.20151122-0905\lwpd.commons.xml.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.jscript_9.0.1.20151122-0905\lib\lwpd.commons.ibmjs.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.ibm.notes.java.api\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.ibm.notes.java.api\Notes.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.domino.osgi.core_9.0.1.20151122-0905.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.http.registry_1.0.100.v20080427-0830.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-io-2.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-codec-1.6.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-net-3.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-lang3-3.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\org.apache.commons\commons-fileupload-1.3.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.jackson.library\jackson-all-1.9.9.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.osgi.util_3.1.300.v20080303.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.core.runtime_3.4.0.v20080512.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.common_3.4.0.v20080421-2006.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.registry_3.4.0.v20080516-0950.jar;C:\Domino\osgi\rcp\eclipse\plugins\com.ibm.eclipse.equinox.registry.nl_9.0.1.20130829-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.core.runtime.compatibility.registry_3.2.200.v20080610\runtime_registry_compatibility.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.utils\bin;C:\Domino\osgi\rcp\eclipse\plugins\javax.servlet_2.4.0.v200806031604-RCP20130829-1400.jar;C:\jars\plugins\org.openntf.junit.libraries_1.1.0.201409021259.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\junit-4.11.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\hamcrest-core-1.3.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\powermock-easymock-1.5.5-full.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\easymock-3.2.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\cglib-nodep-2.2.2.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\javassist-3.18.2-GA.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\.metadata\.plugins\org.eclipse.pde.core\.external_libraries\org.openntf.junit.libraries_1.1.0.201409021259\lib\objenesis-2.1.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.rest.client\bin;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.xsp.dojo_9.0.1.20151122-0905\xsp.dojo.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\io.netty\netty-all-4.1.4.Final.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\io.netty\netty-tcnative-openssl-static-1.1.33.Fork15-SNAPSHOT-windows-x86_64}.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\io.netty\jzlib-1.1.2.jar;C:\Domino\jvm\lib\ext\jython-standalone-2.5.4-rc1.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.core.jobs_3.4.1.R34x_v20081128.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.preferences_3.2.201.R34x_v20080709-RCP20130829-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.core.contenttype_3.3.0.v20080604-1400.jar;C:\Domino\osgi\rcp\eclipse\plugins\org.eclipse.equinox.app_1.1.0.v20080421-2006.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.google.guice\guice-3.0.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.google.guice\guice-assistedinject-3.0.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.google.guice\javax.inject.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.google.guice\aopalliance.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.di.guicer\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.domino.module\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.xpage.profiler\bin;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.wink_9.0.1.v00_00_20151122-0905.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\httpclient-4.0.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\httpcore-4.0.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\jaxb-api-2.2.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\jaxb-impl-2.2.1.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\jsr311-api-1.1.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\slf4j-api-1.6.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\slf4j-simple-1.6.1.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\stax-api-1.0-2.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\wink-client-1.1.2-incubating.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\wink-common-1.1.2-incubating.jar;C:\Domino\osgi\shared\eclipse\plugins\org.apache.wink_1.1.2.20151122-0905\lib\wink-server-1.1.2-incubating.jar;C:\Domino\osgi\shared\eclipse\plugins\com.ibm.domino.das_9.0.1.v00_00_20151122-0905.jar;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.websocket\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.websocket.client\bin;C:\Users\Mark\Documents\eclipse-workspaces\xockets.io\com.tc.websocket.tests\bin;C:\Domino\jvm\lib\ext\groovy-2.4.7.jar;C:\Domino\jvm\lib\ext\jruby-complete-1.7.25.jar;C:\Domino\jvm\lib\ext\groovy-jsr223-2.4.7.jar com.tc.websocket.load.tests.QueueWebSocketLoadTest
+2CIENVVAR      INCLUDE=c:\notesapi901\include
+2CIENVVAR      JAVA_HOME=C:\java\jdk1.8.0_65
+2CIENVVAR      LOCALAPPDATA=C:\Users\Mark\AppData\Local
+2CIENVVAR      LOGONSERVER=\\MAMBLER-MAC-WIN
+2CIENVVAR      NUMBER_OF_PROCESSORS=8
+2CIENVVAR      OPENSSL_CONF=C:\OpenSSL-Win64\bin\openssl.cfg
+2CIENVVAR      OPENSSL_INCLUDE_DIR=C:\OpenSSL-Win64\include
+2CIENVVAR      OPENSSL_LIB_DIR=C:\OpenSSL-Win64\lib
+2CIENVVAR      OS=Windows_NT
+2CIENVVAR      Path=C:/java/jdk1.8.0_65/bin/../jre/bin/server;C:/java/jdk1.8.0_65/bin/../jre/bin;C:/java/jdk1.8.0_65/bin/../jre/lib/amd64;C:\java\jdk1.8.0_65\bin;C:\Strawberry\perl\bin;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;C:\Program Files\Microsoft SDKs\Windows\v7.1\Include;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Program Files\VideoLAN\VLC;C:\Program Files\Adobe\Adobe PDF iFilter 11 for 64-bit platforms\bin;C:\apache-maven\bin;C:\Program Files (x86)\IguanaIR;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files (x86)\CMake\bin;C:\ant\bin;C:\Program Files (x86)\Symantec\VIP Access Client\;C:\Domino;C:\Windows\System32;C:\Program Files\Mercurial\;C:\nodejs\;C:\Program Files (x86)\Microsoft SDKs\Azure\CLI\wbin;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files\Microsoft SQL Server\120\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\120\Tools\Binn\ManagementStudio\;C:\Program Files (x86)\Microsoft SQL Server\120\DTS\Binn\;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Users\Mark\Documents\kepler\;C:\Program Files\Microsoft Windows Performance Toolkit\;C:\Strawberry\c\bin;C:\Strawberry\perl\site\bin;C:\netty-tcnative\apr-1.5.2-dist\bin;C:\WINDOWS\system32\config\systemprofile\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\OpenSSL-Win64\bin;C:\Program Files (x86)\Git\bin\;C:\Users\Mark\.dnx\bin;C:\ffmpeg\bin;C:\Users\Mark\AppData\Roaming\npm;C:\Users\Mark\AppData\Local\atom\bin;C:\Users\Mark\Documents\kepler;
+2CIENVVAR      PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+2CIENVVAR      PROCESSOR_ARCHITECTURE=AMD64
+2CIENVVAR      PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 70 Stepping 1, GenuineIntel
+2CIENVVAR      PROCESSOR_LEVEL=6
+2CIENVVAR      PROCESSOR_REVISION=4601
+2CIENVVAR      ProgramData=C:\ProgramData
+2CIENVVAR      ProgramFiles=C:\Program Files
+2CIENVVAR      ProgramFiles(x86)=C:\Program Files (x86)
+2CIENVVAR      ProgramW6432=C:\Program Files
+2CIENVVAR      PSModulePath=C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules\;C:\Program Files (x86)\Microsoft SDKs\Azure\PowerShell\ServiceManagement;C:\Program Files (x86)\Microsoft SQL Server\120\Tools\PowerShell\Modules\
+2CIENVVAR      PUBLIC=C:\Users\Public
+2CIENVVAR      RCP_SDK=C:\RED\redlink_sdk\
+2CIENVVAR      SESSIONNAME=Console
+2CIENVVAR      SystemDrive=C:
+2CIENVVAR      SystemRoot=C:\WINDOWS
+2CIENVVAR      TEMP=C:\Users\Mark\AppData\Local\Temp
+2CIENVVAR      TMP=C:\Users\Mark\AppData\Local\Temp
+2CIENVVAR      USERDOMAIN=mambler-mac-win
+2CIENVVAR      USERDOMAIN_ROAMINGPROFILE=mambler-mac-win
+2CIENVVAR      USERNAME=Mark
+2CIENVVAR      USERPROFILE=C:\Users\Mark
+2CIENVVAR      VLC_PLUGIN_PATH=C:\Program Files\VideoLAN\VLC\plugins\
+2CIENVVAR      VS110COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools\
+2CIENVVAR      VS120COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Tools\
+2CIENVVAR      VS140COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\
+2CIENVVAR      windir=C:\WINDOWS
+2CIENVVAR      windows_tracing_flags=3
+2CIENVVAR      windows_tracing_logfile=C:\BVTBin\Tests\installpackage\csilogfile.log
+NULL           
+1CIJVMMI       JVM Monitoring Interface (JVMMI)
+NULL           ------------------------
+2CIJVMMIOFF    [not available]
+NULL           
+NULL           ------------------------------------------------------------------------
+0SECTION       MEMINFO subcomponent dump routine
+NULL           =================================
+1STHEAPFREE    Bytes of Heap Space Free: 0 
+1STHEAPALLOC   Bytes of Heap Space Allocated: 80000000 
+NULL           
+1STSEGTYPE     Internal Memory
+NULL           segment          start            alloc            end               type     bytes
+1STSEGMENT     000000021C806218 00000002235310C8 00000002235310C8 00000002235410C8  01000040 10000
+1STSEGMENT     000000021C8058B8 000000022389A748 000000022389A748 00000002238AA748  01000040 10000
+1STSEGMENT     000000021C8052B8 00000002233B69F8 00000002233B69F8 00000002233CC448  01000040 15A50
+1STSEGMENT     000000021C8051F8 0000000222719228 0000000222719228 000000022272D930  01000040 14708
+1STSEGMENT     000000001436C758 000000021D0514E8 000000021D0514E8 000000021D0614E8  01000040 10000
+1STSEGMENT     00000000143715E8 000000021D151978 000000021D151978 000000021D161978  01000040 10000
+1STSEGMENT     000000001436EEE8 0000000217251108 0000000217251108 0000000217261108  01000040 10000
+1STSEGMENT     00000000054989E8 0000000216FCFFE8 0000000216FCFFE8 0000000216FDFFE8  01000040 10000
+1STSEGMENT     0000000014372B18 00000002032775C8 00000002032775C8 00000002032875C8  01000040 10000
+1STSEGMENT     0000000014372998 00000001F11B1028 00000001F11B1028 00000001F11C1028  01000040 10000
+1STSEGMENT     0000000014371D38 00000001DDC37488 00000001DDC37488 00000001DDC47488  01000040 10000
+1STSEGMENT     000000001436CD58 00000001C9FB3168 00000001C9FB3168 00000001C9FC3168  01000040 10000
+1STSEGMENT     000000001436C818 00000001B7B40B78 00000001B7B40B78 00000001B7B50B78  01000040 10000
+1STSEGMENT     000000001436C998 00000001A39045C8 00000001A39045C8 00000001A39145C8  01000040 10000
+1STSEGMENT     000000001436CBD8 000000018FA003E8 000000018FA003E8 000000018FA103E8  01000040 10000
+1STSEGMENT     0000000014372C98 0000000130597168 0000000130597168 00000001305A7168  01000040 10000
+1STSEGMENT     0000000014371978 000000015D3D70C8 000000015D3D70C8 000000015D3E70C8  01000040 10000
+1STSEGMENT     000000001436CF68 000000014A821488 000000014A821488 000000014A831488  01000040 10000
+1STSEGMENT     000000001436CEA8 00000001408E03E8 00000001408E03E8 00000001408F03E8  01000040 10000
+1STSEGMENT     0000000014372758 000000012F752168 000000012F752168 000000012F762168  01000040 10000
+1STSEGMENT     0000000012B854D8 000000011BB42028 000000011BB42028 000000011BB52028  01000040 10000
+1STSEGMENT     0000000012B85A18 00000000F60F92A8 00000000F60F92A8 00000000F61092A8  01000040 10000
+1STSEGMENT     0000000012B85898 00000000E2B99488 00000000E2B99488 00000000E2BA9488  01000040 10000
+1STSEGMENT     0000000012B85598 00000000CFBF53E8 00000000CFBF53E8 00000000CFC053E8  01000040 10000
+1STSEGMENT     00000000143730E8 00000000BBE94708 00000000BBE94708 00000000BBEA4708  01000040 10000
+1STSEGMENT     0000000014373568 00000000A90D5668 00000000A90D5668 00000000A90E5668  01000040 10000
+1STSEGMENT     0000000014372E18 00000000844DCAC8 00000000844DCAC8 00000000844ECAC8  01000040 10000
+1STSEGMENT     00000000143728D8 00000000181B6188 00000000181B6188 00000000181C6188  01000040 10000
+1STSEGMENT     00000000143699F8 0000000077FC7808 0000000077FC7808 0000000077FD7808  01000040 10000
+1STSEGMENT     000000001436CB18 0000000013F809F8 0000000013F809F8 0000000013F909F8  01000040 10000
+1STSEGMENT     0000000014371BB8 0000000015960708 0000000015960708 0000000015970708  01000040 10000
+1STSEGMENT     00000000143712E8 0000000012F42A88 0000000012F42A88 0000000012F52A88  01000040 10000
+1STSEGMENT     0000000012B85658 0000000014BF91F8 0000000014BF91F8 0000000014C091F8  01000040 10000
+1STSEGMENT     0000000012B84068 0000000010255028 0000000010255028 0000000010265028  01000040 10000
+1STSEGMENT     0000000005498AA8 0000000015DF8178 0000000015DF8178 0000000015E08178  01000040 10000
+1STSEGMENT     000000000401AC08 000000001427B2A8 000000001427B2A8 000000001428B2A8  01000040 10000
+1STSEGMENT     0000000003C1C9D8 000000001402F158 000000001402F158 000000001403F158  01000040 10000
+1STSEGMENT     000000000401ACC8 00000000124EB028 00000000124EB028 00000000124FB028  01000040 10000
+1STSEGMENT     0000000012B857D8 000000001276D4C8 000000001276D4C8 000000001277D4C8  01000040 10000
+1STSEGMENT     0000000012B85358 0000000016285038 0000000016285038 0000000016295038  01000040 10000
+1STSEGMENT     0000000002AC7218 0000000006084FB8 0000000006084FB8 0000000006094FB8  01000040 10000
+1STSEGMENT     0000000005498B68 00000000061D6BC8 00000000061D6BC8 00000000061E6BC8  01000040 10000
+1STSEGMENT     0000000012B83BE8 000000001442E208 000000001442E208 000000001443E208  01000040 10000
+1STSEGMENT     000000000401D458 0000000005C877C8 0000000005C877C8 0000000005C977C8  01000040 10000
+1STSEGMENT     000000000401AD88 0000000005A011A8 0000000005A011A8 0000000005A111A8  01000040 10000
+1STSEGMENT     0000000003C42398 00000000058CCE18 00000000058CCE18 00000000058DCE18  01000040 10000
+1STSEGMENT     0000000005498F28 00000000057D9DC8 00000000057D9DC8 00000000057E9DC8  01000040 10000
+1STSEGMENT     0000000005498868 00000000057C9D88 00000000057C9D88 00000000057D9D88  01000040 10000
+1STSEGMENT     0000000003C1C858 0000000005781C78 0000000005781C78 0000000005791C78  01000040 10000
+1STSEGMENT     0000000003C422D8 0000000005695988 0000000005695988 00000000056A5988  01000040 10000
+1STSEGMENT     0000000003C42458 00000000053F9468 00000000053F9468 0000000005409468  01000040 10000
+1STSEGMENT     0000000003C42758 0000000003F70848 0000000003F70848 0000000003F80848  01000040 10000
+1STSEGMENT     0000000002AC6C18 0000000005533068 0000000005533068 0000000005543068  01000040 10000
+1STSEGMENT     0000000002A79BE8 00000000052E8168 00000000052E8168 00000000052F8168  01000040 10000
+1STSEGMENT     0000000005498DA8 0000000004182E88 0000000004182E88 0000000004192E88  01000040 10000
+1STSEGMENT     0000000003C425D8 0000000003F086F8 0000000003F086F8 0000000003F186F8  01000040 10000
+1STSEGMENT     0000000003C1CA98 000000000406B078 000000000406B078 000000000407B078  01000040 10000
+1STSEGMENT     0000000002A79EE8 0000000005320218 0000000005320218 0000000005330218  01000040 10000
+1STSEGMENT     0000000002A7A068 0000000003E17908 0000000003E17908 0000000003E27908  01000040 10000
+1STSEGMENT     0000000002A7A1E8 0000000003BB33B8 0000000003BB33B8 0000000003BC33B8  01000040 10000
+1STSEGMENT     0000000003C42698 0000000003C24E28 0000000003C24E28 0000000003C34E28  01000040 10000
+1STSEGMENT     0000000003C1CC18 0000000003D37198 0000000003D37198 0000000003D47198  01000040 10000
+1STSEGMENT     0000000003C1CB58 0000000003D6C638 0000000003D6C638 0000000003D7C638  01000040 10000
+1STSEGMENT     0000000002C73FF8 0000000003C93138 0000000003C93138 0000000003CA3138  01000040 10000
+1STSEGMENT     0000000002AC6CD8 0000000003A4FCB8 0000000003A4FCB8 0000000003A5FCB8  01000040 10000
+1STSEGMENT     0000000002C74238 0000000002EAE108 0000000002EAE108 0000000002EBE108  01000040 10000
+1STSEGMENT     0000000002C74178 00000000039D00D8 00000000039D00D8 00000000039E00D8  01000040 10000
+1STSEGMENT     0000000002C73E78 0000000002CBD6E8 0000000002CBD6E8 0000000002D00D40  01000040 43658
+1STSEGMENT     0000000002C73DB8 0000000002C74FA8 0000000002C74FA8 0000000002C9C0D8  01000040 27130
+1STSEGMENT     0000000002C73CF8 0000000002A95BA8 0000000002A95BA8 0000000002AA5BA8  01000040 10000
+1STSEGMENT     0000000002C73C38 0000000002A85B68 0000000002A85B68 0000000002A95B68  01000040 10000
+NULL           
+1STSEGTYPE     Object Memory
+NULL           segment          start            alloc            end               type     bytes
+1STSEGMENT     0000000002A73388 00007FF57FED0000 00007FF5FFED0000 00007FF5FFED0000  00000009 80000000
+NULL           
+1STSEGTYPE     Class Memory
+NULL           segment          start            alloc            end               type     bytes
+1STSEGMENT     000000001436D6B8 00000001F0895610 00000001F089A230 00000001F089D610  00010040 8010
+1STSEGMENT     000000000401BAD8 00000001F090D760 00000001F0913770 00000001F0915760  00010040 8010
+1STSEGMENT     000000000401BA18 00000001F08ED718 00000001F0904928 00000001F090D718  00020040 20000
+1STSEGMENT     000000000401B958 00000001F08E56D0 00000001F08ECFE0 00000001F08ED6D0  00010040 8010
+1STSEGMENT     000000000401B898 00000001F08C5688 00000001F08DFF38 00000001F08E5688  00020040 20000
+1STSEGMENT     000000000401B7D8 000000017A0D3490 000000017A0DB2C0 000000017A0DB490  00010040 8010
+1STSEGMENT     000000000401B718 00000001F08A5648 00000001F08A7520 00000001F08C5648  00020040 20000
+1STSEGMENT     000000000401B658 0000000216B64070 0000000216B6BD70 0000000216B6C070  00010040 8010
+1STSEGMENT     000000000401B598 0000000216B44028 0000000216B613C0 0000000216B64028  00020040 20000
+1STSEGMENT     000000000401B4D8 0000000005418B90 0000000005418E90 0000000005418E90  00010040 310
+1STSEGMENT     000000000401B418 00000000054187E8 0000000005418B48 0000000005418B48  00020040 360
+1STSEGMENT     000000000401D308 00000000056952C0 00000000056955D0 00000000056955D0  00010040 320
+1STSEGMENT     000000000401D248 0000000005694ED8 0000000005695278 0000000005695278  00020040 3A0
+1STSEGMENT     000000000401D188 0000000005694AF0 0000000005694E90 0000000005694E90  00010040 3B0
+1STSEGMENT     000000000401D0C8 00000000055C2CA8 00000000055C31F0 00000000055C31F0  00020040 548
+1STSEGMENT     000000000401D008 00000000058ECEA0 00000000058F2230 00000000058F4EA0  00010040 8010
+1STSEGMENT     000000000401CF48 000000000592CFA0 0000000005934BB0 0000000005934FA0  00010040 8010
+1STSEGMENT     000000000401CE88 00000000056C5AB0 00000000056C69D0 00000000056C6AB0  00010040 1010
+1STSEGMENT     000000000401CDC8 0000000005776EF0 0000000005779B20 0000000005779B20  00010040 2C40
+1STSEGMENT     000000000401CD08 0000000005819EC8 000000000582CB90 0000000005837DC8  00020040 1DF00
+1STSEGMENT     000000000401CC48 00000000055C2420 00000000055C2730 00000000055C2820  00010040 410
+1STSEGMENT     0000000004020368 0000000003CC0FD8 0000000003CC1390 0000000003CC1FD8  00020040 1000
+1STSEGMENT     00000000040202A8 0000000003AB4EA0 0000000003AB7740 0000000003AB7740  00010040 28B0
+1STSEGMENT     00000000040201E8 000000000576D338 0000000005776EB0 0000000005776EB0  00020040 9B78
+1STSEGMENT     0000000004020128 00000000056BDA60 00000000056C5870 00000000056C5A60  00010040 8010
+1STSEGMENT     0000000004020068 0000000005468710 0000000005470470 0000000005470710  00010040 8010
+1STSEGMENT     000000000401FFA8 0000000005673A10 0000000005673D30 0000000005673D30  00010040 330
+1STSEGMENT     000000000401FEE8 0000000005674C28 0000000005674FC0 0000000005674FC0  00020040 398
+1STSEGMENT     000000000401FE28 000000000567D960 00000000056858D0 0000000005685960  00010040 8010
+1STSEGMENT     000000000401FD68 0000000005675910 000000000567D870 000000000567D910  00010040 8010
+1STSEGMENT     000000000401FCA8 0000000005791CC0 0000000005799C80 0000000005799CC0  00010040 8010
+1STSEGMENT     000000000401F348 0000000005719AA8 000000000573CC48 000000000573D238  00020040 23790
+1STSEGMENT     000000000401F288 00000000057C1D40 00000000057C9D30 00000000057C9D40  00010040 8010
+1STSEGMENT     000000000401F1C8 00000000057A1CF8 00000000057C1750 00000000057C1CF8  00020040 20000
+1STSEGMENT     000000000401F108 0000000005779C30 0000000005781B30 0000000005781C30  00010040 8010
+1STSEGMENT     000000000401F048 00000000056A59D0 00000000056AD770 00000000056AD9D0  00010040 8010
+1STSEGMENT     000000000401EF88 00000000054094B0 00000000054111D0 00000000054114B0  00010040 8010
+1STSEGMENT     000000000401EEC8 00000000055EB338 000000000560A398 000000000560B338  00020040 20000
+1STSEGMENT     000000000401EE08 0000000003FA3F90 0000000003FABF50 0000000003FABF90  00010040 8010
+1STSEGMENT     000000000401ED48 00000000054194F0 0000000005421450 00000000054214F0  00010040 8010
+1STSEGMENT     000000000401EC88 00000000040BA0B0 00000000040BA3C0 00000000040BA3C0  00010040 320
+1STSEGMENT     000000000401FB58 00000000040B9D58 00000000040BA068 00000000040BA068  00020040 310
+1STSEGMENT     000000000401FA98 00000000053F1420 00000000053F9240 00000000053F9420  00010040 8010
+1STSEGMENT     000000000401F9D8 00000000053E93D0 00000000053F1320 00000000053F13D0  00010040 8010
+1STSEGMENT     000000000401F918 00000000053E1380 00000000053E9140 00000000053E9380  00010040 8010
+1STSEGMENT     000000000401F858 00000000053D9330 00000000053E1090 00000000053E1330  00010040 8010
+1STSEGMENT     000000000401F798 00000000053B8428 00000000053D8C48 00000000053D92E8  00020040 20EC0
+1STSEGMENT     000000000401F6D8 00000000055931D0 000000000559B0F0 000000000559B1D0  00010040 8010
+1STSEGMENT     000000000401F618 0000000005573188 0000000005592630 0000000005593188  00020040 20000
+1STSEGMENT     000000000401F558 000000000556B140 0000000005573090 0000000005573140  00010040 8010
+1STSEGMENT     000000000401F498 000000000554B0F8 000000000556A398 000000000556B0F8  00020040 20000
+1STSEGMENT     000000000401E328 00000000055430B0 000000000554AE10 000000000554B0B0  00010040 8010
+1STSEGMENT     000000000401E268 000000000409B1A0 00000000040A2FC0 00000000040A31A0  00010040 8010
+1STSEGMENT     000000000401E1A8 000000000560B3F8 000000000562A048 000000000562B3F8  00020040 20000
+1STSEGMENT     000000000401E0E8 00000000055B32D0 00000000055BB250 00000000055BB2D0  00010040 8010
+1STSEGMENT     000000000401E028 00000000055CB2F8 00000000055E7AA8 00000000055EB2F8  00020040 20000
+1STSEGMENT     000000000401DF68 00000000055AB280 00000000055B3190 00000000055B3280  00010040 8010
+1STSEGMENT     000000000401DEA8 0000000003FA39B0 0000000003FA3CC0 0000000003FA3CC0  00010040 320
+1STSEGMENT     000000000401DDE8 000000000402A758 000000000402AAE0 000000000402AAE0  00020040 388
+1STSEGMENT     000000000401DD28 00000000054606C0 00000000054684A0 00000000054686C0  00010040 8010
+1STSEGMENT     000000000401DC68 000000000564B4B8 0000000005667978 000000000566B4B8  00020040 20000
+1STSEGMENT     0000000004019288 0000000004122D08 000000000413ECA8 0000000004142D08  00020040 20000
+1STSEGMENT     00000000040191C8 0000000005502FB0 000000000550AF80 000000000550AFB0  00010040 8010
+1STSEGMENT     0000000004019108 0000000005512FE8 000000000552D008 0000000005532FE8  00020040 20000
+1STSEGMENT     0000000004019048 00000000041A2F70 00000000041AAE90 00000000041AAF70  00010040 8010
+1STSEGMENT     0000000004018F88 000000000419AF20 00000000041A2E80 00000000041A2F20  00010040 8010
+1STSEGMENT     0000000004018EC8 0000000005448630 0000000005450180 0000000005450630  00010040 8010
+1STSEGMENT     0000000004018E08 00000000055A3230 00000000055AB1C0 00000000055AB230  00010040 8010
+1STSEGMENT     0000000004018D48 0000000004142D90 000000000414ACC0 000000000414AD90  00010040 8010
+1STSEGMENT     0000000004018C88 00000000052C80E8 00000000052E78E8 00000000052E80E8  00020040 20000
+1STSEGMENT     0000000004018BC8 000000000566B540 00000000056731C0 0000000005673540  00010040 8010
+1STSEGMENT     0000000005498728 000000000562B478 0000000005648798 000000000564B478  00020040 20000
+1STSEGMENT     0000000005498668 00000000055C32B0 00000000055CB100 00000000055CB2B0  00010040 8010
+1STSEGMENT     00000000054985A8 0000000005310240 0000000005318170 0000000005318240  00010040 8010
+1STSEGMENT     00000000054984E8 0000000005458670 00000000054605A0 0000000005460670  00010040 8010
+1STSEGMENT     0000000005498428 00000000054285E8 0000000005448050 00000000054485E8  00020040 20000
+1STSEGMENT     0000000005498368 0000000003DA4750 0000000003DAC640 0000000003DAC750  00010040 8010
+1STSEGMENT     00000000054982A8 0000000004152DC8 0000000004170658 0000000004172DC8  00020040 20000
+1STSEGMENT     00000000054981E8 00000000052F81B0 0000000005300150 00000000053001B0  00010040 8010
+1STSEGMENT     0000000005498128 0000000005478030 000000000547FEF0 0000000005480030  00010040 8010
+1STSEGMENT     0000000005498068 000000000405B060 0000000004062DD0 0000000004063060  00010040 8010
+1STSEGMENT     0000000005488EE8 00000000053983E8 00000000053B3DB8 00000000053B83E8  00020040 20000
+1STSEGMENT     0000000005488E28 0000000004053010 000000000405AFF0 000000000405B010  00010040 8010
+1STSEGMENT     0000000005488D68 00000000053783A8 0000000005397218 00000000053983A8  00020040 20000
+1STSEGMENT     0000000005488CA8 0000000004192ED0 000000000419ADD0 000000000419AED0  00010040 8010
+1STSEGMENT     0000000005488BE8 0000000003F50808 0000000003F6D2C0 0000000003F70808  00020040 20000
+1STSEGMENT     0000000005488B28 00000000054E5C90 00000000054EDC70 00000000054EDC90  00010040 8010
+1STSEGMENT     0000000005488A68 00000000054F5CD0 00000000054FDC90 00000000054FDCD0  00010040 8010
+1STSEGMENT     00000000054889A8 0000000003E309F0 0000000003E38910 0000000003E389F0  00010040 8010
+1STSEGMENT     00000000054888E8 00000000054BDBB8 00000000054DB4C8 00000000054DDBB8  00020040 20000
+1STSEGMENT     0000000005488828 00000000040E2C48 00000000040FDAA8 0000000004102C48  00020040 20000
+1STSEGMENT     0000000002A76688 00000000054DDC40 00000000054E5C20 00000000054E5C40  00010040 8010
+1STSEGMENT     0000000002A765C8 00000000041B2F50 00000000041BAF20 00000000041BAF50  00010040 8010
+1STSEGMENT     0000000002A76508 000000000404AFC0 0000000004052E80 0000000004052FC0  00010040 8010
+1STSEGMENT     0000000002A76448 0000000003F88920 0000000003F907A0 0000000003F90920  00010040 8010
+1STSEGMENT     0000000002A76388 0000000005499028 00000000054B71D8 00000000054B9028  00020040 20000
+1STSEGMENT     0000000002A762C8 0000000003F808D0 0000000003F88790 0000000003F888D0  00010040 8010
+1STSEGMENT     0000000002A76208 0000000004083110 000000000408B0F0 000000000408B110  00010040 8010
+1STSEGMENT     0000000002A76148 0000000004102CC8 0000000004120A58 0000000004122CC8  00020040 20000
+1STSEGMENT     0000000002A76088 0000000003CA3180 0000000003CAB0A0 0000000003CAB180  00010040 8010
+1STSEGMENT     0000000002A75FC8 00000000052C00A0 00000000052C8070 00000000052C80A0  00010040 8010
+1STSEGMENT     0000000002A76E88 0000000003CFD080 0000000003D05000 0000000003D05080  00010040 8010
+1STSEGMENT     0000000002A76DC8 0000000005350298 000000000536B510 0000000005370298  00020040 20000
+1STSEGMENT     0000000002A76D08 0000000003D7C680 0000000003D84660 0000000003D84680  00010040 8010
+1STSEGMENT     0000000002A76C48 00000000040AB1E0 00000000040B3120 00000000040B31E0  00010040 8010
+1STSEGMENT     0000000002A76B88 000000000402AF78 0000000004044620 000000000404AF78  00020040 20000
+1STSEGMENT     0000000002A76AC8 0000000004093150 000000000409B0F0 000000000409B150  00010040 8010
+1STSEGMENT     0000000002A76A08 0000000003F38780 0000000003F405A0 0000000003F40780  00010040 8010
+1STSEGMENT     0000000002A76948 0000000005330258 000000000534FF38 0000000005350258  00020040 20000
+1STSEGMENT     0000000002A76888 0000000005370360 0000000005378330 0000000005378360  00010040 8010
+1STSEGMENT     0000000002A767C8 0000000003E50AC8 0000000003E70740 0000000003E70AC8  00020040 20000
+1STSEGMENT     0000000003FB0728 000000000407B0C0 0000000004082F40 00000000040830C0  00010040 8010
+1STSEGMENT     0000000003FB0668 00000000040DAC00 00000000040E2AA0 00000000040E2C00  00010040 8010
+1STSEGMENT     0000000003FB05A8 00000000040BABB8 00000000040DA448 00000000040DABB8  00020040 20000
+1STSEGMENT     0000000003FB04E8 0000000003F487C0 0000000003F50670 0000000003F507C0  00010040 8010
+1STSEGMENT     0000000003FB0428 0000000003F18738 0000000003F37A10 0000000003F38738  00020040 20000
+1STSEGMENT     0000000003FB0368 0000000003E70B50 0000000003E78B00 0000000003E78B50  00010040 8010
+1STSEGMENT     0000000003FB02A8 0000000003FBC8C0 0000000003FC4770 0000000003FC48C0  00010040 8010
+1STSEGMENT     0000000003FB01E8 0000000003EE05E8 0000000003EFF6F0 0000000003F005E8  00020040 20000
+1STSEGMENT     0000000003FB0128 00000000039EFB60 00000000039F7AD0 00000000039F7B60  00010040 8010
+1STSEGMENT     0000000003FB0068 0000000003EC05A8 0000000003EDF740 0000000003EE05A8  00020040 20000
+1STSEGMENT     0000000002EAD8A8 0000000003E48A80 0000000003E50A60 0000000003E50A80  00010040 8010
+1STSEGMENT     0000000002EAD7E8 0000000003FF8AF8 00000000040179F0 0000000004018AF8  00020040 20000
+1STSEGMENT     0000000002EAD728 0000000003D17120 0000000003D1EFF0 0000000003D1F120  00010040 8010
+1STSEGMENT     0000000002EAD668 0000000003C830C0 0000000003C8AF70 0000000003C8B0C0  00010040 8010
+1STSEGMENT     0000000002EAD5A8 0000000003DD7808 0000000003DF4DC8 0000000003DF7808  00020040 20000
+1STSEGMENT     0000000002EAD4E8 0000000003F98940 0000000003FA08F0 0000000003FA0940  00010040 8010
+1STSEGMENT     0000000002EAD428 0000000003D471D8 0000000003D63728 0000000003D671D8  00020040 20000
+1STSEGMENT     0000000002EAD368 0000000003F006B0 0000000003F08670 0000000003F086B0  00010040 8010
+1STSEGMENT     0000000002EAD2A8 0000000003E40A30 0000000003E489D0 0000000003E48A30  00010040 8010
+1STSEGMENT     0000000002EAD1E8 0000000003EA0568 0000000003EBD030 0000000003EC0568  00020040 20000
+1STSEGMENT     0000000002DF5B58 0000000003FF0AB0 0000000003FF89C0 0000000003FF8AB0  00010040 8010
+1STSEGMENT     0000000002DF5A98 0000000003D27160 0000000003D2F060 0000000003D2F160  00010040 8010
+1STSEGMENT     0000000002DF59D8 0000000003E80528 0000000003E9B7E0 0000000003EA0528  00020040 20000
+1STSEGMENT     0000000002DF5918 0000000003D8C6C0 0000000003D944C0 0000000003D946C0  00010040 8010
+1STSEGMENT     0000000002DF5858 0000000003DB77C8 0000000003DD5068 0000000003DD77C8  00020040 20000
+1STSEGMENT     0000000002DF5798 0000000003FB0FF0 0000000003FB8F80 0000000003FB8FF0  00010040 8010
+1STSEGMENT     0000000002DF56D8 0000000004028BB8 0000000004029948 0000000004029948  00020040 D90
+1STSEGMENT     0000000002DF5618 0000000004020B70 0000000004028B20 0000000004028B70  00010040 8010
+1STSEGMENT     0000000002DF5558 0000000003FD0A68 0000000003FEBD98 0000000003FF0A68  00020040 20000
+1STSEGMENT     0000000002DF5498 0000000003AA7DC0 0000000003AAFCC0 0000000003AAFDC0  00010040 8010
+1STSEGMENT     0000000002DF2EE8 0000000003E27990 0000000003E2F8B0 0000000003E2F990  00010040 8010
+1STSEGMENT     0000000002DF2E28 0000000003DF78C8 0000000003E14EC0 0000000003E178C8  00020040 20000
+1STSEGMENT     0000000002DF2D68 0000000003D0F0D0 0000000003D16EE0 0000000003D170D0  00010040 8010
+1STSEGMENT     0000000002DF2CA8 0000000003BD3478 0000000003BEFA08 0000000003BF3478  00020040 20000
+1STSEGMENT     0000000002DF2BE8 0000000003D9C700 0000000003DA46B0 0000000003DA4700  00010040 8010
+1STSEGMENT     0000000002DF2B28 0000000003CF5030 0000000003CFCE90 0000000003CFD030  00010040 8010
+1STSEGMENT     0000000002DF2A68 0000000003B9B330 0000000003BA31F0 0000000003BA3330  00010040 8010
+1STSEGMENT     0000000002DF29A8 0000000003BF34F8 0000000003C11968 0000000003C134F8  00020040 20000
+1STSEGMENT     0000000002DF28E8 00000000039C00A0 00000000039C7FC0 00000000039C80A0  00010040 8010
+1STSEGMENT     0000000002DF2828 0000000003C63078 0000000003C7F628 0000000003C83078  00020040 20000
+1STSEGMENT     0000000002D2EB98 0000000003C1CDE0 0000000003C24C20 0000000003C24DE0  00010040 8010
+1STSEGMENT     0000000002D2EAD8 0000000003B63260 0000000003B6B130 0000000003B6B260  00010040 8010
+1STSEGMENT     0000000002D2EA18 0000000003BAB370 0000000003BB3320 0000000003BB3370  00010040 8010
+1STSEGMENT     0000000002D2E958 0000000003B7B2E8 0000000003B9AE48 0000000003B9B2E8  00020040 20000
+1STSEGMENT     0000000002D2E898 0000000003C13580 0000000003C1B550 0000000003C1B580  00010040 8010
+1STSEGMENT     0000000002D2E7D8 0000000002E9E0D0 0000000002EA60C0 0000000002EA60D0  00010040 8010
+1STSEGMENT     0000000002D2E718 0000000003C43038 0000000003C62A58 0000000003C63038  00020040 20000
+1STSEGMENT     0000000002D2E658 0000000003BCB430 0000000003BD3380 0000000003BD3430  00010040 8010
+1STSEGMENT     0000000002D2E598 0000000003B732A0 0000000003B7B0A0 0000000003B7B2A0  00010040 8010
+1STSEGMENT     0000000002D2E4D8 0000000003B43218 0000000003B62290 0000000003B63218  00020040 20000
+1STSEGMENT     0000000002D32AB8 0000000003B3B1D0 0000000003B430F0 0000000003B431D0  00010040 8010
+1STSEGMENT     0000000002D329F8 0000000003A47C70 0000000003A4FAD0 0000000003A4FC70  00010040 8010
+1STSEGMENT     0000000002D32938 0000000003B090C8 0000000003B274E0 0000000003B290C8  00020040 20000
+1STSEGMENT     0000000002D32878 0000000003A3FC20 0000000003A479B0 0000000003A47C20  00010040 8010
+1STSEGMENT     0000000002D327B8 0000000003B01080 0000000003B09020 0000000003B09080  00010040 8010
+1STSEGMENT     0000000002D326F8 0000000003A1FBD8 0000000003A3DBC8 0000000003A3FBD8  00020040 20000
+1STSEGMENT     0000000002D32638 0000000003AF9030 0000000003B00E60 0000000003B01030  00010040 8010
+1STSEGMENT     0000000002D32578 00000000039FFB98 0000000003A1C6D0 0000000003A1FB98  00020040 20000
+1STSEGMENT     0000000002D324B8 0000000002DE5FF0 0000000002DEDFC0 0000000002DEDFF0  00010040 8010
+1STSEGMENT     0000000002D323F8 00000000039E0120 00000000039E8000 00000000039E8120  00010040 8010
+1STSEGMENT     0000000002A74428 0000000003A67D68 0000000003A86778 0000000003A87D68  00020040 20000
+1STSEGMENT     0000000002A74368 0000000003A5FD20 0000000003A67BB0 0000000003A67D20  00010040 8010
+1STSEGMENT     0000000002A742A8 0000000002DBCF20 0000000002DC4F00 0000000002DC4F20  00010040 8010
+1STSEGMENT     0000000002A741E8 0000000002E96080 0000000002E9DE60 0000000002E9E080  00010040 8010
+1STSEGMENT     0000000002A74128 000007FFFF348840 000007FFFF348CE4 000007FFFF348CE4  04020104 4D4
+1STSEGMENT     0000000002A74068 000007FFFF684350 000007FFFF6847C8 000007FFFF6847C8  04200104 4A8
+1STSEGMENT     0000000002A73FA8 0000000002D73608 0000000002D91E20 0000000002D93608  00020040 20000
+1STSEGMENT     0000000002A73EE8 0000000002D0C358 0000000002D27660 0000000002D2C358  00020040 20000
+1STSEGMENT     0000000002A73E28 0000000002D01ED0 0000000002D09E70 0000000002D09ED0  00010040 8010
+1STSEGMENT     0000000002A73D68 0000000002AC5498 0000000002AC5B78 0000000002AC5B78  00020040 6E0
+NULL           
+1STSEGTYPE     JIT Code Cache
+NULL           segment          start            alloc            end               type     bytes
+1STSEGMENT     0000000002A85568 00007FF57D6B0000 00007FF57D90F160 00007FF57DEB0000  00000068 800000
+1STSEGLIMIT    Allocation limit:               134217728 (0x0000000008000000)
+NULL           
+1STSEGTYPE     JIT Data Cache
+NULL           segment          start            alloc            end               type     bytes
+1STSEGMENT     0000000002A85828 0000000002ED0058 0000000003014200 00000000036D0058  00000048 800000
+1STSEGLIMIT    Allocation limit:    <unlimited>
+NULL           
+1STGCHTYPE     GC History  
+NULL           
+NULL           ------------------------------------------------------------------------

@@ -251,7 +251,10 @@ public abstract class Script implements Runnable {
 		}else if(SupportedEngine.PYTHON.engine().equalsIgnoreCase(engine)){
 			script = new PythonScript();
 		
-		}else{
+		}else if(SupportedEngine.BEANSHELL.engine().equalsIgnoreCase(engine)){
+			script= new BSHScript();
+		}
+		else{
 			script = new JSRScript(engine);
 		}
 		

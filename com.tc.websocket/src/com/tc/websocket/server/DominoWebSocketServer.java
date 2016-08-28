@@ -661,11 +661,8 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	
 
 	private int calcBatchSize(int users){
-		int size = users / 2;
-		if (size < 500){
-			size = 500;
-		}
-		return size;
+		int batch = users / 2;
+		return batch < 1000 ? 500 : 1000;
 	}
 
 	private boolean send(String target, String json){

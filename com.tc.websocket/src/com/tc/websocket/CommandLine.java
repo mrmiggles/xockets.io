@@ -204,7 +204,7 @@ public class CommandLine implements CommandProvider {
 	}
 
 	private void reloadScripts(CommandInterpreter out, IDominoWebSocketServer server){
-		out.println("reloading event observers...");
+		out.println("reloading all scripts...");
 		server.reloadScripts();
 		out.println("scripts have been reloaded / recompiled");
 	}

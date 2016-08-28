@@ -9,7 +9,8 @@ public enum SupportedEngine {
    GROOVY("gvy","groovy"),
    JAVASCRIPT("js","js"),
    SSJS("ssjs","js"),
-   AGENT("agent","agent");
+   AGENT("agent","agent"),
+   BEANSHELL("bsh","beanshell");
 	
 	
 	

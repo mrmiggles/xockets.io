@@ -25,7 +25,7 @@ public class JSRScript extends Script{
 	@Inject
 	private IGuicer guicer;
 
-	private static final Logger logger = Logger.getLogger(Script.class.getName());
+	private static final Logger logger = Logger.getLogger(JSRScript.class.getName());
 
 	private ScriptEngineManager manager;
 	private ScriptEngine engine;
@@ -55,7 +55,7 @@ public class JSRScript extends Script{
 	}
 
 	public synchronized boolean recompile(boolean reload){
-		boolean b = false;
+		boolean b = true;
 		try{
 			if(this.getSource()!=null){
 
@@ -64,21 +64,18 @@ public class JSRScript extends Script{
 				}else{
 					this.setScript(reload ? this.extractFile() : this.getScript());
 				}
-
 				
-				Compilable compilingEngine = (Compilable)engine;
-				CompiledScript compiled = compilingEngine.compile(this.getScript());
-				
-				if(compiled == null){
-					throw new RuntimeException("Compiler error with " + this.getSource());
+				try{
+					Compilable compilingEngine = (Compilable)engine;
+					this.setCompiled(compilingEngine.compile(this.getScript()));
+				}catch(final Throwable ex){
+					logger.log(Level.SEVERE, null, ex);
+					b = false;
 				}
-				
-				this.setCompiled(compiled);
-				
-				b = true;
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.log(Level.SEVERE,null, e);
+			b = false;
 		}
 		return b;
 	}
