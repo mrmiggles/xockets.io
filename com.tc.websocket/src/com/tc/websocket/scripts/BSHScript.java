@@ -15,8 +15,7 @@ public class BSHScript extends Script {
 
 	private static final Logger logger = Logger.getLogger(BSHScript.class.getName());
 
-	private Interpreter interpreter;
-	private File tempSource;
+	private File sourceFile;
 	
 	
 	@Inject
@@ -26,6 +25,10 @@ public class BSHScript extends Script {
 	public void run() {
 		Session session = this.openSession();
 		try{
+			
+			//new interpreter for each invocation to keep it thread safe.
+			Interpreter interpreter = new Interpreter();
+			interpreter.source(this.sourceFile.getPath());
 			
 			interpreter.set(Const.FUNCTION, this.getFunction());
 			interpreter.set(Const.RHINO_SESSION, session);
@@ -62,16 +65,13 @@ public class BSHScript extends Script {
 		}
 	}
 
-
-
-	public Interpreter getInterpreter() {
-		return interpreter;
+	
+	public File getSourceFile() {
+		return sourceFile;
 	}
 
-
-
-	public void setInterpreter(Interpreter interpreter) {
-		this.interpreter = interpreter;
+	public void setSourceFile(File sourceFile) {
+		this.sourceFile = sourceFile;
 	}
 
 
@@ -83,7 +83,7 @@ public class BSHScript extends Script {
 		copy.setFunction(this.getFunction());
 		copy.setScript(this.getScript());
 		copy.setSource(this.getSource());
-		copy.setInterpreter(this.interpreter);
+		copy.setSourceFile(this.getSourceFile());
 		copy.setCreds(user, password);
 		return copy;
 	}
@@ -96,14 +96,13 @@ public class BSHScript extends Script {
 			if(reload){
 				this.setScript(this.extractFile());
 
-				if(this.tempSource!=null){
-					this.tempSource.delete(); //cleanup prior file.
+				if(this.sourceFile!=null){
+					this.sourceFile.delete(); //cleanup prior file.
 				}
 				
-				this.tempSource = File.createTempFile("tmp", ".bsh");
-				FileUtils.writeByteArrayToFile(this.tempSource, this.getScript().getBytes());
-				this.interpreter = new Interpreter();
-				interpreter.source(this.tempSource.getPath());
+				this.sourceFile = File.createTempFile("tmp", ".bsh");
+				FileUtils.writeByteArrayToFile(this.sourceFile, this.getScript().getBytes());
+
 			}
 		}catch(Exception e){
 			logger.log(Level.SEVERE, null, e);
