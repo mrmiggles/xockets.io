@@ -252,9 +252,10 @@ public class User implements IUser {
 		//we get here... find the uri match
 		for(ContextWrapper w : this.getConnections()){
 			String uri = this.parseUri(w);
+			String directUri = uri + StringCache.FORWARD_SLASH + this.getUserId();
 			if(path.isWild() && uri.contains(path.getUri())){
 				results.add(w);
-			}else if(uri.equals(path.getUri())){
+			}else if(uri.equals(path.getUri()) ||  directUri.equals(path.getUri())){
 				results.add(w);
 			}
 		}
@@ -318,6 +319,17 @@ public class User implements IUser {
 		for(ContextWrapper wrapper : this.getConnections()){
 			vec.add(this.parseUri(wrapper));
 		}
+		
+		
+		//add the URI paths including userId
+		List<String> list = new ArrayList<String>();
+		for(String str : vec){
+			str = str + "/" + this.getUserId();
+			list.add(str);
+		}
+		
+		vec.addAll(list);
+		
 		return vec;
 	}
 

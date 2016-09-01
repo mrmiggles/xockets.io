@@ -139,27 +139,8 @@ public final class ColUtils {
     }
 
 	public static void main(String[] args) {
-		List<NameValue<Integer>> list = new ArrayList<NameValue<Integer>>();
-		
-		for(int i=0;i<1000;i++){
-			NameValue<Integer> nv = new NameValue<Integer>();
-			if(i >= 230){
-				nv.setValue(999);
-			}else{
-				nv.setValue(new Integer(i));
-			}
-			nv.setName("name(" + i + ") ");
-			
-			list.add(nv);
-		}
-		
-		
-		
-	//	ColUtils.stampCollection(list, "setName", "HI");
-		int start = ColUtils.findIndex(list, "getValue", new Integer(999), true);
-		System.out.println("start = " + start);
-		NameValue<?> nv = ColUtils.findObject(list, "getValue", new Integer(999), true);
-		System.out.println(nv.toString());
+		Map<String,Object> map = ColUtils.toMap("message","hi");
+		System.out.println(map);
     }
 	
 
@@ -239,6 +220,8 @@ public final class ColUtils {
     		}
     	return map;
     }
+    
+    
     
     
     

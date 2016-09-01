@@ -104,5 +104,7 @@ public interface IConfig {
 	public boolean isEmptyCredentials();
 	
 	public String getVersion();
+	
+	public String property(String key);
 
 }

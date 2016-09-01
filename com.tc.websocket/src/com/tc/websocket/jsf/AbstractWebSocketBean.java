@@ -205,6 +205,7 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 		}
 	}
 
+	
 	public void addEventObserver(final String function, final String source){
 		
 		if(!this.containsObserver(function, source)){
@@ -259,13 +260,17 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 		return server.findUriListener(scriptPath)!=null;
 	}
 	
-	
-	public void addListeners(final String uri, final String[] sources){
+	@Override
+	public void addUriListeners(final String uri, final String[] sources){
 		for(String source : sources){
 			this.addUriListener(uri, source);
 		}
 	}
 
+	@Override
+	public void addUriListener(final String source){
+		this.addUriListener(source, source, null, null);
+	}
 
 	@Override
 	public void addUriListener(final String uri, final String source){
@@ -323,7 +328,51 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	}
 	
 
+	@Override
+	public void addIntervaledScripts(int interval, String[] sources) {
+		for(String source : sources){
+			this.addIntervaled(interval, source);
+		}
+	}
 
+	@Override
+	public void addIntervaled(final int interval, final String source,final String runAsUser,final String runAsPassword) {
+		
+		TaskRunner.getInstance().add(new Runnable(){
+
+			@Override
+			public void run() {
+				Script script = Script.newScript(source)
+				.source(source)
+				.function(Const.ON_INTERVAL)
+				.creds(runAsUser, runAsPassword)
+				.interval(interval);
+				script.recompile(true);
+				server.addIntervaled(script);
+			}
+		});
+	}
+
+	@Override
+	public void addIntervaled(int interval, String source) {
+		this.addIntervaled(interval, source, null, null);
+	}
+
+	@Override
+	public void removeIntervaled(final String source) {
+		TaskRunner.getInstance().add(new Runnable(){
+
+			@Override
+			public void run() {
+				Script script = Script.newScript(source)
+				.source(source)
+				.function(Const.ON_INTERVAL);
+				server.removeIntervaled(script);
+			}
+			
+			
+		});
+	}
 	
 	
 

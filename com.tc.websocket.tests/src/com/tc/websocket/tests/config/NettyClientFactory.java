@@ -14,7 +14,7 @@ import com.tc.websocket.tests.client.NettyTestClient;
 
 public class NettyClientFactory {
 
-	private static List<NettyTestClient> clients  = new ArrayList<NettyTestClient>();
+	private List<NettyTestClient> clients  = new ArrayList<NettyTestClient>();
 
 
 	public List<NettyTestClient> buildClients(int maxPayload) throws URISyntaxException, InterruptedException, SSLException{

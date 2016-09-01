@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({TestRestServices.class})
+@SuiteClasses({TestRestServices.class, TestScriptingRuntimes.class, TestBatchSend.class})
 public class AllTests {
 
 }

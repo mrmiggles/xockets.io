@@ -87,6 +87,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	private static IMultiMap<String,IUser> VALID_USERS=new MultiMap<String, IUser>(Config.getInstance().getMaxConnections() / 2);
 	private static final Logger logger = Logger.getLogger(DominoWebSocketServer.class.getName());
 	private static Set<Script> OBSERVERS = Collections.synchronizedSet(new HashSet<Script>());
+	private static Set<Script> INTERVALED = Collections.synchronizedSet(new HashSet<Script>());
 
 	
 	//set during server provisioning (see DominoWebSocketModule)
@@ -380,7 +381,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	
 	public boolean onMessage(String to, String json){
 		boolean b = this.send(to, json);
-		//this.notifyEventObservers(Const.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
+		this.notifyEventObservers(Const.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
 		return b;
 	}
 	
@@ -886,7 +887,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			}
 		}
 
-
 		VALID_USERS.clear();
 		URI_MAP.clear();
 		OBSERVERS.clear();
@@ -900,7 +900,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 	@Override
 	public void addEventObserver(Script script) {
-		System.out.println("adding " + script.getSource() + " observer.");
 		if(!OBSERVERS.contains(script)){
 			OBSERVERS.add(script);
 		}
@@ -918,8 +917,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 	@Override
 	public synchronized void notifyEventObservers(String event, Object ...args) {
-		//System.out.println("notifyEventObservers");
-		
 		Batch batch = new Batch();
 		for(Script script : OBSERVERS){
 			if(script.getFunction().equalsIgnoreCase(event)){
@@ -975,6 +972,21 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		list.addAll(OBSERVERS);
 		list.addAll(getUriListeners());
 		return list;
+	}
+
+	@Override
+	public void addIntervaled(Script script) {
+		INTERVALED.add(guicer.inject(script));
+	}
+
+	@Override
+	public void removeIntervaled(Script script) {
+		INTERVALED.remove(script);
+	}
+
+	@Override
+	public Collection<Script> getIntervaled() {
+		return INTERVALED;
 	}
 
 

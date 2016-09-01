@@ -27,10 +27,6 @@ import java.util.List;
 public final class StrUtils {
 
 
-    private static final int _DIGIT_BEGIN = 48;
-    private static final int _DIGIT_END = 57;
-
-
     private StrUtils() {
     	//should not be instantiated.
     }
@@ -178,16 +174,6 @@ public final class StrUtils {
         return source;
     }
 
-    public static boolean isDigit(char c) {
-        int x = c;
-
-        if ((x >= _DIGIT_BEGIN) && (x <= _DIGIT_END)) {
-            return true;
-        }
-
-        return false;
-    }
-
 
     public static String[] explode(String source) {
         return StrUtils.explode(source, " ");
@@ -285,7 +271,7 @@ public final class StrUtils {
         return Character.isUpperCase(c);
     }
 
-    public static boolean hasNumbersInString(String string) {
+    public static boolean containsNumber(String string) {
 
         char[] c = string.toCharArray();
         for (int i = 0; i < c.length; i++) {
@@ -360,10 +346,6 @@ public final class StrUtils {
         return ALL_LETTERS.indexOf(letter) > -1;
     }
 
-    private static String NUMBERS="0123456789";
-    public static boolean isNumber(char nbr) {
-        return NUMBERS.indexOf(nbr) > -1;
-    }
 
     public static String stripOutNonNumeric(String value) {
         char[] c = value.toCharArray();
@@ -398,21 +380,23 @@ public final class StrUtils {
     public static boolean instr(String source, char check) {
         return source.indexOf(check) != -1;
     }
+    
+    private static String NUMBERS="0123456789";
+    public static boolean isNumber(char nbr) {
+        return NUMBERS.indexOf(nbr) > -1;
+    }
+
 
     public static boolean isNumber(String number) {
-    	if(StrUtils.isEmpty(number)){
-    		return false;
+    	boolean b = true;
+    	char[] chars = number.toCharArray();
+    	for(char c : chars){
+    		if(!StrUtils.isNumber(c)){
+    			b = false;
+    			break;
+    		}
     	}
-
-        char[] chars = number.toCharArray();
-
-        for (int i = 0; i < chars.length; i++) {
-            if (!isDigit(chars[i])) {
-                return false;
-            }
-        }
-
-        return true;
+    	return b;
     }
 
     public static String removeLeadingChar(String source, char c) {
@@ -430,6 +414,8 @@ public final class StrUtils {
 
         return source.substring(pos, source.length());
     }
+    
+    
 
     /* remove leading whitespace */
     public static String ltrim(String source) {

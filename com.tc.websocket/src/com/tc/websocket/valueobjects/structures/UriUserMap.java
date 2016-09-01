@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.tc.utils.StringCache;
 import com.tc.websocket.Config;
 import com.tc.websocket.server.RoutingPath;
 import com.tc.websocket.valueobjects.IUser;
@@ -24,7 +25,14 @@ public class UriUserMap {
 			if(!list.contains(user)){
 				list.add(user);
 			}
+			
+			//now lets append user's Id
+			Collection<IUser> direct = this.get(uri + StringCache.FORWARD_SLASH + user.getUserId());
+			if(!direct.contains(user)){
+				direct.add(user);
+			}
 		}
+
 	}
 	
 	public synchronized void remove(IUser user){
@@ -34,6 +42,9 @@ public class UriUserMap {
 			if(list.isEmpty()){
 				map.remove(user.getUri());
 			}
+			
+			//remove the direct uris
+			map.remove(uri + StringCache.FORWARD_SLASH + user.getUserId());
 		}
 	}
 	

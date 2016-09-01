@@ -120,7 +120,8 @@ public class Const {
 	public static final String ON_CLOSE="onClose";
 	public static final String ON_MESSAGE="onMessage";
 	public static final String ON_ERROR="onError";
-	public static final String[] ALL_EVENTS={ON_OPEN,ON_CLOSE,ON_MESSAGE,ON_ERROR};
+	public static final String ON_INTERVAL="onInterval";
+	public static final String[] ALL_EVENTS={ON_OPEN,ON_CLOSE,ON_MESSAGE,ON_ERROR,ON_INTERVAL};
 	
 	
 	//guice keys
@@ -143,22 +144,19 @@ public class Const {
 	public static final String FUNCTION="function";
 	
 	
-	//RhinoClient scoped variable names.
-	public static final String RHINO_EVENT="event";
-	public static final String RHINO_SOCKET_MESSAGE="socketMessage";
-	public static final String RHINO_EX="EX";
-	public static final String RHINO_SESSION="session";
-	public static final String RHINO_WEB_SOCKET_CLIENT="websocketClient";
-	public static final String RHINO_BUNDLE_UTIL="bundleUtils";
-	public static final String RHINO_CACHE="cache";
-	public static final String RHINO_HANDSHAKE="handShake";
-	public static final String RHINO_DOC_SRCH="@Contains(sessionId;\"rhino\");";
+	
+	//scoped variable names for scripting runtimes
+	public static final String VAR_EVENT="event";
+	public static final String VAR_SOCKET_MESSAGE="socketMessage";
+	public static final String VAR_SESSION="session";
+	public static final String VAR_WEBSOCKET_CLIENT="websocketClient";
+	public static final String VAR_BUNDLE_UTILS="bundleUtils";
+	public static final String VAR_CACHE="cache";
+	public static final String VAR_TERM_SIGNAL="termSignal";
+	public static final String VAR_SCRIPT="script";
 	
 	
 	//jsf object keys
 	public static final String SOURCE_URI="sourceUri";
-	
-	
-	public static final String MULTI_TO="___to___";
 	
 }

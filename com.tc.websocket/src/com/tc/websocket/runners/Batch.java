@@ -22,4 +22,8 @@ public class Batch implements Runnable {
 		runners.remove(runner);
 	}
 	
+	public boolean isEmpty(){
+		return runners.isEmpty();
+	}
+	
 }

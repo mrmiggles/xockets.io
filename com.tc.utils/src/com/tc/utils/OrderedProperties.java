@@ -28,11 +28,6 @@ import java.util.logging.Logger;
 
 
 
-/**
- * @author Mark W Ambler
- * mambler@tekcounsel.net
- */
-
 public class OrderedProperties extends LinkedHashMap<String, String>{
     /**
 	 * 

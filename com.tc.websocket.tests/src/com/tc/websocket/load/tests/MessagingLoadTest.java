@@ -49,6 +49,7 @@ public class MessagingLoadTest{
 		cfg.overrideProperty("compression.enabled", "false");
 		cfg.overrideProperty("message.delay", "100");
 		
+		
 		loader = new MessagingLoadTest();
 		System.out.println("Loaded " + cfg.getNumberOfClients() + ".  Pass start command to initiate test.");
 		

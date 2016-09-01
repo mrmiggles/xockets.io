@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: io.netty
 Bundle-SymbolicName: io.netty
-Bundle-Version: 4.1.4
+Bundle-Version: 4.1.5
 Bundle-ClassPath: jzlib-1.1.2.jar,
- netty-all-4.1.4.Final.jar,
- netty-tcnative-openssl-static-1.1.33.Fork15-SNAPSHOT-windows-x86_64}.jar
+ netty-tcnative-openssl-static-1.1.33.Fork15-SNAPSHOT-windows-x86_64}.jar,
+ netty-all-4.1.5.Final.jar
 Bundle-Vendor: netty
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.jcraft.jzlib,

@@ -1,14 +1,17 @@
 package com.tc.websocket.scripts;
 
 import java.io.File;
+import java.util.Date;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import lotus.domino.Session;
+
 import org.apache.commons.io.FileUtils;
+
 import bsh.Interpreter;
-import com.google.inject.Inject;
-import com.tc.di.guicer.IGuicer;
-import com.tc.utils.BundleUtils;
+
 import com.tc.websocket.Const;
 
 public class BSHScript extends Script {
@@ -18,26 +21,30 @@ public class BSHScript extends Script {
 	private File sourceFile;
 	
 	
-	@Inject
-	private IGuicer guicer;
+	
 
 	@Override
 	public void run() {
+		
+		if(!this.shouldRun()){return;}
+		
 		Session session = this.openSession();
 		try{
+			
 			
 			//new interpreter for each invocation to keep it thread safe.
 			Interpreter interpreter = new Interpreter();
 			interpreter.source(this.sourceFile.getPath());
 			
-			interpreter.set(Const.FUNCTION, this.getFunction());
-			interpreter.set(Const.RHINO_SESSION, session);
-			interpreter.set(Const.RHINO_BUNDLE_UTIL, new BundleUtils());
-			interpreter.set(Const.RHINO_WEB_SOCKET_CLIENT,guicer.inject(new SimpleClient(this)));
+			
+			for( Entry<String,Object> entry: this.getCommonVars(session).entrySet()){
+				interpreter.set(entry.getKey(), entry.getValue());
+			}
+			
+
 			
 			
 			String func = this.getFunction();
-
 			if(this.getFunction().equalsIgnoreCase(Const.ON_MESSAGE)){
 				interpreter.set("msg", this.getArgs()[0]);
 				func = this.getFunction() + "(msg)";
@@ -54,9 +61,14 @@ public class BSHScript extends Script {
 				interpreter.set("ex", this.getArgs()[0]);
 				func = this.getFunction() + "(ex)";
 
+			}else if (this.getFunction().equalsIgnoreCase(Const.ON_INTERVAL)){
+				func = this.getFunction() + "()";
+
 			}
 			
 			interpreter.eval(func);
+			
+			this.setLastRun(new Date());
 		
 		}catch(Exception e){
 			logger.log(Level.SEVERE,null, e);
@@ -84,6 +96,7 @@ public class BSHScript extends Script {
 		copy.setScript(this.getScript());
 		copy.setSource(this.getSource());
 		copy.setSourceFile(this.getSourceFile());
+		copy.setLastRun(this.getLastRun());
 		copy.setCreds(user, password);
 		return copy;
 	}

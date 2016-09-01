@@ -1,8 +1,23 @@
-xockets.io (pronounced zockets.io, for XPages websockets) plugin adds support for browser based websockets in the XPages runtime.  
+xockets.io (pronounced Zockets IO, for XPages websockets) plugin adds support for browser based websockets in the XPages runtime.  
 It leverages Netty.io websocket libraries to easily scale to a large number of users.  This plugin replaces the websocket implementation 
-found in the webshell-xpages-ext-lib hence the 2.0.0 release.  Below is a list of the latest features available in xockets.io:
+found in the webshell-xpages-ext-lib.  Below is a list of the latest features available in xockets.io:
 
 
+xockets.io as of 3.0.0
+-New Features include:
+	URI Listeners (replaced Rhino SocketEventListeners)
+	"Intervaled" Scripts to fire on a specific interval
+	Support for the following scripting runtimes (Groovy, JRuby, Jython, BeanShell, Agents(LS and Java), and Rhino's JavaScript)
+-Fix:
+	Routing a message to a user on a specific page has been restored.  Was broken in prior release (e.g. /chat.nsf/chat.xsp/CN=admin admin/OU=...)
+	
+-Breaking Changes Introduced:
+	Refactor any scripts that registered via addSocketEventListener methods to use the new methods for URI Listeners (see chat.nsf sample)
+	A file extension must be used with the ssjs or file design elements (e.g. logger.ssjs, or logger.py)
+	
+
+	
+	
 xockets.io as of 2.0.8
 -New feature added to allow event observer scripts for all connected clients
 

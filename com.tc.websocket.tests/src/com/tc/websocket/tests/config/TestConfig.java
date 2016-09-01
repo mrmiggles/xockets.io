@@ -418,4 +418,9 @@ public class TestConfig implements IConfig {
 		return "N/A";
 	}
 
+	@Override
+	public String property(String key) {
+		return this.props.getProperty(key);
+	}
+
 }

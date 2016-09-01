@@ -1,4 +1,6 @@
 package com.tc.websocket.scripts;
+import java.util.Date;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,8 +18,6 @@ import lotus.domino.Session;
 
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
-import com.tc.utils.BundleUtils;
-import com.tc.websocket.Const;
 
 public class JSRScript extends Script{
 
@@ -98,30 +98,16 @@ public class JSRScript extends Script{
 		copy.setSource(this.getSource());
 		copy.setCompiled(this.getCompiled());
 		copy.setEngine(this.getEngine());
-		//copy.recompile(true);
+		copy.setLastRun(this.getLastRun());
 		copy.setCreds(user, password);
 		return copy;
-	}
-	
-	public Bindings buildBindings(ScriptEngine engine, Object...args){
-		Bindings bindings = engine.createBindings();
-		
-		int cntr =0;
-		String name = null;
-		for(Object o : args){
-			if(cntr % 2 ==0){
-				name = (String)o;
-			}else{
-				//engine.getContext().setAttribute(name, o, ScriptContext.ENGINE_SCOPE);
-				bindings.put(name, o);
-			}
-			cntr++;
-		}
-		return bindings;
 	}
 
 	@Override
 	public void run() {
+		
+		
+		if(!this.shouldRun()){return;}
 		
 		if(this.isCallingItself()) return; //we don't want to accidentally recurse.
 
@@ -130,20 +116,17 @@ public class JSRScript extends Script{
 		try {
 
 			//make sure args have all their dependencies
-			for(Object o : args) {
-				guicer.inject(o);
+			if(!this.isIntervaled()){ // no args for background script
+				for(Object o : args) {
+					guicer.inject(o);
+				}
+			}
+			
+			Bindings bindings = this.engine.createBindings();
+			for( Entry<String,Object> entry: this.getCommonVars(session).entrySet()){
+				bindings.put(entry.getKey(), entry.getValue());
 			}
 
-			Bindings bindings = this.buildBindings(this.engine,
-					Const.FUNCTION //name 
-					,getFunction()//value
-					,Const.RHINO_SESSION //name
-					,session //value
-					,Const.RHINO_BUNDLE_UTIL //name
-					,new BundleUtils()//value
-					,Const.RHINO_WEB_SOCKET_CLIENT//name
-					,guicer.inject(new SimpleClient(this))//value
-					);
 
 			// execute the compiled script.
 			if (getScript() == null){
@@ -163,6 +146,7 @@ public class JSRScript extends Script{
 			Invocable invocable = (Invocable) this.getCompiled().getEngine();
 			invocable.invokeFunction(this.getFunction(), args);
 		
+			this.setLastRun(new Date());
 
 		}catch(ScriptException se){
 			logger.log(Level.SEVERE,null, se);

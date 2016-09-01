@@ -17,7 +17,10 @@
 
 package com.tc.websocket.scripts;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,10 +31,15 @@ import lotus.domino.Database;
 import lotus.domino.NotesException;
 import lotus.domino.Session;
 
+import com.google.inject.Inject;
+import com.tc.di.guicer.IGuicer;
 import com.tc.guice.domino.module.SessionFactory;
+import com.tc.utils.BundleUtils;
+import com.tc.utils.DateUtils;
 import com.tc.utils.DxlUtils;
 import com.tc.utils.StringCache;
 import com.tc.websocket.Config;
+import com.tc.websocket.Const;
 import com.tc.websocket.IConfig;
 import com.tc.websocket.valueobjects.SocketMessage;
 
@@ -48,9 +56,27 @@ public abstract class Script implements Runnable {
 	private String script;
 	private String source;
 	private String toString;
+	private int interval;
+	private Date lastRun = new Date();
 	protected String user, password;
 	protected Object[] args;
 	
+	@Inject
+	IGuicer guicer;
+	
+	
+	public boolean shouldRun(){
+		boolean b = true;
+		if(this.isIntervaled()){
+			long secs = DateUtils.getTimeDiffSec(lastRun , new Date());
+			b =  secs > interval;
+		}
+		return b;
+	}
+
+	public boolean isIntervaled(){
+		return this.interval > 0;
+	}
 
 
 	protected Session openSession(){
@@ -113,15 +139,18 @@ public abstract class Script implements Runnable {
 	@Override
 	public String toString(){
 		if(toString == null){
-			toString = this.getUri() + "." + this.getFunction() + "." + this.getSource();
+			toString = (this.getUri() == null ? "" : this.getUri() + ".")  + this.getFunction() + "." + this.getSource();
 		}
 		return toString;
 	}
 	
 	@Override
 	public boolean equals(Object o){
-		if (o == null) return false;
-		return this.toString().equals(o.toString());
+		boolean b = false;
+		if(o instanceof Script){
+			b  = this.toString().equals(o.toString());
+		}
+		return b;
 	}
 	
 	
@@ -238,6 +267,10 @@ public abstract class Script implements Runnable {
 		return this;
 	}
 	
+	public Script interval(int interval){
+		this.interval = interval;
+		return this;
+	}
 
 	
 	
@@ -265,24 +298,54 @@ public abstract class Script implements Runnable {
 	
 	public boolean isCallingItself(){
 		boolean b= false;
-		for(Object o : this.getArgs()){
-			if(o instanceof SocketMessage){
-				SocketMessage msg = (SocketMessage) o;
-				if(this.getSource().equalsIgnoreCase(msg.getFrom())){
-					b = true;
-					break;
+		if(this.isIntervaled() == false){
+			for(Object o : this.getArgs()){
+				if(o instanceof SocketMessage){
+					SocketMessage msg = (SocketMessage) o;
+					if(this.getSource().equalsIgnoreCase(msg.getFrom())){
+						b = true;
+						break;
+					}
 				}
 			}
 		}
 		return b;
 	}
-	
+
 	public static void printEngines(){
 		ScriptEngineManager manager = new ScriptEngineManager();
         List<ScriptEngineFactory> engines = manager.getEngineFactories();
 		for(ScriptEngineFactory engine : engines){
 			System.out.println(engine.getEngineName());
 		}
+	}
+	
+	public int getInterval() {
+		return interval;
+	}
+
+	public void setInterval(int interval) {
+		this.interval = interval;
+	}
+
+	public Date getLastRun() {
+		return lastRun;
+	}
+
+	public void setLastRun(Date lastRun) {
+		this.lastRun = lastRun;
+	}
+	
+	public Map<String,Object> getCommonVars(Session session){
+		Map<String,Object> vars = new HashMap<String,Object>();
+		vars.put(Const.FUNCTION, this.getFunction());
+		vars.put(Const.VAR_SESSION, session);
+		vars.put(Const.VAR_BUNDLE_UTILS, new BundleUtils());
+		vars.put(Const.VAR_WEBSOCKET_CLIENT, guicer.inject(new SimpleClient(this)));
+		vars.put(Const.VAR_TERM_SIGNAL, TermSignal.insta());
+		vars.put(Const.VAR_CACHE, ScriptCache.insta());
+		vars.put(Const.VAR_SCRIPT,new ScriptWrapper(this));
+		return vars;
 	}
 
 }

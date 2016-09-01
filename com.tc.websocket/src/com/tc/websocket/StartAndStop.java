@@ -61,7 +61,6 @@ public class StartAndStop {
 				
 				//cleanup all the RhinoClient users
 				StampAll stamp = new StampAll();
-				stamp.setSearch(Const.RHINO_DOC_SRCH);
 				stamp.setField(Const.FIELD_FORM);
 				stamp.setValue(Const.FIELD_VALUE_DELETE);
 				stamp.run();

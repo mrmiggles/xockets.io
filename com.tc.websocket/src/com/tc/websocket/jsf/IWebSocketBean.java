@@ -52,11 +52,13 @@ public interface IWebSocketBean {
 
 	
 	//URI listeners
-	public void addListeners(final String uri, final String[] sources);
+	public void addUriListeners(final String uri, final String[] sources);
 	public void addUriListener(String uri, String source, String runAsUser, String runAsPassword);
 	public void addUriListener(String uri, String source);
+	public void addUriListener(String source);
 	public boolean containsUriListener(String uri);
 	public void removeUriListener(String source);
+
 	
 	
 	//observers
@@ -65,5 +67,12 @@ public interface IWebSocketBean {
 	public boolean containsObserver(final String function, final String source);
 	public void removeObserver(final String function, final String source);
 	
-
+	
+	
+	//intervaled
+	public void addIntervaledScripts(int interval, final String[] sources);
+	public void addIntervaled(int interval, String source, String runAsUser, String runAsPassword);
+	public void addIntervaled(int interval, String source);
+	public void removeIntervaled(String source);
+	
 }

@@ -1,5 +1,8 @@
 package com.tc.websocket.scripts;
 
+import java.util.Date;
+import java.util.Map.Entry;
+
 import lotus.domino.Session;
 
 import org.python.core.Py;
@@ -10,8 +13,6 @@ import org.python.util.PythonInterpreter;
 
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
-import com.tc.utils.BundleUtils;
-import com.tc.websocket.Const;
 
 public class PythonScript extends Script{
 
@@ -22,7 +23,10 @@ public class PythonScript extends Script{
 
 	@Override
 	public void run() {
-
+		
+		if(!this.shouldRun()){return;}
+		
+		
 		Session session = null;
 		PythonInterpreter python = null;
 
@@ -30,15 +34,17 @@ public class PythonScript extends Script{
 			
 			if(this.isCallingItself()) return;
 			
+
+
+			
 			session = this.openSession();
 			python = new PythonInterpreter();
 
 
 			//setup the global vars.
-			python.set(Const.FUNCTION, Py.java2py(this.getFunction()));
-			python.set(Const.RHINO_SESSION, Py.java2py(session));
-			python.set(Const.RHINO_BUNDLE_UTIL, Py.java2py(new BundleUtils()));
-			python.set(Const.RHINO_WEB_SOCKET_CLIENT, Py.java2py(guicer.inject(new SimpleClient(this))));
+			for( Entry<String,Object> entry: this.getCommonVars(session).entrySet()){
+				python.set(entry.getKey(), Py.java2py(entry.getValue()));
+			}
 			
 			
 			//execute the compiled code.
@@ -47,17 +53,25 @@ public class PythonScript extends Script{
 			//get handle on the function
 			PyFunction func = (PyFunction) python.get(this.getFunction());
 			
-			//convert all the args to pyobjects
-			PyObject[] pyArgs = new PyObject[args.length];
-			for(int i = 0; i< args.length; i++){
-				guicer.inject(args[i]); //add dependency
-				pyArgs[i] = Py.java2py(args[i]); // wrap in a PyObject
+			//convert all the args to pyobjects (no args for intervaled script)
+			if(!this.isIntervaled()){
+				PyObject[] pyArgs = new PyObject[args.length];
+				for(int i = 0; i< args.length; i++){
+					guicer.inject(args[i]); //add dependency
+					pyArgs[i] = Py.java2py(args[i]); // wrap in a PyObject
+				}
+				//call the function, pass the PyObject[] args.
+				func.__call__(pyArgs);
+			}else{
+				//call the empty function
+				func.__call__();
 			}
 			
-			//call the function, pass the PyObject[] args.
-			func.__call__(pyArgs);
+
 			
 			
+			
+			this.setLastRun(new Date());
 			
 			
 		}catch(Exception e){
@@ -78,6 +92,7 @@ public class PythonScript extends Script{
 		copy.setScript(this.getScript());
 		copy.setSource(this.getSource());
 		copy.setCreds(user, password);
+		copy.setLastRun(this.getLastRun());
 		copy.setCompiled(this.getCompiled());
 		return copy;
 	}

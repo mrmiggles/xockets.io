@@ -71,6 +71,7 @@ public class CommandLine implements CommandProvider {
 
 			}else if("count-all".equals(command)){
 				out.println(server.getUsers().size());
+				
 			}else if("show-engines".equals(command)){
 				Script.printEngines();
 			}
@@ -95,13 +96,18 @@ public class CommandLine implements CommandProvider {
 			}else if("reload-scripts".equalsIgnoreCase(command)){
 				this.reloadScripts(out, server);
 				
-			}else if("register-script".startsWith(command)){
-				this.registerScript(out);
+			}else if("register-listener".startsWith(command)){
+				this.registerListener(server, out);
 				
 			}else if("register-observer".startsWith(command)){
 				this.registerObserver(server, out);
 				
-			}else if("show-scripts".startsWith(command)){
+			}else if("register-intervaled".startsWith(command)){
+				this.registerIntervaled(server, out);
+				
+			}
+			
+			else if("show-scripts".startsWith(command)){
 				this.showScripts(server, out);
 				
 			}else if("remove-script".startsWith(command)){
@@ -169,9 +175,26 @@ public class CommandLine implements CommandProvider {
 	
 	}
 	
-	private void registerScript(CommandInterpreter out){
-		throw new IllegalArgumentException("No longer supported.");
+	private void registerListener(IDominoWebSocketServer server, CommandInterpreter out){
 		
+		String uri = out.nextArgument();
+		String scriptPath = out.nextArgument();
+
+		
+		if(StrUtils.isEmpty(scriptPath)){
+			out.println("invalid path to script.");
+			return;
+		}
+		
+		
+		Script script = Script.newScript(scriptPath);
+		script.setFunction(Const.ON_MESSAGE);
+		script.setSource(scriptPath);
+		script.setUri(uri);
+		Guicer.getInstance(Activator.bundle).inject(script);
+		script.recompile(true);
+		server.addUriListener(script);
+		out.println(script.toString() + " added to server's URI listeners.");	
 	}
 	
 	private void registerObserver(IDominoWebSocketServer server, CommandInterpreter out){
@@ -200,6 +223,34 @@ public class CommandLine implements CommandProvider {
 		
 		
 		out.println(script.toString() + " added to the server's observers.");
+		
+	}
+	
+	
+	private void registerIntervaled(IDominoWebSocketServer server, CommandInterpreter out){
+		
+		int interval = Integer.parseInt(out.nextArgument());
+		String scriptPath = out.nextArgument();
+
+		
+		if(interval<=0) throw new IllegalArgumentException("Interval must be greater than zero.");
+		
+		if(StrUtils.isEmpty(scriptPath)){
+			out.println("invalid path to script.");
+			return;
+		}
+		
+		
+		Script script = Script.newScript(scriptPath);
+		script.setFunction(Const.ON_INTERVAL);
+		script.setSource(scriptPath);
+		script.setInterval(interval);
+		Guicer.getInstance(Activator.bundle).inject(script);
+		script.recompile(true);
+		server.addIntervaled(script);
+		
+		
+		out.println(script.toString() + " added to the server's intervaled scripts.");
 		
 	}
 

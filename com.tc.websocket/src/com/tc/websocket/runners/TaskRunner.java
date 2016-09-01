@@ -1,5 +1,5 @@
 /*
- * � Copyright Tek Counsel LLC 2016
+ * Copyright Tek Counsel LLC 2016
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -31,6 +31,8 @@ import com.tc.guice.domino.module.ServerInfo;
 import com.tc.websocket.Activator;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
+import com.tc.websocket.scripts.Script;
+import com.tc.websocket.server.IDominoWebSocketServer;
 
 
 public class TaskRunner implements Runnable {
@@ -52,6 +54,9 @@ public class TaskRunner implements Runnable {
 
 	@Inject
 	IGuicer guicer;
+	
+	@Inject
+	IDominoWebSocketServer server;
 
 
 	public static TaskRunner getInstance(){
@@ -83,6 +88,18 @@ public class TaskRunner implements Runnable {
 		while (!RUN_QUEUE.isEmpty()) {
 			IFutureRunnable future = RUN_QUEUE.poll();
 			scheduler.schedule(future, future.getSeconds(), TimeUnit.SECONDS);
+		}
+		
+		//make sure the scheduled scripts fire.
+		Batch batch = new Batch();
+		for(Script script : server.getIntervaled()){
+			if(script.shouldRun()){
+				batch.addRunner(script);
+			}
+		}
+		
+		if(!batch.isEmpty()){
+			this.add(batch);
 		}
 	}
 

@@ -679,4 +679,9 @@ public class Config implements Runnable, IConfig {
 		return "";
 	}
 
+	@Override
+	public String property(String key) {
+		return this.props.getProperty(key);
+	}
+
 }

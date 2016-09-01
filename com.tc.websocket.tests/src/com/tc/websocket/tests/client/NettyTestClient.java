@@ -28,6 +28,7 @@ public class NettyTestClient extends AbstractClient implements Runnable{
 	private static AtomicLong dataVolume = new AtomicLong();
 	private static Date initDate = new Date();
 	private int printOnCount = TestConfig.getInstance().getPrintOnCount();
+	private boolean printData = new Boolean(TestConfig.getInstance().property("print.data"));
 
 
 	public NettyTestClient(URI uri) throws InterruptedException {
@@ -61,6 +62,11 @@ public class NettyTestClient extends AbstractClient implements Runnable{
 			start = new Date();
 			System.out.println("datetime=" + strdate + ", total.msgs=" + counter.get() +  ", seconds=" + time + ", username=" + this.getUsername() + ", uri=" + this.getUri().getPath() + ", received: mb=" + mb + ", kb=" + kb + ", bytes=" + message.length() + ", host=" + this.getRemoteHost());
 		}	
+		
+		if(printData){
+			System.out.println(message);
+		}
+		
 	}
 
 	public String getUsername() {

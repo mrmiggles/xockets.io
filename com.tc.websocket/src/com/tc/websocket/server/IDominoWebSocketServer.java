@@ -107,4 +107,10 @@ public interface IDominoWebSocketServer extends Runnable {
 	public Script findUriListener(String source);
 	public void removeUriListener(Script script);
 	
+	
+	//for scheduled onInterval scripts
+	public void addIntervaled(Script script);
+	public void removeIntervaled(Script script);
+	public Collection<Script> getIntervaled(); 
+	
 }
