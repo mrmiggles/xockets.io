@@ -32,7 +32,7 @@ import com.tc.websocket.valueobjects.Prompt;
 @Provider
 public class RestArgumentException implements ExceptionMapper<IllegalArgumentException> {
     
-	private static final Logger logger = Logger.getLogger(RestArgumentException.class.getName());
+	private static final Logger LOG = Logger.getLogger(RestArgumentException.class.getName());
 
 
  
@@ -41,7 +41,7 @@ public class RestArgumentException implements ExceptionMapper<IllegalArgumentExc
         IPrompt prompt = new Prompt();
         String msg  = exception.getMessage();
         prompt.setMessage(IPrompt.EXCEPTION,msg);
-        logger.log(Level.SEVERE,null, exception);
+        LOG.log(Level.SEVERE,null, exception);
         return Response.status(Response.Status.OK).entity(prompt).type(MediaType.APPLICATION_JSON).build();
     }
 }

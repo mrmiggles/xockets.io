@@ -36,7 +36,7 @@ import com.tc.websocket.Const;
 
 public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
 	
-	private static final Logger logger = Logger.getLogger(ProxyBackendHandler.class.getName());
+	private static final Logger LOG = Logger.getLogger(ProxyBackendHandler.class.getName());
 
 	private final Channel inboundChannel;
 	private boolean websocket;
@@ -105,9 +105,9 @@ public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 		if(cause.getMessage().startsWith(Const.ESTABLISHED_CONN_ERR)){
-			logger.log(Level.FINE, null, cause);
+			LOG.log(Level.FINE, null, cause);
 		}else{
-			logger.log(Level.SEVERE, null, cause);
+			LOG.log(Level.SEVERE, null, cause);
 		}
 		
 		ProxyFrontendHandler.closeOnFlush(ctx.channel());

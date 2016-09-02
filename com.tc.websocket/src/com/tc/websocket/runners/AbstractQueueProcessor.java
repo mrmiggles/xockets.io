@@ -39,7 +39,7 @@ public abstract class AbstractQueueProcessor extends NotesOperation {
 	@Inject
 	private ISocketMessageFactory msgFactory;
 
-	private static final Logger logger = Logger.getLogger(AbstractQueueProcessor.class.getName());
+	private static final Logger LOG = Logger.getLogger(AbstractQueueProcessor.class.getName());
 
 
 	//@Stopwatch(time=50)
@@ -74,7 +74,7 @@ public abstract class AbstractQueueProcessor extends NotesOperation {
 			}
 
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 		}
 	}
 

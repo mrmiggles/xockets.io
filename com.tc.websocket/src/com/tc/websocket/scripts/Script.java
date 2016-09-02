@@ -45,7 +45,7 @@ import com.tc.websocket.valueobjects.SocketMessage;
 
 public abstract class Script implements Runnable {
 	
-	private static final Logger logger = Logger.getLogger(Script.class.getName());
+	private static final Logger LOG = Logger.getLogger(Script.class.getName());
 	
 	public static final int OBSERVER=1;
 	public static final int LISTENER=2;
@@ -225,7 +225,7 @@ public abstract class Script implements Runnable {
 			byte[] byteMe = DxlUtils.findSSJS(db, resource);
 			script = new String(byteMe).trim();
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 
 		} finally {
 			SessionFactory.closeSession(session);

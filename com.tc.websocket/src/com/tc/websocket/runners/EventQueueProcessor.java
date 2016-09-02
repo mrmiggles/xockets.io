@@ -32,7 +32,7 @@ import com.tc.xpage.profiler.Stopwatch;
 
 
 public class EventQueueProcessor extends AbstractQueueProcessor implements Runnable {
-	private static final Logger logger = Logger.getLogger(EventQueueProcessor.class.getName());
+	private static final Logger LOG = Logger.getLogger(EventQueueProcessor.class.getName());
 	
 	private String target;
 	private String eventQueue;
@@ -68,7 +68,7 @@ public class EventQueueProcessor extends AbstractQueueProcessor implements Runna
 
 			view.setAutoUpdate(true);
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 
 		}finally{
 			this.closeSession(session);

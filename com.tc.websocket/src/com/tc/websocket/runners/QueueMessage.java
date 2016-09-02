@@ -35,7 +35,7 @@ import com.tc.xpage.profiler.Stopwatch;
 
 public class QueueMessage extends NotesOperation {
 
-	private static Logger logger = Logger.getLogger(QueueMessage.class.getName());
+	private static Logger LOG = Logger.getLogger(QueueMessage.class.getName());
 
 
 	private SocketMessage msg;
@@ -75,7 +75,7 @@ public class QueueMessage extends NotesOperation {
 				doc.recycle();
 
 			} catch (NotesException e) {
-				logger.log(Level.SEVERE,null, e);
+				LOG.log(Level.SEVERE,null, e);
 
 			}finally{
 				this.closeSession(session);
@@ -95,7 +95,7 @@ public class QueueMessage extends NotesOperation {
 			eo.recycle();
 			rtitem.recycle();
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 
 		}finally{
 			if(file!=null && file.exists()){

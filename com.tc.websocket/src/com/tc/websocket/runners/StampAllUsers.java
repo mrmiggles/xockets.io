@@ -33,7 +33,7 @@ import com.tc.xpage.profiler.Stopwatch;
 
 public class StampAllUsers extends NotesOperation implements Runnable {
 
-	private static final Logger logger = Logger.getLogger(StampAllUsers.class.getName());
+	private static final Logger LOG = Logger.getLogger(StampAllUsers.class.getName());
 
 	private String status;
 
@@ -72,7 +72,7 @@ public class StampAllUsers extends NotesOperation implements Runnable {
 			}
 
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 
 		}finally{
 			SessionFactory.closeSession(session);

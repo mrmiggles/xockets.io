@@ -48,7 +48,7 @@ public class User implements IUser {
 	private ContextWrapper conn;
 	private String host; //used for clustered environments.
 	
-	//private static final Logger logger = Logger.getLogger(User.class.getName());
+	//private static final Logger LOG = Logger.getLogger(User.class.getName());
 
 
 	@Override
@@ -243,11 +243,13 @@ public class User implements IUser {
 
 	
 	public Collection<ContextWrapper> findConnection(RoutingPath path){
-		List<ContextWrapper> results = new ArrayList<ContextWrapper>();
+		
 		
 		if(path.getUri().equals(this.getUserId()) || path.getUri().equalsIgnoreCase(Const.BROADCAST)){
 			return this.getConnections();
 		}
+		
+		List<ContextWrapper> results = new ArrayList<ContextWrapper>();
 		
 		//we get here... find the uri match
 		for(ContextWrapper w : this.getConnections()){

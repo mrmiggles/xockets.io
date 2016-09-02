@@ -33,7 +33,7 @@ import com.tc.websocket.valueobjects.IUser;
 
 public class RestWebSocketBean extends AbstractWebSocketBean {
 	
-	private static final Logger logger = Logger.getLogger(RestWebSocketBean.class.getName());
+	private static final Logger LOG = Logger.getLogger(RestWebSocketBean.class.getName());
 
 	private HttpServletRequest req;
 
@@ -53,7 +53,7 @@ public class RestWebSocketBean extends AbstractWebSocketBean {
 		try {
 			username =XSPUtils.session().getEffectiveUserName();
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 		}
 		return username;
 	}

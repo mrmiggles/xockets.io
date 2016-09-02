@@ -40,7 +40,7 @@ import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.xpage.profiler.Stopwatch;
 
 public class SocketMessageFactory implements ISocketMessageFactory {
-	private static final Logger logger = Logger.getLogger(SocketMessageFactory.class.getName());
+	private static final Logger LOG = Logger.getLogger(SocketMessageFactory.class.getName());
 	
 	
 	/* (non-Javadoc)
@@ -71,7 +71,7 @@ public class SocketMessageFactory implements ISocketMessageFactory {
 		
 		
 		}catch(NotesException n){
-			logger.log(Level.SEVERE,null,n);
+			LOG.log(Level.SEVERE,null,n);
 			
 		}
 		
@@ -106,13 +106,13 @@ public class SocketMessageFactory implements ISocketMessageFactory {
 			msg.setJson(json);//so we don't have to re-serialize...
 
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 			try{
 				doc.replaceItemValue(Const.FIELD_SENTFLAG, Const.FIELD_SENTFLAG_VALUE_ERROR);
 				doc.replaceItemValue(Const.FIELD_ERROR, e.getMessage());
 				doc.save();
 			}catch(NotesException n){
-				logger.log(Level.SEVERE,null, n);
+				LOG.log(Level.SEVERE,null, n);
 			}
 		}
 		return msg;
@@ -133,7 +133,7 @@ public class SocketMessageFactory implements ISocketMessageFactory {
 					int end = json.lastIndexOf(StringCache.CLOSE_CURLY_BRACE);
 					json=json.substring(start,end) + StringCache.CLOSE_CURLY_BRACE;
 				} catch (IOException e) {
-					logger.log(Level.SEVERE,null,e);
+					LOG.log(Level.SEVERE,null,e);
 				}finally{
 					IOUtils.closeQuietly(in);
 					eo.recycle();

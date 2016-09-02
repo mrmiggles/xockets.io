@@ -35,7 +35,7 @@ import com.tc.websocket.Const;
 import com.tc.xpage.profiler.Stopwatch;
 
 public class BroadcastQueueProcessor extends AbstractQueueProcessor implements Runnable {
-	private static final Logger logger = Logger.getLogger(BroadcastQueueProcessor.class.getName());
+	private static final Logger LOG = Logger.getLogger(BroadcastQueueProcessor.class.getName());
 	private List<String> clusterMates = new ArrayList<String>();
 
 	@Override
@@ -73,7 +73,7 @@ public class BroadcastQueueProcessor extends AbstractQueueProcessor implements R
 				view.setAutoUpdate(true);
 			}
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 
 		}finally{
 			super.closeSession(session);
@@ -124,7 +124,7 @@ public class BroadcastQueueProcessor extends AbstractQueueProcessor implements R
 				directMessage.recycle();
 			}
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 
 			try {
 				doc.replaceItemValue(Const.FIELD_ERROR, e.getLocalizedMessage());
@@ -136,7 +136,7 @@ public class BroadcastQueueProcessor extends AbstractQueueProcessor implements R
 				directMessage.save();
 
 			} catch (NotesException e1) {
-				logger.log(Level.SEVERE,null, e);
+				LOG.log(Level.SEVERE,null, e);
 			}
 
 

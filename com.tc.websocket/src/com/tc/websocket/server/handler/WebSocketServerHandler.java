@@ -45,7 +45,7 @@ import com.tc.websocket.server.IDominoWebSocketServer;
  */
 public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> {
 
-	private static final Logger logger = Logger.getLogger(WebSocketServerHandler.class.getName());
+	private static final Logger LOG = Logger.getLogger(WebSocketServerHandler.class.getName());
 
 	private WebSocketServerHandshaker handshaker;
 
@@ -133,9 +133,9 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 
 		if(Config.getInstance().isTestMode()){
-			logger.log(Level.SEVERE,this.newWrapper(ctx).getResourceDescriptor() + " closed abruptly.");
+			LOG.log(Level.SEVERE,this.newWrapper(ctx).getResourceDescriptor() + " closed abruptly.");
 		}else{
-			logger.log(Level.SEVERE,null,cause);
+			LOG.log(Level.SEVERE,null,cause);
 		}
 
 		this.dominoServer.closeWithDelay(this.newWrapper(ctx), 0);

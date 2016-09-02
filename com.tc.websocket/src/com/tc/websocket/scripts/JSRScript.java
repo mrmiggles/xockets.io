@@ -25,7 +25,7 @@ public class JSRScript extends Script{
 	@Inject
 	private IGuicer guicer;
 
-	private static final Logger logger = Logger.getLogger(JSRScript.class.getName());
+	private static final Logger LOG = Logger.getLogger(JSRScript.class.getName());
 
 	private ScriptEngineManager manager;
 	private ScriptEngine engine;
@@ -69,12 +69,12 @@ public class JSRScript extends Script{
 					Compilable compilingEngine = (Compilable)engine;
 					this.setCompiled(compilingEngine.compile(this.getScript()));
 				}catch(final Throwable ex){
-					logger.log(Level.SEVERE, null, ex);
+					LOG.log(Level.SEVERE, null, ex);
 					b = false;
 				}
 			}
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 			b = false;
 		}
 		return b;
@@ -149,11 +149,11 @@ public class JSRScript extends Script{
 			this.setLastRun(new Date());
 
 		}catch(ScriptException se){
-			logger.log(Level.SEVERE,null, se);
+			LOG.log(Level.SEVERE,null, se);
 			
 		
 		}catch (Exception e) {
-			logger.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 			
 		} finally {
 			this.closeSession(session);

@@ -18,9 +18,9 @@ import javax.net.ssl.TrustManagerFactory;
 
 public class SSLFactory implements ISSLFactory {
 
-	private SslContext sslCtx = null;
+	private SslContext sslCtx;
 
-	private static final Logger logger= Logger.getLogger(SSLFactory.class.getName());
+	private static final Logger LOG= Logger.getLogger(SSLFactory.class.getName());
 	public SSLFactory(){
 
 	}	
@@ -69,7 +69,7 @@ public class SSLFactory implements ISSLFactory {
 
 
 		}catch(Exception e){
-			logger.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 		}
 		return ctx;
 	}
@@ -90,7 +90,7 @@ public class SSLFactory implements ISSLFactory {
 						.build();
 				
 		}catch(Exception e){
-			logger.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 		}
 
 		return ctx;
@@ -106,7 +106,7 @@ public class SSLFactory implements ISSLFactory {
 					.trustManager(InsecureTrustManagerFactory.INSTANCE)
 					.build();
 		}catch(Exception e){
-			logger.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 		}
 		return clientCtx;
 	}
@@ -123,7 +123,7 @@ public class SSLFactory implements ISSLFactory {
 				clientCtx = this.createInsecureClientSslCtx(cfg);
 			}
 		}catch(Exception e){
-			logger.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 		}
 		return clientCtx;
 	}

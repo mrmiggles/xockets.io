@@ -32,7 +32,7 @@ import com.tc.websocket.server.IDominoWebSocketServer;
 
 public class WebSocketBean extends AbstractWebSocketBean implements Serializable, IWebSocketBean{
 
-	private static Logger logger = Logger.getLogger(WebSocketBean.class.getName());
+	private static Logger LOG = Logger.getLogger(WebSocketBean.class.getName());
 	private static final long serialVersionUID = 2680334746972588793L;
 	private final AtomicBoolean isOn = new AtomicBoolean(false);
 
@@ -48,7 +48,7 @@ public class WebSocketBean extends AbstractWebSocketBean implements Serializable
 			try {
 				this.registerCurrentUser();
 			} catch (NotesException e) {
-				logger.log(Level.SEVERE,null,e);
+				LOG.log(Level.SEVERE,null,e);
 			}
 		}
 	}

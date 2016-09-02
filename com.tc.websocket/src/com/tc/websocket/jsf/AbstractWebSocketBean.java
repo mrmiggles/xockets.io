@@ -46,7 +46,7 @@ import com.tc.websocket.valueobjects.SocketMessage;
 
 public abstract class AbstractWebSocketBean implements IWebSocketBean {
 
-	private static final Logger logger = Logger.getLogger(AbstractWebSocketBean.class.getName());
+	private static final Logger LOG = Logger.getLogger(AbstractWebSocketBean.class.getName());
 
 	protected IDominoWebSocketServer server;
 
@@ -82,7 +82,7 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 			ApplyStatus status = new ApplyStatus(user);
 			TaskRunner.getInstance().add(status);
 		}catch(Exception e){
-			logger.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 		}
 
 	}

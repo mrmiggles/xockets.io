@@ -53,7 +53,7 @@ import com.tc.websocket.valueobjects.User;
 
 public class DominoWebSocketModule extends AbstractModule {
 
-	private static final Logger logger = Logger.getLogger(DominoWebSocketModule.class.getName());
+	private static final Logger LOG = Logger.getLogger(DominoWebSocketModule.class.getName());
 
 	private static IDominoWebSocketServer server;
 	private static IConfig config = Config.getInstance();
@@ -84,7 +84,7 @@ public class DominoWebSocketModule extends AbstractModule {
 			bind(ISSLFactory.class).to(SSLFactory.class).in(Singleton.class);
 
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 		}
 
 	}
@@ -118,7 +118,7 @@ public class DominoWebSocketModule extends AbstractModule {
 					try {
 						filter = (IWebsocketFilter) Class.forName(websocketFilter).newInstance();
 					} catch (Exception e) {
-						logger.log(Level.SEVERE,null, e);
+						LOG.log(Level.SEVERE,null, e);
 					} 
 				}
 			}
@@ -162,7 +162,7 @@ public class DominoWebSocketModule extends AbstractModule {
 				server = domserver;
 			}
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 		}
 		return server;
 	}
@@ -201,7 +201,7 @@ public class DominoWebSocketModule extends AbstractModule {
 			server.start();
 
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 		}
 	}
 

@@ -20,7 +20,10 @@ import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 
 public class AgentScript extends Script {
-	Logger logger = Logger.getLogger(AgentScript.class.getName());
+	Logger LOG = Logger.getLogger(AgentScript.class.getName());
+	
+	private static final String FUNCTION="function";
+	private static final String EVENT="event";
 
 	@Override
 	public void run() {
@@ -65,7 +68,7 @@ public class AgentScript extends Script {
 			e.printStackTrace();
 
 			doc.replaceItemValue("error", e.getMessage() );
-			doc.replaceItemValue("function", Const.ON_ERROR);
+			doc.replaceItemValue(FUNCTION, Const.ON_ERROR);
 
 			RichTextItem item = doc.createRichTextItem("Body");
 			item.appendText(JSONUtils.toJson(user));
@@ -77,7 +80,7 @@ public class AgentScript extends Script {
 
 
 		}catch(NotesException n){
-			logger.log(Level.SEVERE, null, n);
+			LOG.log(Level.SEVERE, null, n);
 		}finally{
 			this.closeSession(session);
 		}
@@ -101,7 +104,7 @@ public class AgentScript extends Script {
 			doc.replaceItemValue("host",user.getHost());
 			doc.replaceItemValue("status",user.getStatus());
 			doc.replaceItemValue("uris",ColUtils.toVector(user.getUris()));
-			doc.replaceItemValue("function", fun);
+			doc.replaceItemValue(FUNCTION, fun);
 
 			RichTextItem item = doc.createRichTextItem("Body");
 			item.appendText(JSONUtils.toJson(user));
@@ -112,7 +115,7 @@ public class AgentScript extends Script {
 
 
 		}catch(NotesException n){
-			logger.log(Level.SEVERE, null, n);
+			LOG.log(Level.SEVERE, null, n);
 		}finally{
 			this.closeSession(session);
 		}
@@ -129,11 +132,11 @@ public class AgentScript extends Script {
 
 			SocketMessage msg = (SocketMessage) this.args[0];
 
-			doc.replaceItemValue("function", Const.ON_MESSAGE);
+			doc.replaceItemValue(FUNCTION, Const.ON_MESSAGE);
 			doc.replaceItemValue("from", msg.getFrom());
 			doc.replaceItemValue("to", msg.getTo());
 			doc.replaceItemValue("text", msg.getText());
-			doc.replaceItemValue("event", Const.ON_MESSAGE);
+			doc.replaceItemValue(EVENT, Const.ON_MESSAGE);
 			doc.replaceItemValue("targets", ColUtils.toVector(msg.getTargets()));
 
 			RichTextItem item = doc.createRichTextItem("Body");
@@ -146,7 +149,7 @@ public class AgentScript extends Script {
 
 
 		}catch(NotesException n){
-			logger.log(Level.SEVERE, null, n);
+			LOG.log(Level.SEVERE, null, n);
 		}finally{
 			this.closeSession(session);
 		}
@@ -159,12 +162,12 @@ public class AgentScript extends Script {
 			session = this.openSession();
 			Database db = session.getDatabase(StringCache.EMPTY, dbPath());
 			Document doc = db.createDocument();
-			doc.replaceItemValue("function", Const.ON_MESSAGE);
-			doc.replaceItemValue("event", Const.ON_INTERVAL);
+			doc.replaceItemValue(FUNCTION, Const.ON_MESSAGE);
+			doc.replaceItemValue(EVENT, Const.ON_INTERVAL);
 			Agent agent = db.getAgent(StrUtils.rightBack(this.getSource(), "/"));
 			agent.runWithDocumentContext(doc);
 		}catch(NotesException n){
-			logger.log(Level.SEVERE, null, n);
+			LOG.log(Level.SEVERE, null, n);
 		}finally{
 			this.closeSession(session);
 		}

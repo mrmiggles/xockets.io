@@ -35,14 +35,14 @@ import com.tc.websocket.valueobjects.Prompt;
 @Provider
 public class RestNotesException implements ExceptionMapper<NotesException> {
     
-	private static final Logger logger = Logger.getLogger(RestNotesException.class.getName());
+	private static final Logger LOG = Logger.getLogger(RestNotesException.class.getName());
 
 
     @Override
 	public Response toResponse(NotesException exception) {
         IPrompt prompt = new Prompt();
         prompt.setMessage(IPrompt.EXCEPTION,exception.text);
-        logger.log(Level.SEVERE,null, exception);
+        LOG.log(Level.SEVERE,null, exception);
         return Response.status(Response.Status.OK).entity(prompt).type(MediaType.APPLICATION_JSON).build();
     }
 }

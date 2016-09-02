@@ -42,7 +42,7 @@ import com.tc.websocket.server.pipeline.IPipelineBuilder;
 
 public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
-	private static final Logger logger = Logger.getLogger(ProxyFrontendHandler.class.getName());	
+	private static final Logger LOG = Logger.getLogger(ProxyFrontendHandler.class.getName());	
 
 	private final String remoteHost;
 	private final int remotePort;
@@ -164,7 +164,7 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 				out.close();
 
 			} catch (Exception e) {
-				logger.log(Level.SEVERE, null,e);
+				LOG.log(Level.SEVERE, null,e);
 			}finally{
 				IOUtils.closeQuietly(out);
 			}
@@ -183,9 +183,9 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 		if(cause.getMessage().startsWith(Const.ESTABLISHED_CONN_ERR)){
-			logger.log(Level.FINE, null, cause);
+			LOG.log(Level.FINE, null, cause);
 		}else{
-			logger.log(Level.SEVERE, null, cause);
+			LOG.log(Level.SEVERE, null, cause);
 		}
 		closeOnFlush(ctx.channel());
 	}

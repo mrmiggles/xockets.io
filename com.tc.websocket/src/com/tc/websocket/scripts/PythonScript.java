@@ -77,7 +77,7 @@ public class PythonScript extends Script{
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
-			python.cleanup();
+			if(python!=null) python.cleanup();
 			this.closeSession(session);
 		}
 	}

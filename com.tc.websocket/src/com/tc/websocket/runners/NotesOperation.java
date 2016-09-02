@@ -15,7 +15,7 @@ import com.tc.websocket.Config;
 import com.tc.websocket.Const;
 
 public abstract class NotesOperation implements Runnable {
-	private static final Logger logger = Logger.getLogger(NotesOperation.class.getName());
+	private static final Logger LOG = Logger.getLogger(NotesOperation.class.getName());
 	
 	
 	public Session openSession(){
@@ -49,7 +49,7 @@ public abstract class NotesOperation implements Runnable {
 			
 		} catch (NotesException e) {
 			if(!e.text.contains("No documents were categorized")){
-				logger.log(Level.SEVERE,null,e);
+				LOG.log(Level.SEVERE,null,e);
 			}
 		}finally{
 			closeSession(session);
@@ -70,7 +70,7 @@ public abstract class NotesOperation implements Runnable {
 			db.recycle();
 			
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 
 		}finally{
 			closeSession(session);

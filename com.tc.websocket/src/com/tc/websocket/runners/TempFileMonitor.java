@@ -27,8 +27,8 @@ import com.tc.utils.DateUtils;
 
 
 public class TempFileMonitor implements Runnable {
-	
-	private static final Logger logger = Logger.getLogger(TempFileMonitor.class.getName());
+
+	private static final Logger LOG = Logger.getLogger(TempFileMonitor.class.getName());
 
 	@Override
 	public void run() {
@@ -49,19 +49,21 @@ public class TempFileMonitor implements Runnable {
 
 			temp.delete();//cleanup
 
-			for(File file: files){
-				String name = file.getName();
-				if(file.exists() && name.startsWith("eo") && name.endsWith("tm")){
-					//calculate the age
-					Date lastmod = new Date(file.lastModified());
-					long minutes = DateUtils.getTimeDiffMin(lastmod, new Date());
-					if(minutes >= 5){
-						FileUtils.deleteQuietly(file);
+			if(files!=null){
+				for(File file: files){
+					String name = file.getName();
+					if(file.exists() && name.startsWith("eo") && name.endsWith("tm")){
+						//calculate the age
+						Date lastmod = new Date(file.lastModified());
+						long minutes = DateUtils.getTimeDiffMin(lastmod, new Date());
+						if(minutes >= 5){
+							FileUtils.deleteQuietly(file);
+						}
 					}
 				}
 			}
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null ,e);
+			LOG.log(Level.SEVERE,null ,e);
 		}
 	}
 

@@ -40,8 +40,8 @@ public class TaskRunner implements Runnable {
 	//singleton instance of this class
 	private static TaskRunner RUNNER = new TaskRunner();
 
-	//logger... thank you captain obvious :)
-	private static final Logger logger = Logger.getLogger(TaskRunner.class.getName());
+	//LOG... thank you captain obvious :)
+	private static final Logger LOG = Logger.getLogger(TaskRunner.class.getName());
 
 	//in memory data structure for queued up runnables.
 	private final Queue<IFutureRunnable> RUN_QUEUE = new ConcurrentLinkedQueue<IFutureRunnable>();
@@ -167,7 +167,7 @@ public class TaskRunner implements Runnable {
 			
 			
 		}catch(Exception e){
-			logger.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 		}
 	}
 
@@ -180,10 +180,10 @@ public class TaskRunner implements Runnable {
 				scheduler.shutdownNow();
 			}
 			
-			logger.log(Level.INFO,"TaskRunner scheduler shutdown");
+			LOG.log(Level.INFO,"TaskRunner scheduler shutdown");
 			
 		} catch (InterruptedException e) {
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 		}
 
 		RUN_QUEUE.clear();

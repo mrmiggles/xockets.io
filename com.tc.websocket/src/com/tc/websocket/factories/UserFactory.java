@@ -32,7 +32,7 @@ import com.tc.websocket.Const;
 import com.tc.websocket.valueobjects.IUser;
 
 public class UserFactory implements IUserFactory {
-	private static final Logger logger = Logger.getLogger(UserFactory.class.getName());
+	private static final Logger LOG = Logger.getLogger(UserFactory.class.getName());
 	
 	@Inject
 	IGuicer guicer;
@@ -62,7 +62,7 @@ public class UserFactory implements IUserFactory {
 			
 		}
 		
-		logger.log(Level.INFO, user.getUserId() + " created ");
+		LOG.log(Level.INFO, user.getUserId() + " created ");
 		
 		return user;
 	}
@@ -83,7 +83,7 @@ public class UserFactory implements IUserFactory {
 			user.setUserId(doc.getItemValueString(Const.FIELD_USERID));
 			
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 		}
 		
 		return user;

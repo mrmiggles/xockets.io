@@ -52,7 +52,7 @@ import com.tc.websocket.valueobjects.SocketMessage;
 
 public class RestWebSocket implements IRestWebSocket {
 
-	private static final Logger logger = Logger.getLogger(RestWebSocket.class.getName());
+	private static final Logger LOG = Logger.getLogger(RestWebSocket.class.getName());
 
 	@Inject
 	IGuicer guicer;
@@ -123,7 +123,7 @@ public class RestWebSocket implements IRestWebSocket {
 			List<SelectItem> list = bean.getOnlineUsers();
 			res = this.buildMessage(Const.INFO, "websocketUrl",bean.getWebSocketUrl(), "onlineUsers",list,"sessionId", req.getSession().getId());
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 			res =  this.buildMessage(Const.EXCEPTION, Const.EXCEPTION.toLowerCase(),e.getMessage());
 		}
 		return res;
@@ -138,7 +138,7 @@ public class RestWebSocket implements IRestWebSocket {
 			bean.removeCurrentUser();
 			res= this.buildMessage(Const.INFO, "unregister","true");
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 			res =  this.buildMessage(Const.EXCEPTION, Const.EXCEPTION.toLowerCase(),e.getMessage());
 		}
 		return res;
@@ -153,7 +153,7 @@ public class RestWebSocket implements IRestWebSocket {
 			List<SelectItem> list = bean.getOnlineUsers();
 			res = this.buildResponse(list);
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 			res =  this.buildMessage(Const.EXCEPTION, Const.EXCEPTION.toLowerCase(),e.getMessage());
 		}
 		return res;
@@ -168,7 +168,7 @@ public class RestWebSocket implements IRestWebSocket {
 			IWebSocketBean bean = newBean();
 			res = this.buildMessage(Const.INFO, "websocketUrl", bean.getWebSocketUrl());
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 			res =  this.buildMessage(Const.EXCEPTION, Const.EXCEPTION.toLowerCase(),e.getMessage());
 		}
 		return res;
@@ -184,7 +184,7 @@ public class RestWebSocket implements IRestWebSocket {
 			bean.sendMessage(msg);
 			res= this.buildMessage(Const.INFO, "sendMessage","true");
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 			res =  this.buildMessage(Const.EXCEPTION, Const.EXCEPTION.toLowerCase(),e.getMessage());
 		}
 		return res;

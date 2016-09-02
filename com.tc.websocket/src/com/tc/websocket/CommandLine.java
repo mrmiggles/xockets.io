@@ -170,9 +170,7 @@ public class CommandLine implements CommandProvider {
 	
 
 	private void removeScript(IDominoWebSocketServer server, CommandInterpreter out){
-		
 		throw new IllegalArgumentException("No longer supported.");
-	
 	}
 	
 	private void registerListener(IDominoWebSocketServer server, CommandInterpreter out){

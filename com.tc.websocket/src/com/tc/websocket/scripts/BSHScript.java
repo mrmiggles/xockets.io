@@ -16,7 +16,7 @@ import com.tc.websocket.Const;
 
 public class BSHScript extends Script {
 
-	private static final Logger logger = Logger.getLogger(BSHScript.class.getName());
+	private static final Logger LOG = Logger.getLogger(BSHScript.class.getName());
 
 	private File sourceFile;
 	
@@ -71,7 +71,7 @@ public class BSHScript extends Script {
 			this.setLastRun(new Date());
 		
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 		}finally{
 			this.closeSession(session);
 		}
@@ -118,7 +118,7 @@ public class BSHScript extends Script {
 
 			}
 		}catch(Exception e){
-			logger.log(Level.SEVERE, null, e);
+			LOG.log(Level.SEVERE, null, e);
 		}
 		return b;
 	}

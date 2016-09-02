@@ -49,7 +49,7 @@ import com.tc.websocket.server.IDominoWebSocketServer;
 
 public class WebSocketValidationHandler extends SimpleChannelInboundHandler<FullHttpRequest>{
 
-	private static final Logger logger = Logger.getLogger(WebSocketValidationHandler.class.getName());
+	private static final Logger LOG = Logger.getLogger(WebSocketValidationHandler.class.getName());
 	
 	@Inject
 	private IDominoWebSocketServer server;
@@ -89,7 +89,7 @@ public class WebSocketValidationHandler extends SimpleChannelInboundHandler<Full
 		}
 		
 		if(server.getWebSocketCount() >= cfg.getMaxConnections()){
-			logger.log(Level.SEVERE,"Maximum number of websockets " + cfg.getMaxConnections() + " created.");
+			LOG.log(Level.SEVERE,"Maximum number of websockets " + cfg.getMaxConnections() + " created.");
 			sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HTTP_1_1, FORBIDDEN));
 			return false;
 		}
@@ -97,7 +97,7 @@ public class WebSocketValidationHandler extends SimpleChannelInboundHandler<Full
 
 		String origin = req.headers().get(HttpHeaderNames.ORIGIN);
 		if(origin!=null && !Config.getInstance().isAllowedOrigin(origin)){
-			logger.log(Level.SEVERE,"Invalid origin " + origin + " attempting to make websocket connection");
+			LOG.log(Level.SEVERE,"Invalid origin " + origin + " attempting to make websocket connection");
 			sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HTTP_1_1, FORBIDDEN));
 			return false;
 		}

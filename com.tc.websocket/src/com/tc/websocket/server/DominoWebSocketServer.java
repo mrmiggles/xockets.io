@@ -84,10 +84,10 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	private static final IConfig cfg = Config.getInstance();
 	private static final UriUserMap URI_MAP = new UriUserMap();
 	private static final UriScriptMap SCRIPT_MAP = new UriScriptMap();
-	private static IMultiMap<String,IUser> VALID_USERS=new MultiMap<String, IUser>(Config.getInstance().getMaxConnections() / 2);
-	private static final Logger logger = Logger.getLogger(DominoWebSocketServer.class.getName());
-	private static Set<Script> OBSERVERS = Collections.synchronizedSet(new HashSet<Script>());
-	private static Set<Script> INTERVALED = Collections.synchronizedSet(new HashSet<Script>());
+	private static final IMultiMap<String,IUser> VALID_USERS=new MultiMap<String, IUser>(Config.getInstance().getMaxConnections() / 2);
+	private static final Logger LOG = Logger.getLogger(DominoWebSocketServer.class.getName());
+	private static final Set<Script> OBSERVERS = Collections.synchronizedSet(new HashSet<Script>());
+	private static final Set<Script> INTERVALED = Collections.synchronizedSet(new HashSet<Script>());
 
 	
 	//set during server provisioning (see DominoWebSocketModule)
@@ -258,7 +258,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		//check for null.
 		if (user == null){
-			logger.log(Level.SEVERE,"User is null.  Closing connection...");
+			LOG.log(Level.SEVERE,"User is null.  Closing connection...");
 			conn.channel().close();
 			return;
 		}
@@ -267,7 +267,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		//another anonymous check
 		if(!cfg.isAllowAnonymous() && (username==null || user.isAnonymous())){
-			logger.log(Level.INFO,"anonymous not allowed");
+			LOG.log(Level.INFO,"anonymous not allowed");
 			conn.channel().close();
 			return;
 
@@ -334,15 +334,15 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				}else{
 					level= target.queryAccess(user.getUserId());
 				}
-				logger.log(Level.INFO,"ACL level is " + level + " for user " + user.getUserId() +  " in database " + target.getFilePath());
+				LOG.log(Level.INFO,"ACL level is " + level + " for user " + user.getUserId() +  " in database " + target.getFilePath());
 				if(level<ACL.LEVEL_READER){
-					logger.log(Level.SEVERE, "User " + user.getUserId() + "  does not have permission to access " + target.getFilePath());
+					LOG.log(Level.SEVERE, "User " + user.getUserId() + "  does not have permission to access " + target.getFilePath());
 					b = false;
 				}
 				target.recycle();
 			}
 		}catch(NotesException n){
-			logger.log(Level.SEVERE,null , n);
+			LOG.log(Level.SEVERE,null , n);
 		}finally{
 			SessionFactory.closeSession(session);
 		}
@@ -403,7 +403,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				messages = JSONUtils.toList(json, SocketMessage.class);
 				
 			} catch (Exception e) {
-				logger.log(Level.SEVERE, null, e);
+				LOG.log(Level.SEVERE, null, e);
 			} 
 		}else{
 			messages.add(JSONUtils.toObject(json, SocketMessage.class));
@@ -445,7 +445,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		//if msg fails to be created by json parser handle the null object
 		if(msg == null){
-			logger.log(Level.SEVERE,"Socket Message could not be created.");
+			LOG.log(Level.SEVERE,"Socket Message could not be created.");
 			return;
 		}
 
@@ -507,13 +507,13 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 	@Override
 	public void onError(ContextWrapper conn, Exception ex) {
-		logger.log(Level.FINE,"***DominoWebSocketServer.onError***");
+		LOG.log(Level.FINE,"***DominoWebSocketServer.onError***");
 		if(conn!=null){
 			Attribute<Object> att = conn.attr(AttributeKey.newInstance("resourceDescriptor"));
-			logger.log(Level.SEVERE,null,att.get().toString());
+			LOG.log(Level.SEVERE,null,att.get().toString());
 		}
 
-		logger.log(Level.SEVERE,null, ex);
+		LOG.log(Level.SEVERE,null, ex);
 		
 		
 		this.notifyEventObservers(Const.ON_ERROR, ex);
@@ -577,7 +577,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				db.open();
 			}
 		}catch(NotesException n){
-			logger.log(Level.SEVERE, null, n);
+			LOG.log(Level.SEVERE, null, n);
 		}
 		return db;
 	}
@@ -614,7 +614,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		Session session = SessionFactory.openSession(cfg.getUsername(),cfg.getPassword());
 		try{
 			db = this.db(session, path);
-			uri = uri.replace(StringCache.STAR, StringCache.EMPTY);
 
 			//probably not the fastest approach, need to re-visit.
 			for(IUser user : col){
@@ -646,9 +645,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				}
 			}
 		}catch(NotesException n){
-			logger.log(Level.SEVERE,null, n);
+			LOG.log(Level.SEVERE,null, n);
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 		}
 
 		finally{
@@ -790,7 +789,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	public boolean isValidSize(String json){
 		boolean b = true;
 		if(json.length() > cfg.getMaxSize()){
-			logger.log(Level.SEVERE,"Message is larger than " + cfg.getMaxSize() + " bytes.  It will not be sent.");
+			LOG.log(Level.SEVERE,"Message is larger than " + cfg.getMaxSize() + " bytes.  It will not be sent.");
 			b = false;
 		}
 		return b;
@@ -872,7 +871,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 			}
 		}catch(Exception e){
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 		}
 	}
 
@@ -968,9 +967,10 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 	@Override
 	public Collection<Script> getAllScripts() {
-		List<Script> list = new ArrayList<Script>(OBSERVERS.size());
+		List<Script> list = new ArrayList<Script>(100);
 		list.addAll(OBSERVERS);
 		list.addAll(getUriListeners());
+		list.addAll(getIntervaled());
 		return list;
 	}
 

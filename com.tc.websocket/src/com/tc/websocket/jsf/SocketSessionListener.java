@@ -29,22 +29,22 @@ import com.tc.utils.XSPUtils;
 import com.tc.websocket.Const;
 
 public class SocketSessionListener implements SessionListener {
-	private static Logger logger = Logger.getLogger(SocketSessionListener.class.getName());
+	private static Logger LOG = Logger.getLogger(SocketSessionListener.class.getName());
 
 	@Override
 	public void sessionCreated(ApplicationEx app, HttpSessionEvent event) {
-		logger.log(Level.INFO,"***sessionCreated***");
+		LOG.log(Level.INFO,"***sessionCreated***");
 		IWebSocketBean userMgr = (IWebSocketBean) XSPUtils.getBean(Const.WEBSOCKET_BEAN);
 		try {
 			userMgr.registerCurrentUser();
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 		}
 	}
 
 	@Override
 	public void sessionDestroyed(ApplicationEx app, HttpSessionEvent event) {
-		logger.log(Level.INFO,"***sessionDestroyed***");	
+		LOG.log(Level.INFO,"***sessionDestroyed***");	
 		if(XSPUtils.context()!=null){
 			IWebSocketBean userMgr = (IWebSocketBean) XSPUtils.getBean(Const.WEBSOCKET_BEAN);
 			userMgr.removeCurrentUser();

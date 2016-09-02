@@ -40,7 +40,7 @@ import com.tc.xpage.profiler.Stopwatch;
 
 public class ApplyStatus extends NotesOperation {
 
-	private static Logger logger = Logger.getLogger(ApplyStatus.class.getName());
+	private static Logger LOG = Logger.getLogger(ApplyStatus.class.getName());
 
 	@Inject
 	IDominoWebSocketServer server;
@@ -96,7 +96,7 @@ public class ApplyStatus extends NotesOperation {
 
 				this.user.setStatus(Const.STATUS_ONLINE);
 
-				logger.log(Level.FINE,this.getUserId());
+				LOG.log(Level.FINE,this.getUserId());
 
 				Document doc = this.getUserDoc(session, true);
 
@@ -126,7 +126,7 @@ public class ApplyStatus extends NotesOperation {
 
 
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 		}finally{
 			this.closeSession(session);
 		}
@@ -175,7 +175,7 @@ public class ApplyStatus extends NotesOperation {
 			}
 
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null, e);
 
 		}finally{
 			this.closeSession(session);
@@ -189,7 +189,7 @@ public class ApplyStatus extends NotesOperation {
 		try {
 			doc = db.getDocumentByUNID(unid);
 		} catch (NotesException e) {
-			logger.log(Level.FINE, e.text);
+			LOG.log(Level.FINE, e.text);
 		}
 
 		return doc;

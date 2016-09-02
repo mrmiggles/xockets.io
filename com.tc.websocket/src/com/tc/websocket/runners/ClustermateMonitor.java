@@ -35,7 +35,7 @@ import com.tc.xpage.profiler.Stopwatch;
 
 public class ClustermateMonitor extends AbstractQueueProcessor implements Runnable {
 
-	private static final Logger logger = Logger.getLogger(ClustermateMonitor.class.getName());
+	private static final Logger LOG = Logger.getLogger(ClustermateMonitor.class.getName());
 
 	@Override
 	@Stopwatch
@@ -76,7 +76,7 @@ public class ClustermateMonitor extends AbstractQueueProcessor implements Runnab
 			}
 
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 
 		}finally{
 			this.closeSession(session);
@@ -112,7 +112,7 @@ public class ClustermateMonitor extends AbstractQueueProcessor implements Runnab
 			view.setAutoUpdate(true);
 
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 		}
 
 	}

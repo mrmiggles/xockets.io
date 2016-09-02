@@ -238,10 +238,7 @@ public final class StrUtils {
 
 
     public static boolean isEmpty(String s) {
-        if (s == null) {
-            return true;
-        }
-        return s.equals(StringCache.EMPTY);
+    	return s ==null || s.length() == 0;
     }
     
     public static boolean areEmpty(String ...s){

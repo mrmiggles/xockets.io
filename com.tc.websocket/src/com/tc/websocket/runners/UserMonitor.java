@@ -41,7 +41,7 @@ public class UserMonitor extends AbstractQueueProcessor implements Runnable {
 	@Inject
 	IUserFactory userFactory;
 	
-	private static final Logger logger = Logger.getLogger(UserMonitor.class.getName());
+	private static final Logger LOG = Logger.getLogger(UserMonitor.class.getName());
 
 	@Override
 	public void run() {
@@ -84,7 +84,7 @@ public class UserMonitor extends AbstractQueueProcessor implements Runnable {
 
 			view.setAutoUpdate(true);
 		} catch (NotesException e) {
-			logger.log(Level.SEVERE,null,e);
+			LOG.log(Level.SEVERE,null,e);
 
 		}finally{
 			super.closeSession(session);
