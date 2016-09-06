@@ -29,9 +29,20 @@ import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
 import com.tc.xpage.profiler.Stopwatch;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class QueueProcessor.
+ */
 public class QueueProcessor extends AbstractQueueProcessor implements Runnable {
+	
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(QueueProcessor.class.getName());
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	@Stopwatch
 	public void run() {

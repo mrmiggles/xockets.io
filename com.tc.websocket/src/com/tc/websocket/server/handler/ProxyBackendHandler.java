@@ -34,13 +34,27 @@ import com.tc.utils.StringCache;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ProxyBackendHandler.
+ */
 public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
 	
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(ProxyBackendHandler.class.getName());
 
+	/** The inbound channel. */
 	private final Channel inboundChannel;
+	
+	/** The websocket. */
 	private boolean websocket;
 
+	/**
+	 * Instantiates a new proxy backend handler.
+	 *
+	 * @param inboundChannel the inbound channel
+	 */
 	public ProxyBackendHandler(Channel inboundChannel) {
 		this.inboundChannel = inboundChannel;
 
@@ -48,24 +62,44 @@ public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
 
 
 
+	/**
+	 * Checks if is websocket.
+	 *
+	 * @return true, if is websocket
+	 */
 	public boolean isWebsocket() {
 		return websocket;
 	}
 
 
 
+	/**
+	 * Sets the websocket.
+	 *
+	 * @param websocket the new websocket
+	 */
 	public void setWebsocket(boolean websocket) {
 		this.websocket = websocket;
 	}
 
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see io.netty.channel.ChannelInboundHandlerAdapter#channelActive(io.netty.channel.ChannelHandlerContext)
+	 */
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) {
 		ctx.read();
 	}
 	
 
+	
+
+	/* (non-Javadoc)
+	 * @see io.netty.channel.ChannelInboundHandlerAdapter#channelRead(io.netty.channel.ChannelHandlerContext, java.lang.Object)
+	 */
 	@Override
 	public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
 		ByteBuf buf = (ByteBuf) msg;
@@ -95,6 +129,11 @@ public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
 
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see io.netty.channel.ChannelInboundHandlerAdapter#channelInactive(io.netty.channel.ChannelHandlerContext)
+	 */
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) {
 		if(!this.isWebsocket()){
@@ -102,6 +141,11 @@ public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
 		}
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see io.netty.channel.ChannelInboundHandlerAdapter#exceptionCaught(io.netty.channel.ChannelHandlerContext, java.lang.Throwable)
+	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 		if(cause.getMessage().startsWith(Const.ESTABLISHED_CONN_ERR)){

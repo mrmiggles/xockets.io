@@ -31,13 +31,27 @@ import com.tc.websocket.Const;
 import com.tc.xpage.profiler.Stopwatch;
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class EventQueueProcessor.
+ */
 public class EventQueueProcessor extends AbstractQueueProcessor implements Runnable {
+	
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(EventQueueProcessor.class.getName());
 	
+	/** The target. */
 	private String target;
+	
+	/** The event queue. */
 	private String eventQueue;
 	
 	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	@Stopwatch
 	public void run() {
@@ -75,24 +89,44 @@ public class EventQueueProcessor extends AbstractQueueProcessor implements Runna
 		}
 	}
 
+	/**
+	 * Gets the target.
+	 *
+	 * @return the target
+	 */
 	public String getTarget() {
 		return target;
 	}
 
 
 
+	/**
+	 * Sets the target.
+	 *
+	 * @param to the new target
+	 */
 	public void setTarget(String to) {
 		this.target = to;
 	}
 
 
 
+	/**
+	 * Gets the event queue.
+	 *
+	 * @return the event queue
+	 */
 	public String getEventQueue() {
 		return eventQueue;
 	}
 
 
 
+	/**
+	 * Sets the event queue.
+	 *
+	 * @param eventQueue the new event queue
+	 */
 	public void setEventQueue(String eventQueue) {
 		this.eventQueue = eventQueue;
 	}

@@ -19,11 +19,21 @@ package com.tc.websocket.runners;
 import com.tc.websocket.Config;
 import com.tc.xpage.profiler.Stopwatch;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PurgeDocuments.
+ */
 public class PurgeDocuments extends NotesOperation {
 
 
+	/** The Constant SRCH. */
 	private static final String SRCH="Form=\"delete\"";
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	@Stopwatch
 	public void run() {

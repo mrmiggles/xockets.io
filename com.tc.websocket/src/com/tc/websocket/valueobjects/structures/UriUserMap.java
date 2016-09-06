@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket.valueobjects.structures;
 
 import java.util.Collection;
@@ -13,12 +16,23 @@ import com.tc.websocket.valueobjects.IUser;
 
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UriUserMap.
+ */
 public class UriUserMap {
 	
 	
+	/** The map. */
 	private static Map<String, Collection<IUser>> map = new ConcurrentHashMap<String,Collection<IUser>>(Config.getInstance().getMaxConnections()/2);
 	
 	
+	/**
+	 * Adds the.
+	 *
+	 * @param user the user
+	 */
 	public synchronized void add(IUser user){
 		for(String uri : user.getUris()){
 			Collection<IUser> list = this.get(uri);
@@ -35,6 +49,11 @@ public class UriUserMap {
 
 	}
 	
+	/**
+	 * Removes the.
+	 *
+	 * @param user the user
+	 */
 	public synchronized void remove(IUser user){
 		for(String uri : user.getUris()){
 			Collection<IUser> list = this.get(uri);
@@ -48,6 +67,12 @@ public class UriUserMap {
 		}
 	}
 	
+	/**
+	 * Gets the.
+	 *
+	 * @param uri the uri
+	 * @return the collection
+	 */
 	public synchronized Collection<IUser> get(String uri){
 		Collection<IUser> users = map.get(uri);
 		if(users == null){
@@ -57,6 +82,12 @@ public class UriUserMap {
 		return users;
 	}
 	
+	/**
+	 * Gets the.
+	 *
+	 * @param path the path
+	 * @return the collection
+	 */
 	public synchronized Collection<IUser> get(RoutingPath path){
 		Collection<IUser> users = new HashSet<IUser>();
 		users.addAll(this.get(path.getUri()));
@@ -74,6 +105,9 @@ public class UriUserMap {
 		return users;
 	}
 	
+	/**
+	 * Clear.
+	 */
 	public synchronized void clear(){
 		map.clear();
 	}

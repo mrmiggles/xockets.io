@@ -51,15 +51,30 @@ import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.User;
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DominoWebSocketModule.
+ */
 public class DominoWebSocketModule extends AbstractModule {
 
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(DominoWebSocketModule.class.getName());
 
+	/** The server. */
 	private static IDominoWebSocketServer server;
+	
+	/** The config. */
 	private static IConfig config = Config.getInstance();
+	
+	/** The filter. */
 	private static IWebsocketFilter filter;
 
 
+
+	/* (non-Javadoc)
+	 * @see com.google.inject.AbstractModule#configure()
+	 */
 	@Override
 	protected void configure() {
 
@@ -91,18 +106,33 @@ public class DominoWebSocketModule extends AbstractModule {
 
 
 
+	/**
+	 * Provide guicer.
+	 *
+	 * @return the i guicer
+	 */
 	@Provides
 	public IGuicer provideGuicer(){
 		return Guicer.getInstance(Activator.bundle);
 	}
 
 
+	/**
+	 * Provide config.
+	 *
+	 * @return the i config
+	 */
 	@Provides
 	public IConfig provideConfig(){
 		return config;
 	}
 
 
+	/**
+	 * Provide filter.
+	 *
+	 * @return the i websocket filter
+	 */
 	@Provides
 	public synchronized IWebsocketFilter provideFilter(){
 
@@ -130,6 +160,9 @@ public class DominoWebSocketModule extends AbstractModule {
 
 
 
+	/**
+	 * Nullify server.
+	 */
 	public static void nullifyServer(){
 		if(server.isOn()){
 			throw new RuntimeException("server must be turned off first.");
@@ -138,6 +171,13 @@ public class DominoWebSocketModule extends AbstractModule {
 	}
 
 
+	/**
+	 * Provide web socket server.
+	 *
+	 * @param cfg the cfg
+	 * @param filter the filter
+	 * @return the i domino web socket server
+	 */
 	@Provides
 	public synchronized IDominoWebSocketServer provideWebSocketServer(IConfig cfg, IWebsocketFilter filter){
 		try{
@@ -168,6 +208,12 @@ public class DominoWebSocketModule extends AbstractModule {
 	}
 
 
+	/**
+	 * Start server.
+	 *
+	 * @param server the server
+	 * @throws Exception the exception
+	 */
 	private void startServer(IDominoWebSocketServer server) throws Exception{
 		if(config.getPort()<=0){
 			throw new IllegalArgumentException("WEBSOCKET_PORT not configured in notes.ini");	
@@ -176,6 +222,11 @@ public class DominoWebSocketModule extends AbstractModule {
 	}
 
 
+	/**
+	 * Start SSL server.
+	 *
+	 * @param server the server
+	 */
 	private void startSSLServer(IDominoWebSocketServer server){
 
 

@@ -29,13 +29,23 @@ import javax.ws.rs.ext.Provider;
 import com.tc.websocket.valueobjects.IPrompt;
 import com.tc.websocket.valueobjects.Prompt;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RestArgumentException.
+ */
 @Provider
 public class RestArgumentException implements ExceptionMapper<IllegalArgumentException> {
     
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(RestArgumentException.class.getName());
 
 
  
+
+    /* (non-Javadoc)
+     * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
+     */
     @Override
 	public Response toResponse(IllegalArgumentException exception) {
         IPrompt prompt = new Prompt();

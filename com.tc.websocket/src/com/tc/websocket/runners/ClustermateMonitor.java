@@ -33,10 +33,20 @@ import com.tc.websocket.Config;
 import com.tc.websocket.Const;
 import com.tc.xpage.profiler.Stopwatch;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ClustermateMonitor.
+ */
 public class ClustermateMonitor extends AbstractQueueProcessor implements Runnable {
 
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(ClustermateMonitor.class.getName());
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	@Stopwatch
 	public void run() {
@@ -85,6 +95,12 @@ public class ClustermateMonitor extends AbstractQueueProcessor implements Runnab
 	}
 
 
+	/**
+	 * Sets the clustermate users offline.
+	 *
+	 * @param db the db
+	 * @param clustermate the clustermate
+	 */
 	@Stopwatch
 	private void setClustermateUsersOffline(Database db, String clustermate) {
 

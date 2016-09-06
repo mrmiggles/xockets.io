@@ -24,13 +24,20 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 
+
+// TODO: Auto-generated Javadoc
 /**
+ * The Class CustomJsonDateTime.
  *
  * @author mwambler
  */
 public class CustomJsonDateTime extends JsonSerializer<Date> {
 
     
+
+    /* (non-Javadoc)
+     * @see org.codehaus.jackson.map.JsonSerializer#serialize(java.lang.Object, org.codehaus.jackson.JsonGenerator, org.codehaus.jackson.map.SerializerProvider)
+     */
     @Override
 	public void serialize(Date value, JsonGenerator gen, SerializerProvider provider) throws IOException, JsonProcessingException {
         String date = String.valueOf(value.getTime());

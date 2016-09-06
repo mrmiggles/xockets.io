@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket;
 
 import io.netty.handler.ssl.OpenSsl;
@@ -16,14 +19,31 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating SSL objects.
+ */
 public class SSLFactory implements ISSLFactory {
 
+	/** The ssl ctx. */
 	private SslContext sslCtx;
 
+	/** The Constant LOG. */
 	private static final Logger LOG= Logger.getLogger(SSLFactory.class.getName());
+	
+	/**
+	 * Instantiates a new SSL factory.
+	 */
 	public SSLFactory(){
 
 	}	
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.ISSLFactory#createSslContext(com.tc.websocket.IConfig)
+	 */
 	@Override
 	public synchronized SslContext createSslContext(IConfig cfg) {
 		if(sslCtx ==null){
@@ -38,6 +58,13 @@ public class SSLFactory implements ISSLFactory {
 		return sslCtx;
 	}
 
+	/**
+	 * Creates a new SSL object.
+	 *
+	 * @param cfg the cfg
+	 * @param server the server
+	 * @return the ssl context
+	 */
 	private synchronized SslContext createSslContextWithKeyStore(IConfig cfg, boolean server){
 		SslContext ctx = null;
 		try{
@@ -75,6 +102,12 @@ public class SSLFactory implements ISSLFactory {
 	}
 
 
+	/**
+	 * Creates a new SslContext object.
+	 *
+	 * @param cfg the cfg
+	 * @return the ssl context
+	 */
 	private synchronized SslContext createServerSslContext(IConfig cfg){
 		SslContext ctx = null;
 		try{
@@ -97,6 +130,11 @@ public class SSLFactory implements ISSLFactory {
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.ISSLFactory#createInsecureClientSslCtx(com.tc.websocket.IConfig)
+	 */
 	@Override
 	public SslContext createInsecureClientSslCtx(IConfig cfg) {
 		SslContext clientCtx = null;
@@ -112,6 +150,11 @@ public class SSLFactory implements ISSLFactory {
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.ISSLFactory#createClientSslCtx(com.tc.websocket.IConfig)
+	 */
 	@Override
 	public synchronized SslContext createClientSslCtx(IConfig cfg){
 

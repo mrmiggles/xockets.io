@@ -30,16 +30,32 @@ import com.tc.di.guicer.IGuicer;
 import com.tc.websocket.Activator;
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WebSocketService.
+ */
 public class WebSocketService extends RestService {
+	
+	/** The singletons. */
 	private HashSet<Object> singletons = new HashSet<Object>();
+	
+	/** The classes. */
 	private Set<Class<?>> classes = new HashSet<Class<?>>();
 
 
+	/**
+	 * Instantiates a new web socket service.
+	 */
 	public WebSocketService(){
 
 	}
 	
 
+
+	/* (non-Javadoc)
+	 * @see javax.ws.rs.core.Application#getSingletons()
+	 */
 	@Override
 	public HashSet<Object> getSingletons(){
 		ObjectMapper mapper = new ObjectMapper();
@@ -69,6 +85,10 @@ public class WebSocketService extends RestService {
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see org.apache.wink.common.WinkApplication#getClasses()
+	 */
 	@Override
 	public Set<Class<?>> getClasses(){
 		classes.add(RestArgumentException.class);

@@ -16,27 +16,52 @@
 
 package com.tc.websocket.runners;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class FutureRunnable.
+ */
 public class FutureRunnable implements IFutureRunnable{
 	
+	/** The seconds. */
 	private int seconds;
+	
+	/** The run me. */
 	private Runnable runMe;
 	
 	
+	/**
+	 * Instantiates a new future runnable.
+	 *
+	 * @param runMe the run me
+	 */
 	public FutureRunnable(Runnable runMe){
 		this.runMe = runMe;
 	}
 	
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		runMe.run();
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.runners.IFutureRunnable#getSeconds()
+	 */
 	@Override
 	public int getSeconds() {
 		return this.seconds;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.runners.IFutureRunnable#setSeconds(int)
+	 */
 	@Override
 	public void setSeconds(int seconds) {
 		this.seconds = seconds;

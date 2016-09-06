@@ -24,6 +24,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class Activator.
@@ -38,20 +39,27 @@ public class Activator extends Plugin {
 	
 	
 	
+	/** The command line reg. */
 	@SuppressWarnings("unused")
 	private ServiceRegistration commandLineReg;
 
 
 
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
+	 */
 	@Override
 	public void start(final BundleContext context) {
-		
-
 		bundle=context.getBundle(); 
 		commandLineReg=context.registerService(CommandProvider.class.getName(), new CommandLine(), null);
 		StartAndStop.getInstance().start();
 	}
 
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+	 */
 	@Override
 	public void stop(final BundleContext context) {
 		StartAndStop.getInstance().stop();

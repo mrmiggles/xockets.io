@@ -19,19 +19,36 @@ package com.tc.websocket.library;
 
 import com.ibm.xsp.library.AbstractXspLibrary;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WebSocketLibrary.
+ */
 public class WebSocketLibrary extends AbstractXspLibrary {
 
+
+	/* (non-Javadoc)
+	 * @see com.ibm.xsp.library.XspLibrary#getLibraryId()
+	 */
 	@Override
 	public String getLibraryId() {
 		return "com.tc.websocket.library";
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.ibm.xsp.library.AbstractXspLibrary#getPluginId()
+	 */
 	@Override
 	public String getPluginId() {
 		return "com.tc.websocket";
 	}
 
 	
+
+	/* (non-Javadoc)
+	 * @see com.ibm.xsp.library.AbstractXspLibrary#getFacesConfigFiles()
+	 */
 	@Override
 	public String[] getFacesConfigFiles() {
 		return new String[]{

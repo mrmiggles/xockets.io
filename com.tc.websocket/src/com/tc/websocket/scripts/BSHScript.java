@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket.scripts;
 
 import java.io.File;
@@ -14,15 +17,26 @@ import bsh.Interpreter;
 
 import com.tc.websocket.Const;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BSHScript.
+ */
 public class BSHScript extends Script {
 
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(BSHScript.class.getName());
 
+	/** The source file. */
 	private File sourceFile;
 	
 	
 	
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		
@@ -78,16 +92,30 @@ public class BSHScript extends Script {
 	}
 
 	
+	/**
+	 * Gets the source file.
+	 *
+	 * @return the source file
+	 */
 	public File getSourceFile() {
 		return sourceFile;
 	}
 
+	/**
+	 * Sets the source file.
+	 *
+	 * @param sourceFile the new source file
+	 */
 	public void setSourceFile(File sourceFile) {
 		this.sourceFile = sourceFile;
 	}
 
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.scripts.Script#copy(java.lang.Object[])
+	 */
 	@Override
 	public synchronized Script copy(Object ...args){
 		BSHScript copy  = new BSHScript();
@@ -101,6 +129,9 @@ public class BSHScript extends Script {
 		return copy;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.scripts.Script#recompile(boolean)
+	 */
 	@Override
 	public boolean recompile(boolean reload) {
 

@@ -40,25 +40,41 @@ import com.tc.websocket.server.ContextWrapper;
 import com.tc.websocket.server.IDominoWebSocketServer;
 
 
+
+// TODO: Auto-generated Javadoc
 /**
- * Handles handshakes and messages
+ * Handles handshakes and messages.
  */
 public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> {
 
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(WebSocketServerHandler.class.getName());
 
+	/** The handshaker. */
 	private WebSocketServerHandshaker handshaker;
 
+	/** The domino server. */
 	private IDominoWebSocketServer dominoServer;
 
+	/** The guicer. */
 	@Inject
 	IGuicer guicer;
 
 
+	/**
+	 * Gets the domino server.
+	 *
+	 * @return the domino server
+	 */
 	public IDominoWebSocketServer getDominoServer() {
 		return dominoServer;
 	}
 
+	/**
+	 * Sets the domino server.
+	 *
+	 * @param dominoServer the new domino server
+	 */
 	@Inject
 	public void setDominoServer(IDominoWebSocketServer dominoServer) {
 		this.dominoServer = dominoServer;
@@ -66,6 +82,11 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see io.netty.channel.SimpleChannelInboundHandler#channelRead0(io.netty.channel.ChannelHandlerContext, java.lang.Object)
+	 */
 	@Override
 	public void channelRead0(ChannelHandlerContext ctx, Object msg) {
 		if (msg instanceof FullHttpRequest) {
@@ -76,12 +97,23 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see io.netty.channel.ChannelInboundHandlerAdapter#channelReadComplete(io.netty.channel.ChannelHandlerContext)
+	 */
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) {
 		//print ("channelReadComplete");
 		ctx.flush();
 	}
 
+	/**
+	 * Handle hand shake.
+	 *
+	 * @param ctx the ctx
+	 * @param req the req
+	 */
 	private void handleHandShake(ChannelHandlerContext ctx, FullHttpRequest req) {
 		WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(getWebSocketLocation(req), null, true, (int) Config.getInstance().getMaxSize());
 		handshaker = wsFactory.newHandshaker(req);
@@ -93,11 +125,23 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 		}
 	}
 	
+	/**
+	 * New wrapper.
+	 *
+	 * @param ctx the ctx
+	 * @return the context wrapper
+	 */
 	private ContextWrapper newWrapper(ChannelHandlerContext ctx){
 		ContextWrapper wrapper = guicer.createObject(ContextWrapper.class);
 		return wrapper.init(ctx);
 	}
 
+	/**
+	 * Handle web socket frame.
+	 *
+	 * @param ctx the ctx
+	 * @param frame the frame
+	 */
 	private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
 
 		// Check for closing frame
@@ -129,6 +173,10 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see io.netty.channel.ChannelInboundHandlerAdapter#exceptionCaught(io.netty.channel.ChannelHandlerContext, java.lang.Throwable)
+	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 
@@ -145,6 +193,12 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 		}
 	}
 
+	/**
+	 * Gets the web socket location.
+	 *
+	 * @param req the req
+	 * @return the web socket location
+	 */
 	private static String getWebSocketLocation(FullHttpRequest req) {
 		String location =  req.headers().get(HttpHeaderNames.HOST) + Const.WEBSOCKET_URI;
 		if (Config.getInstance().isEncrypted()) {
@@ -155,6 +209,11 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 	}
 
 
+	/**
+	 * Prints the.
+	 *
+	 * @param o the o
+	 */
 	public static void print(Object o){
 		System.out.println(o);
 	}

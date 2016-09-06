@@ -79,74 +79,128 @@ import com.tc.xpage.profiler.Stopwatch;
 
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DominoWebSocketServer.
+ */
 public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
+	/** The Constant cfg. */
 	private static final IConfig cfg = Config.getInstance();
+	
+	/** The Constant URI_MAP. */
 	private static final UriUserMap URI_MAP = new UriUserMap();
+	
+	/** The Constant SCRIPT_MAP. */
 	private static final UriScriptMap SCRIPT_MAP = new UriScriptMap();
+	
+	/** The Constant VALID_USERS. */
 	private static final IMultiMap<String,IUser> VALID_USERS=new MultiMap<String, IUser>(Config.getInstance().getMaxConnections() / 2);
+	
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(DominoWebSocketServer.class.getName());
+	
+	/** The Constant OBSERVERS. */
 	private static final Set<Script> OBSERVERS = Collections.synchronizedSet(new HashSet<Script>());
+	
+	/** The Constant INTERVALED. */
 	private static final Set<Script> INTERVALED = Collections.synchronizedSet(new HashSet<Script>());
 
 	
+	/** The filter. */
 	//set during server provisioning (see DominoWebSocketModule)
 	private IWebsocketFilter filter;
 
 
+	/** The boss group. */
 	//netty boss thread, manages workers
 	@Inject @Named(Const.GUICE_EVENTLOOP_BOSS)
 	private EventLoopGroup bossGroup;
 
+	/** The worker group. */
 	//netty worker threads.
 	@Inject @Named(Const.GUICE_EVENTLOOP_WORKER)
 	private EventLoopGroup workerGroup;
 
+	/** The init. */
 	//netty WebSocketServerInitializer
 	@Inject
 	private WebSocketServerInitializer init;
 
 
+	/** The guicer. */
 	@Inject
 	private IGuicer guicer;
 
 
+	/** The user factory. */
 	@Inject
 	private IUserFactory userFactory;
 
 
+	/** The on. */
 	private AtomicBoolean on = new AtomicBoolean(false);
+	
+	/** The socket count. */
 	private AtomicInteger socket_count = new AtomicInteger(0);
 
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#getWebSocketCount()
+	 */
 	@Override
 	public int getWebSocketCount(){
 		return socket_count.get();
 	}
 	
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#getWebSocketAndObserverCount()
+	 */
 	public int getWebSocketAndObserverCount(){
 		return socket_count.get() + OBSERVERS.size();
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#decrementCount()
+	 */
 	@Override
 	public int decrementCount(){
 		return socket_count.decrementAndGet();
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#setFilter(com.tc.websocket.filter.IWebsocketFilter)
+	 */
 	@Override
 	public void setFilter(IWebsocketFilter filter){
 		this.filter=filter;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#getFilter()
+	 */
 	@Override
 	public IWebsocketFilter getFilter(){
 		return filter;
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#addUser(com.tc.websocket.valueobjects.IUser)
+	 */
 	@Override
 	public void addUser(IUser user){
 
@@ -170,6 +224,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#removeUser(java.lang.String)
+	 */
 	@Override
 	public void removeUser(String key){
 		IUser user = VALID_USERS.get(key);
@@ -190,6 +249,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		}
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#removeUser(com.tc.websocket.valueobjects.IUser)
+	 */
 	@Override
 	public void removeUser(IUser user){
 		if(VALID_USERS.containsKey(user.getUserId())){
@@ -200,6 +264,10 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		}
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#getUsers()
+	 */
 	@Override
 	@Stopwatch
 	public Collection<IUser> getUsers(){
@@ -215,6 +283,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#getUsersOnThisServer()
+	 */
 	@Override
 	@Stopwatch(time=10)
 	public Collection<IUser> getUsersOnThisServer(){
@@ -229,11 +302,19 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+	/**
+	 * Instantiates a new domino web socket server.
+	 */
 	public DominoWebSocketServer() {
 	}
 
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#onOpen(com.tc.websocket.server.ContextWrapper, io.netty.handler.codec.http.FullHttpRequest)
+	 */
 	@Override
 	public void onOpen(ContextWrapper conn, FullHttpRequest req) {
 
@@ -321,6 +402,12 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+	/**
+	 * Checks if is reader.
+	 *
+	 * @param user the user
+	 * @return true, if is reader
+	 */
 	private boolean isReader(IUser user){
 		boolean b = true;
 		//make sure the user has access to the database referenced in the URI.
@@ -350,12 +437,22 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#onClose(com.tc.websocket.server.ContextWrapper)
+	 */
 	@Override
 	public void onClose(ContextWrapper conn) {
 		this.closeWithDelay(conn, 10);
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#closeWithDelay(com.tc.websocket.server.ContextWrapper, int)
+	 */
 	@Override
 	public void closeWithDelay(ContextWrapper conn, int delay) {
 		socket_count.decrementAndGet();
@@ -379,6 +476,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		}
 	}
 	
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#onMessage(java.lang.String, java.lang.String)
+	 */
 	public boolean onMessage(String to, String json){
 		boolean b = this.send(to, json);
 		this.notifyEventObservers(Const.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
@@ -386,6 +488,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 	
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#onMessage(com.tc.websocket.server.ContextWrapper, java.lang.String)
+	 */
 	@Override
 	public void onMessage(ContextWrapper conn, String json) {
 
@@ -427,12 +534,25 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 	
+	/**
+	 * Checks if is message collection.
+	 *
+	 * @param json the json
+	 * @return true, if is message collection
+	 */
 	private boolean isMessageCollection(String json){
 		return json.startsWith(StringCache.OPEN_BRACKET) && json.endsWith(StringCache.CLOSE_BRACKET);
 	}
 
 	
 
+	/**
+	 * Process message.
+	 *
+	 * @param user the user
+	 * @param msg the msg
+	 * @param message the message
+	 */
 	private void processMessage(IUser user, SocketMessage msg , String message){
 		if(msg!=null && !msg.getTo().startsWith(StringCache.FORWARD_SLASH)){
 			if(user == null || user.isAnonymous()) {
@@ -505,6 +625,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#onError(com.tc.websocket.server.ContextWrapper, java.lang.Exception)
+	 */
 	@Override
 	public void onError(ContextWrapper conn, Exception ex) {
 		LOG.log(Level.FINE,"***DominoWebSocketServer.onError***");
@@ -520,6 +643,12 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+	/**
+	 * Resolve session id.
+	 *
+	 * @param conn the conn
+	 * @return the string
+	 */
 	@Stopwatch
 	private String resolveSessionId(ContextWrapper conn){
 		int indexOf = conn.getResourceDescriptor().lastIndexOf(StringCache.FORWARD_SLASH);
@@ -529,26 +658,33 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#resolveUser(com.tc.websocket.server.ContextWrapper)
+	 */
 	@Override
 	@Stopwatch
 	public IUser resolveUser(ContextWrapper conn){
 		return VALID_USERS.get(this.resolveSessionId(conn));
 	}
 
+	
+	
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.server.IDominoWebSocketServer#resolveUser(java.lang.String)
 	 */
-
 	@Override
 	@Stopwatch
 	public IUser resolveUser(String key){
 		return VALID_USERS.get(key);
 	}
 
+	
+
+
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.server.IDominoWebSocketServer#containsUser(java.lang.String)
 	 */
-
 	@Override
 	@Stopwatch
 	public boolean containsUser(String key){
@@ -556,12 +692,24 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+	/**
+	 * On web socket pong.
+	 *
+	 * @param conn the conn
+	 */
 	public void onWebSocketPong(ContextWrapper conn){
 		throw new UnsupportedOperationException("Unsupported");
 
 	}
 
 
+	/**
+	 * Db.
+	 *
+	 * @param session the session
+	 * @param path the path
+	 * @return the database
+	 */
 	private Database db(Session session, RoutingPath path) {
 		if(path.getDbPath()==null) return null;
 		Database db = null;
@@ -583,6 +731,12 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+	/**
+	 * Resolve user id.
+	 *
+	 * @param user the user
+	 * @return the string
+	 */
 	private String resolveUserId(IUser user){
 		if(user.getSessionId().startsWith(Const.RHINO_PREFIX)){
 			return ServerInfo.getInstance().getServerName();
@@ -591,10 +745,10 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.server.IDominoWebSocketServer#getUsersByUri(java.lang.String)
 	 */
-
 	@Override
 	@SuppressWarnings("unchecked")
 	@Stopwatch
@@ -660,11 +814,24 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 	
 
+	/**
+	 * Calc batch size.
+	 *
+	 * @param users the users
+	 * @return the int
+	 */
 	private int calcBatchSize(int users){
 		int batch = users / 2;
 		return batch < 1000 ? 500 : 1000;
 	}
 
+	/**
+	 * Send.
+	 *
+	 * @param target the target
+	 * @param json the json
+	 * @return true, if successful
+	 */
 	private boolean send(String target, String json){
 
 		boolean sent = false;
@@ -725,6 +892,13 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+	/**
+	 * Send to uri.
+	 *
+	 * @param uri the uri
+	 * @param json the json
+	 * @return true, if successful
+	 */
 	@Stopwatch
 	private boolean sendToUri(String uri, String json){
 		boolean b = false;
@@ -757,6 +931,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#pingUsers()
+	 */
 	@Override
 	public void pingUsers(){
 		//with netty may no longer be required.
@@ -764,6 +943,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#broadcast(com.tc.websocket.valueobjects.SocketMessage)
+	 */
 	@Override
 	public void broadcast( SocketMessage msg ) {
 		this.queueMessage(msg);
@@ -773,6 +957,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#queueMessage(com.tc.websocket.valueobjects.SocketMessage)
+	 */
 	@Override
 	@Stopwatch
 	public void queueMessage(SocketMessage msg) {
@@ -784,6 +973,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#isValidSize(java.lang.String)
+	 */
 	@Override
 	@Stopwatch
 	public boolean isValidSize(String json){
@@ -798,6 +992,11 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#removeAllUsers()
+	 */
 	@Override
 	public void removeAllUsers() {
 		VALID_USERS.clear();
@@ -805,6 +1004,10 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#setOn(boolean)
+	 */
 	@Override
 	public void setOn(boolean b){
 		this.on.set(b);
@@ -812,18 +1015,31 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#isOn()
+	 */
 	@Override
 	public boolean isOn(){
 		return this.on.get();
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		this.start();
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#start()
+	 */
 	@Override
 	public synchronized void start(){
 
@@ -877,6 +1093,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#stop()
+	 */
 	@Override
 	public synchronized void stop(){
 		for(IUser user : this.getUsers()){
@@ -897,6 +1116,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#addEventObserver(com.tc.websocket.scripts.Script)
+	 */
 	@Override
 	public void addEventObserver(Script script) {
 		if(!OBSERVERS.contains(script)){
@@ -904,16 +1126,30 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		}
 	}
 	
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#removeEventObserver(com.tc.websocket.scripts.Script)
+	 */
 	public void removeEventObserver(Script script) {
 		OBSERVERS.remove(script);
 	}
 	
 	
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#containsObserver(com.tc.websocket.scripts.Script)
+	 */
 	public boolean containsObserver(Script script){
 		return OBSERVERS.contains(script);
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#notifyEventObservers(java.lang.String, java.lang.Object[])
+	 */
 	@Override
 	public synchronized void notifyEventObservers(String event, Object ...args) {
 		Batch batch = new Batch();
@@ -927,22 +1163,42 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#reloadScripts()
+	 */
 	@Override
 	public void reloadScripts() {
 		for(Script script : this.getAllScripts()){script.recompile(true);}
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#getEventObservers()
+	 */
 	@Override
 	public Collection<Script> getEventObservers() {
 		return OBSERVERS;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#addUriListener(com.tc.websocket.scripts.Script)
+	 */
 	@Override
 	public void addUriListener(Script script) {
 		SCRIPT_MAP.add(script);
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#findUriListener(java.lang.String)
+	 */
 	@Override
 	public Script findUriListener(String source) {
 		Script script = null;
@@ -955,16 +1211,31 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		return script;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#removeUriListener(com.tc.websocket.scripts.Script)
+	 */
 	@Override
 	public void removeUriListener(Script script) {
 		SCRIPT_MAP.remove(script);
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#getUriListeners()
+	 */
 	@Override
 	public Collection<Script> getUriListeners() {
 		return SCRIPT_MAP.all();
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#getAllScripts()
+	 */
 	@Override
 	public Collection<Script> getAllScripts() {
 		List<Script> list = new ArrayList<Script>(100);
@@ -974,16 +1245,30 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		return list;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#addIntervaled(com.tc.websocket.scripts.Script)
+	 */
 	@Override
 	public void addIntervaled(Script script) {
 		INTERVALED.add(guicer.inject(script));
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#removeIntervaled(com.tc.websocket.scripts.Script)
+	 */
 	@Override
 	public void removeIntervaled(Script script) {
 		INTERVALED.remove(script);
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.IDominoWebSocketServer#getIntervaled()
+	 */
 	@Override
 	public Collection<Script> getIntervaled() {
 		return INTERVALED;

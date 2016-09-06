@@ -21,46 +21,74 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Prompt.
+ */
 @XmlRootElement
 public class Prompt implements IPrompt {
 	
+	/** The Constant EXCEPTION. */
 	public static final String EXCEPTION="EXCEPTION";
+	
+	/** The Constant INFO. */
 	public static final String INFO="INFO";
+	
+	/** The Constant WARNING. */
 	public static final String WARNING="WARNING";
 	
+	/** The message. */
 	private String message;
 	
+	/** The title. */
 	private String title;
 	
+	
+
 	/* (non-Javadoc)
-	 * @see com.tc.apn.push.service.rest.IPrompt#getMessage()
+	 * @see com.tc.websocket.valueobjects.IPrompt#getMessage()
 	 */
 	@Override
 	public String getMessage() {
 		return message;
 	}
-	/* (non-Javadoc)
-	 * @see com.tc.apn.push.service.rest.IPrompt#setMessage(java.lang.String)
+	
+	/**
+	 * Sets the message.
+	 *
+	 * @param message the new message
 	 */
+	
+
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	
+
 	/* (non-Javadoc)
-	 * @see com.tc.apn.push.service.rest.IPrompt#getTitle()
+	 * @see com.tc.websocket.valueobjects.IPrompt#getTitle()
 	 */
 	@Override
 	public String getTitle() {
 		return title;
 	}
-	/* (non-Javadoc)
-	 * @see com.tc.apn.push.service.rest.IPrompt#setTitle(java.lang.String)
+	
+	/**
+	 * Sets the title.
+	 *
+	 * @param title the new title
 	 */
+	
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
 	
+	
+
 	/* (non-Javadoc)
-	 * @see com.tc.apn.push.service.rest.IPrompt#setMessage(java.lang.String, java.lang.String)
+	 * @see com.tc.websocket.valueobjects.IPrompt#setMessage(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void setMessage(String title, String message){

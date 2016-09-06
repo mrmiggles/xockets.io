@@ -39,10 +39,18 @@ import com.tc.websocket.Const;
 import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.xpage.profiler.Stopwatch;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating SocketMessage objects.
+ */
 public class SocketMessageFactory implements ISocketMessageFactory {
+	
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(SocketMessageFactory.class.getName());
 	
 	
+
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.factories.ISocketMessageFactory#buildMessages(lotus.domino.ViewEntryCollection)
 	 */
@@ -79,6 +87,7 @@ public class SocketMessageFactory implements ISocketMessageFactory {
 	}
 	
 	
+
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.factories.ISocketMessageFactory#buildMessage(lotus.domino.Document)
 	 */
@@ -120,6 +129,13 @@ public class SocketMessageFactory implements ISocketMessageFactory {
 
 
 
+	/**
+	 * Scan for attached json.
+	 *
+	 * @param rtitem the rtitem
+	 * @return the string
+	 * @throws NotesException the notes exception
+	 */
 	private String scanForAttachedJson(RichTextItem rtitem)throws NotesException{
 		String json = null;
 		@SuppressWarnings("unchecked")

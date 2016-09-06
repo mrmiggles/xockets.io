@@ -30,12 +30,26 @@ import com.ibm.xsp.application.ApplicationEx;
 import com.tc.utils.XSPUtils;
 import com.tc.websocket.server.IDominoWebSocketServer;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WebSocketBean.
+ */
 public class WebSocketBean extends AbstractWebSocketBean implements Serializable, IWebSocketBean{
 
+	/** The log. */
 	private static Logger LOG = Logger.getLogger(WebSocketBean.class.getName());
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 2680334746972588793L;
+	
+	/** The is on. */
 	private final AtomicBoolean isOn = new AtomicBoolean(false);
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#init(com.tc.websocket.server.IDominoWebSocketServer)
+	 */
 	@Override
 	@Inject
 	public void init(IDominoWebSocketServer server){
@@ -53,21 +67,37 @@ public class WebSocketBean extends AbstractWebSocketBean implements Serializable
 		}
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#registerCurrentUser()
+	 */
 	@Override
 	public void registerCurrentUser() throws NotesException {
 		super.registerCurrentUser(XSPUtils.getRequest());
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#removeCurrentUser()
+	 */
 	@Override
 	public void removeCurrentUser() {
 		super.removeCurrentUser(XSPUtils.getRequest());
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#getWebSocketUrl()
+	 */
 	@Override
 	public String getWebSocketUrl() {
 		return super.getWebSocketUrl(XSPUtils.getRequest());
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#setRequest(javax.servlet.http.HttpServletRequest)
+	 */
 	@Override
 	public void setRequest(HttpServletRequest req) {
 		throw new UnsupportedOperationException("Unsupported");

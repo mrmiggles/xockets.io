@@ -17,14 +17,36 @@
 
 package com.tc.websocket.valueobjects;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IPrompt.
+ */
 public interface IPrompt {
 	
+	/** The Constant EXCEPTION. */
 	public static final String EXCEPTION="EXCEPTION";
 
+	/**
+	 * Gets the message.
+	 *
+	 * @return the message
+	 */
 	public abstract String getMessage();
 
+	/**
+	 * Gets the title.
+	 *
+	 * @return the title
+	 */
 	public abstract String getTitle();
 
+	/**
+	 * Sets the message.
+	 *
+	 * @param title the title
+	 * @param message the message
+	 */
 	public abstract void setMessage(String title, String message);
 
 }

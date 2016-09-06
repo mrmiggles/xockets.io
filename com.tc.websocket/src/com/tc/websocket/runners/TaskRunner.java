@@ -35,45 +35,76 @@ import com.tc.websocket.scripts.Script;
 import com.tc.websocket.server.IDominoWebSocketServer;
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class TaskRunner.
+ */
 public class TaskRunner implements Runnable {
 
+	/** The runner. */
 	//singleton instance of this class
 	private static TaskRunner RUNNER = new TaskRunner();
 
+	/** The Constant LOG. */
 	//LOG... thank you captain obvious :)
 	private static final Logger LOG = Logger.getLogger(TaskRunner.class.getName());
 
+	/** The run queue. */
 	//in memory data structure for queued up runnables.
 	private final Queue<IFutureRunnable> RUN_QUEUE = new ConcurrentLinkedQueue<IFutureRunnable>();
 	
+	/** The scheduler. */
 	//service to process state changes for users, and other future tasks.
 	private ScheduledExecutorService scheduler;
 
+	/** The closing. */
 	private AtomicBoolean closing = new AtomicBoolean(false);	
 
 
+	/** The guicer. */
 	@Inject
 	IGuicer guicer;
 	
+	/** The server. */
 	@Inject
 	IDominoWebSocketServer server;
 
 
+	/**
+	 * Gets the single instance of TaskRunner.
+	 *
+	 * @return single instance of TaskRunner
+	 */
 	public static TaskRunner getInstance(){
 		return RUNNER;
 	}
 
+	/**
+	 * Instantiates a new task runner.
+	 */
 	private TaskRunner(){
 			
 	}
 
 
+	/**
+	 * Adds the.
+	 *
+	 * @param runMe the run me
+	 */
 	public void add(Runnable runMe){
 		guicer.inject(runMe);//make sure all dependencies are there.
 		RUN_QUEUE.add(new FutureRunnable(runMe));//queue it up to run as a future runnable with zero seconds.
 	}
 	
 
+	/**
+	 * Adds the.
+	 *
+	 * @param runMe the run me
+	 * @param seconds the seconds
+	 */
 	//run sometime in the future.
 	public void add(Runnable runMe, int seconds){
 		guicer.inject(runMe);//make sure all dependencies are there.
@@ -83,6 +114,10 @@ public class TaskRunner implements Runnable {
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		while (!RUN_QUEUE.isEmpty()) {
@@ -104,6 +139,9 @@ public class TaskRunner implements Runnable {
 	}
 
 
+	/**
+	 * Start.
+	 */
 	public void start(){
 
 		try{
@@ -172,6 +210,9 @@ public class TaskRunner implements Runnable {
 	}
 
 
+	/**
+	 * Stop.
+	 */
 	public void stop(){
 		closing.set(true);		
 		try {
@@ -193,6 +234,11 @@ public class TaskRunner implements Runnable {
 
 	}
 
+	/**
+	 * Checks if is closing.
+	 *
+	 * @return true, if is closing
+	 */
 	public boolean isClosing(){
 		return closing.get();
 	}

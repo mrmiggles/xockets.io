@@ -22,12 +22,31 @@ import lotus.domino.Document;
 import com.tc.websocket.valueobjects.IUser;
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating IUser objects.
+ */
 public interface IUserFactory {
 
+	/**
+	 * Creates a new IUser object.
+	 *
+	 * @param sessionId the session id
+	 * @param userId the user id
+	 * @param status the status
+	 * @return the i user
+	 */
 	public abstract IUser createUser(String sessionId, String userId, String status);
 	
 	//public abstract IUser createUser(String sessionId, String userId, String appPath, String status);
 	
+	/**
+	 * Creates a new IUser object.
+	 *
+	 * @param doc the doc
+	 * @return the i user
+	 */
 	public abstract IUser createUser(Document doc);
 
 }

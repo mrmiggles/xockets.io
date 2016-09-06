@@ -40,29 +40,53 @@ import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
 import com.tc.websocket.server.pipeline.IPipelineBuilder;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ProxyFrontendHandler.
+ */
 public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(ProxyFrontendHandler.class.getName());	
 
+	/** The remote host. */
 	private final String remoteHost;
+	
+	/** The remote port. */
 	private final int remotePort;
 
+	/** The outbound channel. */
 	private volatile Channel outboundChannel;
 
+	/** The handler. */
 	private ProxyBackendHandler handler;
 	
+	/** The builder. */
 	@Inject
 	@Named(Const.GUICE_WEBSOCKET_PIPELINE)
 	private IPipelineBuilder builder;
 
+	/** The guicer. */
 	@Inject
 	IGuicer guicer;
 
+	/**
+	 * Instantiates a new proxy frontend handler.
+	 *
+	 * @param remoteHost the remote host
+	 * @param remotePort the remote port
+	 */
 	public ProxyFrontendHandler(String remoteHost, int remotePort) {
 		this.remoteHost = remoteHost;
 		this.remotePort = remotePort;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see io.netty.channel.ChannelInboundHandlerAdapter#channelActive(io.netty.channel.ChannelHandlerContext)
+	 */
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) {
 		final Channel inboundChannel = ctx.channel();
@@ -96,8 +120,14 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 	}
 
 
+	/** The proxy. */
 	private AtomicBoolean proxy = new AtomicBoolean(true);
 
+	
+
+	/* (non-Javadoc)
+	 * @see io.netty.channel.ChannelInboundHandlerAdapter#channelRead(io.netty.channel.ChannelHandlerContext, java.lang.Object)
+	 */
 	@Override
 	public void channelRead(final ChannelHandlerContext ctx, final Object msg){
 
@@ -154,6 +184,12 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
 
 
+	/**
+	 * Write to file.
+	 *
+	 * @param prefix the prefix
+	 * @param bytes the bytes
+	 */
 	public static void writeToFile(String prefix, byte[] bytes){
 		/*
 		if(Config.getInstance().isDebug()){
@@ -173,6 +209,11 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see io.netty.channel.ChannelInboundHandlerAdapter#channelInactive(io.netty.channel.ChannelHandlerContext)
+	 */
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) {
 		if (outboundChannel != null) {
@@ -180,6 +221,11 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 		}
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see io.netty.channel.ChannelInboundHandlerAdapter#exceptionCaught(io.netty.channel.ChannelHandlerContext, java.lang.Throwable)
+	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 		if(cause.getMessage().startsWith(Const.ESTABLISHED_CONN_ERR)){
@@ -192,6 +238,8 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
 	/**
 	 * Closes the specified channel after all queued write requests are flushed.
+	 *
+	 * @param ch the ch
 	 */
 	static void closeOnFlush(Channel ch) {
 		if (ch.isActive()) {

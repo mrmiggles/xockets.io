@@ -33,15 +33,26 @@ import com.tc.websocket.Const;
 import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.xpage.profiler.Stopwatch;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class QueueMessage.
+ */
 public class QueueMessage extends NotesOperation {
 
+	/** The log. */
 	private static Logger LOG = Logger.getLogger(QueueMessage.class.getName());
 
 
+	/** The msg. */
 	private SocketMessage msg;
 
 
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	@Stopwatch
 	public void run() {
@@ -84,6 +95,12 @@ public class QueueMessage extends NotesOperation {
 
 	}
 
+	/**
+	 * Attach.
+	 *
+	 * @param doc the doc
+	 * @param msg the msg
+	 */
 	private void attach(Document doc, SocketMessage msg){
 		File file = JSONUtils.write(msg);
 		try{
@@ -104,6 +121,11 @@ public class QueueMessage extends NotesOperation {
 		}
 	}
 
+	/**
+	 * Sets the msg.
+	 *
+	 * @param msg the new msg
+	 */
 	public void setMsg(SocketMessage msg) {
 		this.msg = msg;
 	}

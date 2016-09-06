@@ -43,28 +43,56 @@ import com.tc.websocket.Const;
 import com.tc.websocket.IConfig;
 import com.tc.websocket.valueobjects.SocketMessage;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Script.
+ */
 public abstract class Script implements Runnable {
 	
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(Script.class.getName());
 	
-	public static final int OBSERVER=1;
-	public static final int LISTENER=2;
-
+	/** The uri. */
 	private String uri;
+	
+	/** The wild. */
 	private boolean wild;
+	
+	/** The function. */
 	private String function;
+	
+	/** The script. */
 	private String script;
+	
+	/** The source. */
 	private String source;
+	
+	/** The to string. */
 	private String toString;
+	
+	/** The interval. */
 	private int interval;
+	
+	/** The last run. */
 	private Date lastRun = new Date();
+	
+	/** The password. */
 	protected String user, password;
+	
+	/** The args. */
 	protected Object[] args;
 	
+	/** The guicer. */
 	@Inject
 	IGuicer guicer;
 	
 	
+	/**
+	 * Should run.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean shouldRun(){
 		boolean b = true;
 		if(this.isIntervaled()){
@@ -74,11 +102,21 @@ public abstract class Script implements Runnable {
 		return b;
 	}
 
+	/**
+	 * Checks if is intervaled.
+	 *
+	 * @return true, if is intervaled
+	 */
 	public boolean isIntervaled(){
 		return this.interval > 0;
 	}
 
 
+	/**
+	 * Open session.
+	 *
+	 * @return the session
+	 */
 	protected Session openSession(){
 		Session session = null;
 		IConfig cfg = Config.getInstance();
@@ -91,10 +129,20 @@ public abstract class Script implements Runnable {
 		return session;
 	}
 	
+	/**
+	 * Sets the arts.
+	 *
+	 * @param args the new arts
+	 */
 	public void setArts(Object ...args){
 		this.args = args;
 	}
 	
+	/**
+	 * Close session.
+	 *
+	 * @param session the session
+	 */
 	protected void closeSession(Session session){
 		SessionFactory.closeSession(session);
 	}
@@ -102,40 +150,86 @@ public abstract class Script implements Runnable {
 
 
 
+	/**
+	 * Sets the creds.
+	 *
+	 * @param user the user
+	 * @param password the password
+	 */
 	public void setCreds(String user, String password){
 		this.user = user;
 		this.password = password;
 	}
 	
+	/**
+	 * Checks for creds.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean hasCreds(){
 		return this.user!=null && this.password!=null;
 	}
 	
+	/**
+	 * Gets the function.
+	 *
+	 * @return the function
+	 */
 	public String getFunction() {
 		return function;
 	}
 
+	/**
+	 * Sets the function.
+	 *
+	 * @param event the new function
+	 */
 	public void setFunction(String event) {
 		this.function = event;
 	}
 	
+	/**
+	 * Gets the script.
+	 *
+	 * @return the script
+	 */
 	public String getScript() {
 		return script;
 	}
 	
+	/**
+	 * Sets the script.
+	 *
+	 * @param script the new script
+	 */
 	public void setScript(String script) {
 		this.script = script;
 	}
 	
+	/**
+	 * Gets the source.
+	 *
+	 * @return the source
+	 */
 	public String getSource() {
 		return source;
 	}
 	
+	/**
+	 * Sets the source.
+	 *
+	 * @param source the new source
+	 */
 	public void setSource(String source) {
 		this.source = source;
 	}
 	
 	
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString(){
 		if(toString == null){
@@ -144,6 +238,11 @@ public abstract class Script implements Runnable {
 		return toString;
 	}
 	
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object o){
 		boolean b = false;
@@ -154,6 +253,11 @@ public abstract class Script implements Runnable {
 	}
 	
 	
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode(){
 		return this.toString().hashCode();
@@ -161,10 +265,20 @@ public abstract class Script implements Runnable {
 	
 
 	
+	/**
+	 * Gets the uri.
+	 *
+	 * @return the uri
+	 */
 	public String getUri() {
 		return uri;
 	}
 
+	/**
+	 * Sets the uri.
+	 *
+	 * @param uri the new uri
+	 */
 	public void setUri(String uri) {
 		this.uri = uri;
 		if(uri.endsWith(StringCache.STAR)){ //check for wildcard char.
@@ -173,27 +287,52 @@ public abstract class Script implements Runnable {
 		}
 	}
 	
+	/**
+	 * Checks if is wild.
+	 *
+	 * @return true, if is wild
+	 */
 	public boolean isWild() {
 		return wild;
 	}
 
+	/**
+	 * Sets the wild.
+	 *
+	 * @param wild the new wild
+	 */
 	public void setWild(boolean wild) {
 		this.wild = wild;
 	}
 	
 	
+	/**
+	 * Gets the resource.
+	 *
+	 * @return the resource
+	 */
 	protected String getResource(){
 		String resource = this.getSource().replace("/" + dbPath()  + "/", "");
 		return resource;
 	}
 
 	
+	/**
+	 * Db path.
+	 *
+	 * @return the string
+	 */
 	protected String dbPath(){
 		String path = this.getSource();
 		String dbpath = path.substring(1, path.lastIndexOf(StringCache.DOT_NSF)) + ".nsf";
 		return dbpath;	
 	}
 	
+	/**
+	 * Extract file.
+	 *
+	 * @return the string
+	 */
 	public synchronized String extractFile(){
 		Session session = null;
 		String script = null;
@@ -211,6 +350,11 @@ public abstract class Script implements Runnable {
 		return script;
 	}
 	
+	/**
+	 * Extract script.
+	 *
+	 * @return the string
+	 */
 	public synchronized String extractScript() {
 		String path = this.getSource();
 		IConfig cfg = Config.getInstance();
@@ -234,39 +378,92 @@ public abstract class Script implements Runnable {
 		return script;
 	}
 
+	/**
+	 * Copy.
+	 *
+	 * @param args the args
+	 * @return the script
+	 */
 	public abstract Script copy(Object ...args);
 	
+	/**
+	 * Recompile.
+	 *
+	 * @param reload the reload
+	 * @return true, if successful
+	 */
 	public abstract boolean recompile(boolean reload);
 	
+	/**
+	 * Sets the args.
+	 *
+	 * @param args the new args
+	 */
 	public void setArgs(Object ...args){
 		this.args = args;
 	}
 	
+	/**
+	 * Gets the args.
+	 *
+	 * @return the args
+	 */
 	public Object[] getArgs(){
 		return this.args;
 	}
 	
 
+	/**
+	 * Source.
+	 *
+	 * @param source the source
+	 * @return the script
+	 */
 	public Script source(String source){
 		this.source = source;
 		return this;
 	}
 	
+	/**
+	 * Uri.
+	 *
+	 * @param uri the uri
+	 * @return the script
+	 */
 	public Script uri(String uri){
 		this.setUri(uri);
 		return this;
 	}
 	
+	/**
+	 * Function.
+	 *
+	 * @param function the function
+	 * @return the script
+	 */
 	public Script function(String function){
 		this.function = function;
 		return this;
 	}
 	
+	/**
+	 * Creds.
+	 *
+	 * @param user the user
+	 * @param password the password
+	 * @return the script
+	 */
 	public Script creds(String user, String password){
 		this.setCreds(user, password);
 		return this;
 	}
 	
+	/**
+	 * Interval.
+	 *
+	 * @param interval the interval
+	 * @return the script
+	 */
 	public Script interval(int interval){
 		this.interval = interval;
 		return this;
@@ -274,6 +471,12 @@ public abstract class Script implements Runnable {
 
 	
 	
+	/**
+	 * New script.
+	 *
+	 * @param resource the resource
+	 * @return the script
+	 */
 	public static Script newScript(String resource){
 		Script script = null;
 		String engine = SupportedEngine.findEngine(resource);
@@ -296,6 +499,11 @@ public abstract class Script implements Runnable {
 		return script;
 	}
 	
+	/**
+	 * Checks if is calling itself.
+	 *
+	 * @return true, if is calling itself
+	 */
 	public boolean isCallingItself(){
 		boolean b= false;
 		if(this.isIntervaled() == false){
@@ -312,6 +520,9 @@ public abstract class Script implements Runnable {
 		return b;
 	}
 
+	/**
+	 * Prints the engines.
+	 */
 	public static void printEngines(){
 		ScriptEngineManager manager = new ScriptEngineManager();
         List<ScriptEngineFactory> engines = manager.getEngineFactories();
@@ -320,22 +531,49 @@ public abstract class Script implements Runnable {
 		}
 	}
 	
-	public int getInterval() {
+	/**
+	 * Gets the interval.
+	 *
+	 * @return the interval
+	 */
+	public synchronized int getInterval() {
 		return interval;
 	}
 
-	public void setInterval(int interval) {
+	/**
+	 * Sets the interval.
+	 *
+	 * @param interval the new interval
+	 */
+	public synchronized void setInterval(int interval) {
+		if(interval<=0) throw new IllegalArgumentException("interval must be greater than zero.");
 		this.interval = interval;
 	}
 
+	/**
+	 * Gets the last run.
+	 *
+	 * @return the last run
+	 */
 	public Date getLastRun() {
 		return lastRun;
 	}
 
+	/**
+	 * Sets the last run.
+	 *
+	 * @param lastRun the new last run
+	 */
 	public void setLastRun(Date lastRun) {
 		this.lastRun = lastRun;
 	}
 	
+	/**
+	 * Gets the common vars.
+	 *
+	 * @param session the session
+	 * @return the common vars
+	 */
 	public Map<String,Object> getCommonVars(Session session){
 		Map<String,Object> vars = new HashMap<String,Object>();
 		vars.put(Const.FUNCTION, this.getFunction());

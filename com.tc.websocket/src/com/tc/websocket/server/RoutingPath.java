@@ -22,14 +22,31 @@ import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RoutingPath.
+ */
 public class RoutingPath {
 
+	/** The uri. */
 	private String uri;
+	
+	/** The roles. */
 	private String[] roles;
+	
+	/** The db path. */
 	private String dbPath;
+	
+	/** The wild. */
 	private boolean wild;
 
 
+	/**
+	 * Instantiates a new routing path.
+	 *
+	 * @param uri the uri
+	 */
 	public RoutingPath(String uri){
 		this.roles = this.extractRoles(uri);
 		this.dbPath = this.extractDbPath(uri);
@@ -38,6 +55,12 @@ public class RoutingPath {
 
 
 
+	/**
+	 * Extract db path.
+	 *
+	 * @param uri the uri
+	 * @return the string
+	 */
 	private String extractDbPath(String uri){
 		uri = uri.toLowerCase();
 		if(!uri.contains(StringCache.DOT_NSF)) return Const.WEBSOCKET_PATH;//return the websocket.nsf as default.
@@ -46,6 +69,12 @@ public class RoutingPath {
 		return dbPath;
 	}
 
+	/**
+	 * Extract roles.
+	 *
+	 * @param uri the uri
+	 * @return the string[]
+	 */
 	private String[] extractRoles(String uri){
 
 		if(!uri.contains(StringCache.OPEN_BRACKET) && !uri.contains(StringCache.CLOSE_BRACKET)) return null;
@@ -63,6 +92,12 @@ public class RoutingPath {
 		return roles;
 	}
 
+	/**
+	 * Extract uri.
+	 *
+	 * @param uri the uri
+	 * @return the string
+	 */
 	private String extractUri(String uri){
 		StringBuilder sb = new StringBuilder();
 		int len = uri.length();
@@ -88,30 +123,61 @@ public class RoutingPath {
 	}
 	
 
+	/**
+	 * Gets the uri.
+	 *
+	 * @return the uri
+	 */
 	public String getUri() {
 		return uri;
 	}
 
 
 
+	/**
+	 * Gets the roles.
+	 *
+	 * @return the roles
+	 */
 	public String[] getRoles() {
 		return roles;
 	}
 
 
 
+	/**
+	 * Gets the db path.
+	 *
+	 * @return the db path
+	 */
 	public String getDbPath() {
 		return dbPath;
 	}
 
+	/**
+	 * Checks for roles.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean hasRoles(){
 		return roles!=null;
 	}
 
+	/**
+	 * Checks if is wild.
+	 *
+	 * @return true, if is wild
+	 */
 	public boolean isWild(){
 		return wild;
 	}
 
+	/**
+	 * Checks if is member.
+	 *
+	 * @param dbRoles the db roles
+	 * @return true, if is member
+	 */
 	public boolean isMember(Vector<String> dbRoles){
 		boolean b = false;
 		if(this.hasRoles()){

@@ -31,23 +31,43 @@ import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RestWebSocketBean.
+ */
 public class RestWebSocketBean extends AbstractWebSocketBean {
 	
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(RestWebSocketBean.class.getName());
 
+	/** The req. */
 	private HttpServletRequest req;
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#init(com.tc.websocket.server.IDominoWebSocketServer)
+	 */
 	@Override
 	@Inject
 	public void init(IDominoWebSocketServer server){
 		this.server = server;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#registerCurrentUser()
+	 */
 	@Override
 	public void registerCurrentUser() throws NotesException {
 		super.registerCurrentUser(req);
 	}
 
+	/**
+	 * Gets the user name.
+	 *
+	 * @return the user name
+	 */
 	private String getUserName() {
 		String username = null;
 		try {
@@ -58,6 +78,10 @@ public class RestWebSocketBean extends AbstractWebSocketBean {
 		return username;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#removeCurrentUser()
+	 */
 	@Override
 	public void removeCurrentUser() {
 		
@@ -70,11 +94,19 @@ public class RestWebSocketBean extends AbstractWebSocketBean {
 		}
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#getWebSocketUrl()
+	 */
 	@Override
 	public String getWebSocketUrl() {
 		return super.getWebSocketUrl(req);
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#setRequest(javax.servlet.http.HttpServletRequest)
+	 */
 	@Override
 	public void setRequest(HttpServletRequest req) {
 		this.req = req;

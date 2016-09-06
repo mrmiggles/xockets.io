@@ -38,143 +38,295 @@ import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
 import com.tc.utils.XSPUtils;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Config.
+ */
 public class Config implements Runnable, IConfig {
+	
+	/** The logger. */
 	private static Logger LOGGER = Logger.getLogger(Config.class.getName());
 
 
+	/** The allow anonymous. */
 	private boolean allowAnonymous;
+	
+	/** The encrypted. */
 	private boolean encrypted;
+	
+	/** The key store. */
 	private String keyStore;
+	
+	/** The key store password. */
 	private String keyStorePassword;
+	
+	/** The key password. */
 	private String keyPassword;
+	
+	/** The key store type. */
 	private String keyStoreType;
+	
+	/** The port. */
 	private int port;
+	
+	/** The redirect ports. */
 	private List<Integer> redirectPorts;
+	
+	/** The debug. */
 	private boolean debug;
+	
+	/** The profiled. */
 	private boolean profiled;
+	
+	/** The native transport. */
 	private boolean nativeTransport;
 
+	/** The key file. */
 	private String keyFile;
+	
+	/** The cert file. */
 	private String certFile;
+	
+	/** The leak detector. */
 	private boolean leakDetector;
 
 
 
+	/** The websocket filter. */
 	private String websocketFilter;
+	
+	/** The on server. */
 	private boolean onServer;
+	
+	/** The test mode. */
 	private boolean testMode;
+	
+	/** The max size. */
 	private long maxSize;
+	
+	/** The max connections. */
 	private int maxConnections;
+	
+	/** The ping interval. */
 	private int pingInterval;
+	
+	/** The purge interval. */
 	private int purgeInterval;
 
+	/** The clustered. */
 	private boolean clustered;
+	
+	/** The broadcast server. */
 	private String broadcastServer;
+	
+	/** The clustermate monitor. */
 	private String clustermateMonitor;
+	
+	/** The clustermate expiration. */
 	private int clustermateExpiration;
+	
+	/** The error. */
 	private String error;
+	
+	/** The send buffer. */
 	private int sendBuffer;
+	
+	/** The receive buffer. */
 	private int receiveBuffer;
+	
+	/** The client cache max. */
 	private int clientCacheMax;
+	
+	/** The compression enabled. */
 	private boolean compressionEnabled;
 
 
+	/** The proxy backend host. */
 	private String proxyBackendHost;
+	
+	/** The proxy backend port. */
 	private int proxyBackendPort;
 
 
 
+	/** The username. */
 	//server side Id used for generating sessions.
 	private String username;
+	
+	/** The password. */
 	private String password;
+	
+	/** The thread count. */
 	private int threadCount;
 
 
 
+	/** The event loop threads. */
 	private int eventLoopThreads;
+	
+	/** The valid. */
 	private boolean valid;
+	
+	/** The allowed origins. */
 	private List<String> allowedOrigins;
+	
+	/** The props. */
 	private Properties props;
 
+	/** The config. */
 	private static IConfig config = new Config();
 
 
+	/**
+	 * Instantiates a new config.
+	 */
 	//private constructor / singleton
 	private Config(){
 		this.run();
 	}
 
+	/**
+	 * Gets the single instance of Config.
+	 *
+	 * @return single instance of Config
+	 */
 	public static IConfig getInstance(){
 		return config;
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isAllowAnonymous()
+	 */
 	@Override
 	public boolean isAllowAnonymous() {
 		return allowAnonymous;
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isBroadcastServer()
+	 */
 	@Override
 	public boolean isBroadcastServer(){
 		return ServerInfo.getInstance().getServerName().equals(this.getBroadcastServer());
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isEncrypted()
+	 */
 	@Override
 	public boolean isEncrypted() {
 		return encrypted;
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getPort()
+	 */
 	@Override
 	public int getPort() {
 		return port;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getKeyStore()
+	 */
 	@Override
 	public String getKeyStore() {
 		return keyStore;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getKeyStorePassword()
+	 */
 	@Override
 	public String getKeyStorePassword() {
 		return keyStorePassword;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getKeyPassword()
+	 */
 	@Override
 	public String getKeyPassword() {
 		return keyPassword;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isDebug()
+	 */
 	@Override
 	public boolean isDebug(){
 		return debug;
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getKeyStoreType()
+	 */
 	@Override
 	public String getKeyStoreType(){
 		return this.keyStoreType;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getWebsocketFilter()
+	 */
 	@Override
 	public String getWebsocketFilter(){
 		return this.websocketFilter;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isTestMode()
+	 */
 	@Override
 	public boolean isTestMode(){
 		return this.testMode;
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#print(java.lang.Object)
+	 */
 	@Override
 	public void print(Object o){
 		System.out.println("xockets.io service: " + o);
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		//create a trsuted session
@@ -400,16 +552,34 @@ public class Config implements Runnable, IConfig {
 
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getEventLoopThreads()
+	 */
 	@Override
 	public int getEventLoopThreads() {
 		return eventLoopThreads;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isValid()
+	 */
 	@Override
 	public boolean isValid(){
 		return valid;
 	}
 
+	/**
+	 * Gets the value.
+	 *
+	 * @param s the s
+	 * @param key the key
+	 * @return the value
+	 * @throws NotesException the notes exception
+	 */
 	private String getValue(Session s, String key) throws NotesException{
 		String str=null;
 		if(this.props!=null){
@@ -420,6 +590,15 @@ public class Config implements Runnable, IConfig {
 		return str;
 	}
 
+	/**
+	 * Env as bool.
+	 *
+	 * @param s the s
+	 * @param key the key
+	 * @param defaultValue the default value
+	 * @return true, if successful
+	 * @throws NotesException the notes exception
+	 */
 	private boolean envAsBool(Session s, String key, boolean defaultValue) throws NotesException{
 		String str=this.getValue(s, key);
 		if(!StrUtils.isEmpty(str)){
@@ -428,6 +607,15 @@ public class Config implements Runnable, IConfig {
 		return defaultValue;
 	}
 
+	/**
+	 * Env.
+	 *
+	 * @param s the s
+	 * @param key the key
+	 * @param defaultValue the default value
+	 * @return the string
+	 * @throws NotesException the notes exception
+	 */
 	private String env(Session s, String key, String defaultValue) throws NotesException{
 		String str= this.getValue(s,key);
 		if(StrUtils.isEmpty(str)){
@@ -436,6 +624,15 @@ public class Config implements Runnable, IConfig {
 		return str;
 	}
 
+	/**
+	 * Env as list.
+	 *
+	 * @param s the s
+	 * @param key the key
+	 * @param defaultValue the default value
+	 * @return the list
+	 * @throws NotesException the notes exception
+	 */
 	private List<String> envAsList(Session s, String key, String defaultValue) throws NotesException{
 		String str=this.getValue(s,key);
 		
@@ -456,6 +653,15 @@ public class Config implements Runnable, IConfig {
 		return list;
 	}
 
+	/**
+	 * Env as integer list.
+	 *
+	 * @param s the s
+	 * @param key the key
+	 * @param defaultValue the default value
+	 * @return the list
+	 * @throws NotesException the notes exception
+	 */
 	private List<Integer> envAsIntegerList(Session s, String key, String defaultValue) throws NotesException{
 		List<String> list = this.envAsList(s, key, defaultValue);
 		List<Integer> ilist = new ArrayList<Integer>();
@@ -465,6 +671,15 @@ public class Config implements Runnable, IConfig {
 		return ilist;
 	}
 
+	/**
+	 * Env as int.
+	 *
+	 * @param s the s
+	 * @param key the key
+	 * @param defaultValue the default value
+	 * @return the int
+	 * @throws NotesException the notes exception
+	 */
 	private int envAsInt(Session s, String key, int defaultValue) throws NotesException{
 		String str= this.getValue(s,key);
 		if(StrUtils.isEmpty(str)){
@@ -473,6 +688,15 @@ public class Config implements Runnable, IConfig {
 		return Integer.parseInt(str);
 	}
 
+	/**
+	 * Env as long.
+	 *
+	 * @param s the s
+	 * @param key the key
+	 * @param defaultValue the default value
+	 * @return the long
+	 * @throws NotesException the notes exception
+	 */
 	private long envAsLong(Session s, String key, long defaultValue) throws NotesException{
 		String str= this.getValue(s, key);
 		if(StrUtils.isEmpty(str)){
@@ -482,89 +706,174 @@ public class Config implements Runnable, IConfig {
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isOnServer()
+	 */
 	@Override
 	public boolean isOnServer() {
 		return onServer;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#setOnServer(boolean)
+	 */
 	@Override
 	public void setOnServer(boolean onServer) {
 		this.onServer = onServer;
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getBroadcastServer()
+	 */
 	@Override
 	public String getBroadcastServer() {
 		return broadcastServer;
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getClustermateMonitor()
+	 */
 	@Override
 	public String getClustermateMonitor(){
 		return this.clustermateMonitor;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getClustermateExpiration()
+	 */
 	@Override
 	public int getClustermateExpiration() {
 		return clustermateExpiration;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isClustered()
+	 */
 	@Override
 	public boolean isClustered(){
 		return this.clustered;
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getError()
+	 */
 	@Override
 	public String getError(){
 		return this.error;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getMaxSize()
+	 */
 	@Override
 	public long getMaxSize() {
 		return maxSize;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getMaxConnections()
+	 */
 	@Override
 	public int getMaxConnections() {
 		return maxConnections;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#setMaxConnections(int)
+	 */
 	@Override
 	public void setMaxConnections(int maxConnections) {
 		this.maxConnections = maxConnections;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getPingInterval()
+	 */
 	@Override
 	public int getPingInterval() {
 		return pingInterval;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getThreadCount()
+	 */
 	@Override
 	public int getThreadCount() {
 		return threadCount;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#setThreadCount(int)
+	 */
 	@Override
 	public void setThreadCount(int threadCount) {
 		this.threadCount = threadCount;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getPurgeInterval()
+	 */
 	@Override
 	public int getPurgeInterval() {
 		return purgeInterval;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#setPurgeInterval(int)
+	 */
 	@Override
 	public void setPurgeInterval(int purgeInterval) {
 		this.purgeInterval = purgeInterval;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getAllowedOrigins()
+	 */
 	@Override
 	public List<String> getAllowedOrigins() {
 		return allowedOrigins;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isAllowedOrigin(java.lang.String)
+	 */
 	@Override
 	public boolean isAllowedOrigin(String origin){
 		boolean b = false;
@@ -579,11 +888,21 @@ public class Config implements Runnable, IConfig {
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isProfiled()
+	 */
 	@Override
 	public boolean isProfiled() {
 		return profiled;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getUsername()
+	 */
 	@Override
 	public String getUsername() {
 		return username;
@@ -591,44 +910,74 @@ public class Config implements Runnable, IConfig {
 
 
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getPassword()
+	 */
 	@Override
 	public String getPassword() {
 		return password;
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getClientCacheMax()
+	 */
 	@Override
 	public int getClientCacheMax() {
 		return this.clientCacheMax;
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isCompressionEnabled()
+	 */
 	@Override
 	public boolean isCompressionEnabled() {
 		return compressionEnabled;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getSendBuffer()
+	 */
 	@Override
 	public int getSendBuffer() {
 		return sendBuffer;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getReceiveBuffer()
+	 */
 	@Override
 	public int getReceiveBuffer() {
 		return receiveBuffer;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isNativeTransport()
+	 */
 	@Override
 	public boolean isNativeTransport(){
 		return this.nativeTransport;
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getProxyBackendPort()
+	 */
 	@Override
 	public int getProxyBackendPort() {
 		return this.proxyBackendPort;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getProxyBackendHost()
+	 */
 	@Override
 	public String getProxyBackendHost() {
 		return this.proxyBackendHost;
@@ -636,11 +985,21 @@ public class Config implements Runnable, IConfig {
 
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isLeakDetector()
+	 */
 	@Override
 	public boolean isLeakDetector() {
 		return leakDetector;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isProxy()
+	 */
 	@Override
 	public boolean isProxy() {
 		return !StrUtils.isEmpty(this.getProxyBackendHost()) && this.getProxyBackendPort() > 0;
@@ -648,37 +1007,70 @@ public class Config implements Runnable, IConfig {
 
 
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getRedirectPorts()
+	 */
 	@Override
 	public List<Integer> getRedirectPorts() {
 		return this.redirectPorts;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getKeyFile()
+	 */
 	@Override
 	public String getKeyFile() {
 		return this.keyFile;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getCertFile()
+	 */
 	@Override
 	public String getCertFile() {
 		return this.certFile;
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isKeyStore()
+	 */
 	@Override
 	public boolean isKeyStore(){
 		return StrUtils.hasEmpty(this.getCertFile(), this.getKeyFile());
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#isEmptyCredentials()
+	 */
 	@Override
 	public boolean isEmptyCredentials() {
 		return StrUtils.hasEmpty(this.getUsername(),this.getPassword());
 	}
 
+	
+	 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#getVersion()
+	 */
 	@Override
 	public String getVersion() {
 		return "";
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.IConfig#property(java.lang.String)
+	 */
 	@Override
 	public String property(String key) {
 		return this.props.getProperty(key);

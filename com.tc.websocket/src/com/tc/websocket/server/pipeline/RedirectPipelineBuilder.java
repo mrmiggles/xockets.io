@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket.server.pipeline;
 
 import io.netty.channel.ChannelPipeline;
@@ -7,8 +10,18 @@ import io.netty.handler.stream.ChunkedWriteHandler;
 
 import com.tc.websocket.server.handler.RedirectionHandler;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RedirectPipelineBuilder.
+ */
 public class RedirectPipelineBuilder implements IPipelineBuilder {
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.pipeline.IPipelineBuilder#apply(io.netty.channel.ChannelPipeline)
+	 */
 	@Override
 	public void apply(ChannelPipeline pipeline) {
         pipeline.addLast(new HttpServerCodec());

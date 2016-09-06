@@ -17,8 +17,19 @@
 package com.tc.websocket.filter;
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IWebsocketFilter.
+ */
 public interface IWebsocketFilter {
 	
+	/**
+	 * Apply filter.
+	 *
+	 * @param msg the msg
+	 * @return the string
+	 */
 	public String applyFilter(String msg);
 
 }

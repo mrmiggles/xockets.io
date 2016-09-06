@@ -24,16 +24,32 @@ import com.tc.di.guicer.Guicer;
 import com.tc.di.guicer.IGuicer;
 import com.tc.websocket.Activator;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GuiceVariableResolver.
+ */
 public class GuiceVariableResolver extends VariableResolver {
 
+	/** The Constant TARGET_PACKAGE. */
 	private static final String TARGET_PACKAGE="com.tc.websocket";
+	
+	/** The resolver. */
 	private VariableResolver resolver;
 
+	/**
+	 * Instantiates a new guice variable resolver.
+	 *
+	 * @param resolver the resolver
+	 */
 	public GuiceVariableResolver(VariableResolver resolver){
 		this.resolver=resolver;
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see javax.faces.el.VariableResolver#resolveVariable(javax.faces.context.FacesContext, java.lang.String)
+	 */
 	@Override
 	public Object resolveVariable(FacesContext facesContext, String varName)throws EvaluationException {
 		IGuicer guicer = Guicer.getInstance(Activator.bundle);

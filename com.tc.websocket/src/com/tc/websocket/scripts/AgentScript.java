@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket.scripts;
 
 import java.util.Date;
@@ -19,12 +22,26 @@ import com.tc.websocket.Const;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AgentScript.
+ */
 public class AgentScript extends Script {
+	
+	/** The log. */
 	Logger LOG = Logger.getLogger(AgentScript.class.getName());
 	
+	/** The Constant FUNCTION. */
 	private static final String FUNCTION="function";
+	
+	/** The Constant EVENT. */
 	private static final String EVENT="event";
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 
@@ -53,6 +70,9 @@ public class AgentScript extends Script {
 
 	}
 
+	/**
+	 * On error.
+	 */
 	private void onError(){
 		Session session = null;
 		try{
@@ -87,6 +107,11 @@ public class AgentScript extends Script {
 
 	}
 
+	/**
+	 * On open or close.
+	 *
+	 * @param fun the fun
+	 */
 	private void onOpenOrClose(String fun){
 		Session session = null;
 		try{
@@ -122,6 +147,9 @@ public class AgentScript extends Script {
 
 	}
 
+	/**
+	 * On message.
+	 */
 	private void onMessage(){
 		Session session = null;
 		try{
@@ -156,6 +184,9 @@ public class AgentScript extends Script {
 	}
 
 
+	/**
+	 * On interval.
+	 */
 	private void onInterval(){
 		Session session = null;
 		try{
@@ -174,10 +205,17 @@ public class AgentScript extends Script {
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.scripts.Script#extractScript()
+	 */
 	public synchronized String extractScript() {
 		return StringCache.EMPTY;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.scripts.Script#copy(java.lang.Object[])
+	 */
 	@Override
 	public Script copy(Object ...args) {
 		AgentScript copy  = new AgentScript();
@@ -190,6 +228,10 @@ public class AgentScript extends Script {
 		return copy;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.scripts.Script#recompile(boolean)
+	 */
 	@Override
 	public boolean recompile(boolean reload) {
 		return true;

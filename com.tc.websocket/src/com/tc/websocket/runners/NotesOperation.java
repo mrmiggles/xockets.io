@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket.runners;
 
 import java.util.logging.Level;
@@ -14,26 +17,60 @@ import com.tc.utils.StringCache;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NotesOperation.
+ */
 public abstract class NotesOperation implements Runnable {
+	
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(NotesOperation.class.getName());
 	
 	
+	/**
+	 * Open session.
+	 *
+	 * @return the session
+	 */
 	public Session openSession(){
 		return SessionFactory.openSessionDefaultToTrusted(Config.getInstance().getUsername(), Config.getInstance().getPassword());
 	}
 	
+	/**
+	 * Close session.
+	 *
+	 * @param session the session
+	 */
 	public void closeSession(Session session){
 		SessionFactory.closeSession(session);
 	}
 	
+	/**
+	 * Close session.
+	 *
+	 * @param db the db
+	 */
 	public void closeSession(Database db) {
 		SessionFactory.closeSession(db);
 	}
 	
+	/**
+	 * Close session.
+	 *
+	 * @param doc the doc
+	 */
 	public void closeSession(Document doc){
 		SessionFactory.closeSession(doc);
 	}
 	
+	/**
+	 * Stamp documents.
+	 *
+	 * @param search the search
+	 * @param field the field
+	 * @param value the value
+	 */
 	public void stampDocuments(String search, String field, Object value){
 		Session session = this.openSession();
 		try {	
@@ -56,6 +93,11 @@ public abstract class NotesOperation implements Runnable {
 		}
 	}
 	
+	/**
+	 * Removes the documents.
+	 *
+	 * @param search the search
+	 */
 	public void removeDocuments(String search){
 		Session session = openSession();
 		try {	

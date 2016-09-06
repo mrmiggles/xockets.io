@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket.guice;
 
 import com.google.inject.AbstractModule;
@@ -11,8 +14,17 @@ import com.tc.websocket.runners.StampAllUsers;
 import com.tc.websocket.runners.UserCleanup;
 import com.tc.websocket.runners.UserMonitor;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RunnablesModule.
+ */
 public class RunnablesModule extends AbstractModule {
 
+
+	/* (non-Javadoc)
+	 * @see com.google.inject.AbstractModule#configure()
+	 */
 	@Override
 	protected void configure() {
 		//queue/monitors.

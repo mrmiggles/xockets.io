@@ -19,17 +19,29 @@ package com.tc.websocket.runners;
 import com.tc.websocket.Config;
 import com.tc.xpage.profiler.Stopwatch;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StampAll.
+ */
 public class StampAll extends NotesOperation {
 	
+	/** The search. */
 	private String search;
 	
+	/** The field. */
 	private String field;
 	
+	/** The value. */
 	private Object value;
 
 
 
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	@Stopwatch
 	public void run() {
@@ -44,6 +56,11 @@ public class StampAll extends NotesOperation {
 
 
 
+	/**
+	 * Gets the field.
+	 *
+	 * @return the field
+	 */
 	public String getField() {
 		return field;
 	}
@@ -51,6 +68,11 @@ public class StampAll extends NotesOperation {
 
 
 
+	/**
+	 * Sets the field.
+	 *
+	 * @param field the new field
+	 */
 	public void setField(String field) {
 		this.field = field;
 	}
@@ -58,6 +80,11 @@ public class StampAll extends NotesOperation {
 
 
 
+	/**
+	 * Gets the value.
+	 *
+	 * @return the value
+	 */
 	public Object getValue() {
 		return value;
 	}
@@ -65,18 +92,33 @@ public class StampAll extends NotesOperation {
 
 
 
+	/**
+	 * Sets the value.
+	 *
+	 * @param value the new value
+	 */
 	public void setValue(Object value) {
 		this.value = value;
 	}
 
 
 
+	/**
+	 * Gets the search.
+	 *
+	 * @return the search
+	 */
 	public String getSearch() {
 		return search;
 	}
 
 
 
+	/**
+	 * Sets the search.
+	 *
+	 * @param search the new search
+	 */
 	public void setSearch(String search) {
 		this.search = search;
 	}

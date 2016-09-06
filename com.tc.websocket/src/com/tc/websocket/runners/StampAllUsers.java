@@ -31,15 +31,26 @@ import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
 import com.tc.xpage.profiler.Stopwatch;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StampAllUsers.
+ */
 public class StampAllUsers extends NotesOperation implements Runnable {
 
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(StampAllUsers.class.getName());
 
+	/** The status. */
 	private String status;
 
 
 
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	@Stopwatch
 	public void run() {
@@ -83,6 +94,11 @@ public class StampAllUsers extends NotesOperation implements Runnable {
 
 
 
+	/**
+	 * Gets the status.
+	 *
+	 * @return the status
+	 */
 	public String getStatus() {
 		return status;
 	}
@@ -90,6 +106,11 @@ public class StampAllUsers extends NotesOperation implements Runnable {
 
 
 
+	/**
+	 * Sets the status.
+	 *
+	 * @param status the new status
+	 */
 	public void setStatus(String status) {
 		this.status = status;
 	}

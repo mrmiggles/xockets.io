@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket.scripts;
 
 import com.google.inject.Inject;
@@ -6,41 +9,80 @@ import com.tc.utils.JSONUtils;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.SocketMessage;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SimpleClient.
+ */
 public class SimpleClient {
 	
+	/** The server. */
 	@Inject
 	private IDominoWebSocketServer server;
 	
+	/** The guicer. */
 	@Inject
 	private IGuicer guicer;
 	
+	/** The script. */
 	private Script script;
 	
 	
+	/**
+	 * Instantiates a new simple client.
+	 *
+	 * @param script the script
+	 */
 	public SimpleClient(Script script){
 		this.script = script;
 	}
 	
 	
+	/**
+	 * Creates the message.
+	 *
+	 * @return the socket message
+	 */
 	public SocketMessage createMessage() {
 		return guicer.createObject(SocketMessage.class);
 	}
 	
+	/**
+	 * Send msg.
+	 *
+	 * @param msg the msg
+	 */
 	public void sendMsg(SocketMessage msg){
 		msg.setFrom(this.script.getSource());
 		this.send(msg);;
 	}
 	
+	/**
+	 * Send.
+	 *
+	 * @param socketMessage the socket message
+	 */
 	public void send(SocketMessage socketMessage){
 		socketMessage.setFrom(this.script.getSource());
 		server.onMessage(socketMessage.getTo(),JSONUtils.toJson(socketMessage));
 	}
 	
+	/**
+	 * Send.
+	 *
+	 * @param to the to
+	 * @param text the text
+	 */
 	public void send(String to, String text){
 		SocketMessage msg = this.createMessage();
 		this.send(msg.to(to).text(text).from(this.script.getSource()));
 	}
 	
+	/**
+	 * Send.
+	 *
+	 * @param json the json
+	 */
 	public void send(String json){
 		SocketMessage msg = JSONUtils.toObject(json, SocketMessage.class);
 		this.send(msg.from(this.script.getSource()));

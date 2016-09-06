@@ -33,16 +33,28 @@ import com.tc.websocket.factories.IUserFactory;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UserMonitor.
+ */
 public class UserMonitor extends AbstractQueueProcessor implements Runnable {
 	
+	/** The server. */
 	@Inject
 	IDominoWebSocketServer server;
 	
+	/** The user factory. */
 	@Inject
 	IUserFactory userFactory;
 	
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(UserMonitor.class.getName());
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		if(TaskRunner.getInstance().isClosing()){

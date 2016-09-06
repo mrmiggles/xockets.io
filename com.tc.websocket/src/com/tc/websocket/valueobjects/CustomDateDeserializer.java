@@ -16,13 +16,21 @@ import com.tc.utils.DateUtils;
 import com.tc.utils.StrUtils;
 import com.tc.websocket.Const;
 
+
+// TODO: Auto-generated Javadoc
 /**
+ * The Class CustomDateDeserializer.
  *
  * @author mwambler
  */
 public class CustomDateDeserializer extends JsonDeserializer<Date> {
 
     
+    
+
+    /* (non-Javadoc)
+     * @see org.codehaus.jackson.map.JsonDeserializer#deserialize(org.codehaus.jackson.JsonParser, org.codehaus.jackson.map.DeserializationContext)
+     */
     @Override
 	public Date deserialize(JsonParser jp, org.codehaus.jackson.map.DeserializationContext dc) throws IOException, JsonProcessingException {
         String date = jp.getText();

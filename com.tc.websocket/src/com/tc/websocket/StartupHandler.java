@@ -19,8 +19,18 @@ package com.tc.websocket;
 
 import com.ibm.designer.runtime.extensions.RuntimeInitializationEvent;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StartupHandler.
+ */
 public class StartupHandler implements RuntimeInitializationEvent {
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.ibm.designer.runtime.extensions.RuntimeInitializationEvent#initialize()
+	 */
 	@Override
 	public void initialize() {
 		

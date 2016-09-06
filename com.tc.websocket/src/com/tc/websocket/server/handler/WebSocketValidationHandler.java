@@ -47,15 +47,28 @@ import com.tc.websocket.IConfig;
 import com.tc.websocket.server.IDominoWebSocketServer;
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WebSocketValidationHandler.
+ */
 public class WebSocketValidationHandler extends SimpleChannelInboundHandler<FullHttpRequest>{
 
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(WebSocketValidationHandler.class.getName());
 	
+	/** The server. */
 	@Inject
 	private IDominoWebSocketServer server;
 	
+	/** The cfg. */
 	private IConfig cfg = Config.getInstance();
 	
+	
+
+	/* (non-Javadoc)
+	 * @see io.netty.channel.SimpleChannelInboundHandler#channelRead0(io.netty.channel.ChannelHandlerContext, java.lang.Object)
+	 */
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req)throws Exception {
 		if(this.isValidRequest(ctx, req)){
@@ -64,6 +77,13 @@ public class WebSocketValidationHandler extends SimpleChannelInboundHandler<Full
 		}
 	}
 
+	/**
+	 * Checks if is valid request.
+	 *
+	 * @param ctx the ctx
+	 * @param req the req
+	 * @return true, if is valid request
+	 */
 	public boolean isValidRequest(ChannelHandlerContext ctx, FullHttpRequest req) {
 		// Handle a bad request.
 		if (!req.decoderResult().isSuccess()) {
@@ -106,6 +126,13 @@ public class WebSocketValidationHandler extends SimpleChannelInboundHandler<Full
 	}
 
 
+	/**
+	 * Send http response.
+	 *
+	 * @param ctx the ctx
+	 * @param req the req
+	 * @param res the res
+	 */
 	private static void sendHttpResponse(ChannelHandlerContext ctx, FullHttpRequest req, FullHttpResponse res) {
 		// Generate an error page if response getStatus code is not OK (200).
 		if (res.status().code() != 200) {

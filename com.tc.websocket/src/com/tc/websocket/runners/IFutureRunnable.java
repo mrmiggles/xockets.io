@@ -16,10 +16,25 @@
 
 package com.tc.websocket.runners;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface IFutureRunnable.
+ */
 public interface IFutureRunnable extends Runnable {
 
+	/**
+	 * Gets the seconds.
+	 *
+	 * @return the seconds
+	 */
 	public abstract int getSeconds();
 
+	/**
+	 * Sets the seconds.
+	 *
+	 * @param seconds the new seconds
+	 */
 	public abstract void setSeconds(int seconds);
 
 }

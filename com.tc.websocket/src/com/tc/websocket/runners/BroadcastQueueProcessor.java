@@ -34,10 +34,23 @@ import com.tc.websocket.Config;
 import com.tc.websocket.Const;
 import com.tc.xpage.profiler.Stopwatch;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BroadcastQueueProcessor.
+ */
 public class BroadcastQueueProcessor extends AbstractQueueProcessor implements Runnable {
+	
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(BroadcastQueueProcessor.class.getName());
+	
+	/** The cluster mates. */
 	private List<String> clusterMates = new ArrayList<String>();
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	@Stopwatch
 	public void run() {
@@ -81,6 +94,13 @@ public class BroadcastQueueProcessor extends AbstractQueueProcessor implements R
 	}
 
 
+	/**
+	 * Gets the cluster mates.
+	 *
+	 * @param s the s
+	 * @return the cluster mates
+	 * @throws NotesException the notes exception
+	 */
 	private List<String> getClusterMates(Session s) throws NotesException{
 		if(clusterMates.isEmpty()){
 			synchronized(clusterMates){
@@ -113,6 +133,11 @@ public class BroadcastQueueProcessor extends AbstractQueueProcessor implements R
 
 
 
+	/**
+	 * Builds the direct messages.
+	 *
+	 * @param doc the doc
+	 */
 	@Stopwatch
 	private void buildDirectMessages(Document doc) {
 		Document directMessage=null;

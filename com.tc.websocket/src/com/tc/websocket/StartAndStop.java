@@ -34,16 +34,30 @@ import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.xpage.profiler.ProfilerModule;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StartAndStop.
+ */
 public class StartAndStop {
 
+	/** The manager. */
 	private static StartAndStop manager = new StartAndStop();
 
 
+	/**
+	 * Gets the single instance of StartAndStop.
+	 *
+	 * @return single instance of StartAndStop
+	 */
 	public static StartAndStop getInstance(){
 		return manager;
 	}
 
 
+	/**
+	 * Start.
+	 */
 	public void start(){
 		if(ServerInfo.getInstance().isOnServer()){
 
@@ -91,6 +105,9 @@ public class StartAndStop {
 
 
 
+	/**
+	 * Stop.
+	 */
 	public void stop(){
 		
 		if(ServerInfo.getInstance().isOnServer()){
@@ -115,6 +132,11 @@ public class StartAndStop {
 	}
 
 
+	/**
+	 * Gets the modules.
+	 *
+	 * @return the modules
+	 */
 	public List<Module> getModules(){
 		List<Module> modules = new ArrayList<Module>();
 		modules.add(new RunnablesModule());

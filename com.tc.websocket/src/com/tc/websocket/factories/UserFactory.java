@@ -31,12 +31,24 @@ import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
 import com.tc.websocket.valueobjects.IUser;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating User objects.
+ */
 public class UserFactory implements IUserFactory {
+	
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(UserFactory.class.getName());
 	
+	/** The guicer. */
 	@Inject
 	IGuicer guicer;
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.factories.IUserFactory#createUser(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public IUser createUser(String sessionId, String userId, String status){
 		IUser user = guicer.createObject(IUser.class);
@@ -67,6 +79,10 @@ public class UserFactory implements IUserFactory {
 		return user;
 	}
 	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.factories.IUserFactory#createUser(lotus.domino.Document)
+	 */
 	//this method is used to create a user from a different server in a cluster
 	@Override
 	public IUser createUser(Document doc) {

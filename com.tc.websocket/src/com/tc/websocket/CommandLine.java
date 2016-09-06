@@ -38,14 +38,30 @@ import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.structures.UriScriptMap;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CommandLine.
+ */
 public class CommandLine implements CommandProvider {
 	
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(CommandLine.class.getName());
 	
+	/**
+	 * Xockets.
+	 *
+	 * @param out the out
+	 */
 	public void _xockets(final CommandInterpreter out){
 		this._websocket(out);
 	}
 	
+	/**
+	 * Websocket.
+	 *
+	 * @param out the out
+	 */
 	public void _websocket(final CommandInterpreter out) {
 		try{
 			final String command=out.nextArgument();
@@ -133,14 +149,28 @@ public class CommandLine implements CommandProvider {
 	}
 	
 	
+	/**
+	 * To mb.
+	 *
+	 * @param value the value
+	 * @return the long
+	 */
 	private long toMb(long value){
 		return ((value / 1000) / 1000);
 	}
 	
+	/**
+	 * Show listeners.
+	 */
 	private void showListeners(){
 		new UriScriptMap().print();
 	}
 
+	/**
+	 * Show available memory.
+	 *
+	 * @param out the out
+	 */
 	private void showAvailableMemory(CommandInterpreter out){
 		long allocatedMemory  = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
 		long freeMemory = Runtime.getRuntime().maxMemory() - allocatedMemory;
@@ -151,10 +181,22 @@ public class CommandLine implements CommandProvider {
 		
 	}
 	
+	/**
+	 * Show queue counts.
+	 *
+	 * @param server the server
+	 * @param out the out
+	 */
 	private void showQueueCounts(IDominoWebSocketServer server, CommandInterpreter out){
 			out.println("show queue counts no longer supported.");
 	}
 	
+	/**
+	 * Show scripts.
+	 *
+	 * @param server the server
+	 * @param out the out
+	 */
 	private void showScripts(IDominoWebSocketServer server, CommandInterpreter out){
 		boolean b = false;
 		for(Script script : server.getEventObservers()){
@@ -169,10 +211,22 @@ public class CommandLine implements CommandProvider {
 	}
 	
 
+	/**
+	 * Removes the script.
+	 *
+	 * @param server the server
+	 * @param out the out
+	 */
 	private void removeScript(IDominoWebSocketServer server, CommandInterpreter out){
 		throw new IllegalArgumentException("No longer supported.");
 	}
 	
+	/**
+	 * Register listener.
+	 *
+	 * @param server the server
+	 * @param out the out
+	 */
 	private void registerListener(IDominoWebSocketServer server, CommandInterpreter out){
 		
 		String uri = out.nextArgument();
@@ -195,6 +249,12 @@ public class CommandLine implements CommandProvider {
 		out.println(script.toString() + " added to server's URI listeners.");	
 	}
 	
+	/**
+	 * Register observer.
+	 *
+	 * @param server the server
+	 * @param out the out
+	 */
 	private void registerObserver(IDominoWebSocketServer server, CommandInterpreter out){
 		
 		String func = out.nextArgument();
@@ -225,6 +285,12 @@ public class CommandLine implements CommandProvider {
 	}
 	
 	
+	/**
+	 * Register intervaled.
+	 *
+	 * @param server the server
+	 * @param out the out
+	 */
 	private void registerIntervaled(IDominoWebSocketServer server, CommandInterpreter out){
 		
 		int interval = Integer.parseInt(out.nextArgument());
@@ -252,6 +318,12 @@ public class CommandLine implements CommandProvider {
 		
 	}
 
+	/**
+	 * Reload scripts.
+	 *
+	 * @param out the out
+	 * @param server the server
+	 */
 	private void reloadScripts(CommandInterpreter out, IDominoWebSocketServer server){
 		out.println("reloading all scripts...");
 		server.reloadScripts();
@@ -259,6 +331,11 @@ public class CommandLine implements CommandProvider {
 	}
 	
 	
+	/**
+	 * Purge.
+	 *
+	 * @param out the out
+	 */
 	private void purge(CommandInterpreter out){
 		PurgeDocuments purge = new PurgeDocuments();
 		purge.run();
@@ -266,6 +343,12 @@ public class CommandLine implements CommandProvider {
 	}
 	
 
+	/**
+	 * Prints the users.
+	 *
+	 * @param col the col
+	 * @param out the out
+	 */
 	private void printUsers(Collection<IUser> col, CommandInterpreter out){
 
 		List<IUser> list = new ArrayList<IUser>();
@@ -278,6 +361,11 @@ public class CommandLine implements CommandProvider {
 
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.osgi.framework.console.CommandProvider#getHelp()
+	 */
 	@Override
 	public String getHelp() {
 		return "---WebSocket Service Commands---\n"+

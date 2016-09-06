@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket.scripts;
 import java.util.Date;
 import java.util.Map.Entry;
@@ -19,20 +22,39 @@ import lotus.domino.Session;
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JSRScript.
+ */
 public class JSRScript extends Script{
 
 
+	/** The guicer. */
 	@Inject
 	private IGuicer guicer;
 
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(JSRScript.class.getName());
 
+	/** The manager. */
 	private ScriptEngineManager manager;
+	
+	/** The engine. */
 	private ScriptEngine engine;
+	
+	/** The engine name. */
 	private String engineName;
+	
+	/** The compiled. */
 	private CompiledScript compiled;
 
 
+	/**
+	 * Instantiates a new JSR script.
+	 *
+	 * @param engineName the engine name
+	 */
 	public JSRScript(String engineName){
 		
 		this.engineName = engineName;
@@ -41,19 +63,36 @@ public class JSRScript extends Script{
 		
 	}
 	
+	/**
+	 * Instantiates a new JSR script.
+	 */
 	private JSRScript(){
 		
 	}
 
 
+	/**
+	 * Gets the engine.
+	 *
+	 * @return the engine
+	 */
 	public ScriptEngine getEngine() {
 		return engine;
 	}
 
+	/**
+	 * Sets the engine.
+	 *
+	 * @param engine the new engine
+	 */
 	public void setEngine(ScriptEngine engine) {
 		this.engine = engine;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.scripts.Script#recompile(boolean)
+	 */
 	public synchronized boolean recompile(boolean reload){
 		boolean b = true;
 		try{
@@ -81,15 +120,29 @@ public class JSRScript extends Script{
 	}
 
 	
+	/**
+	 * Gets the compiled.
+	 *
+	 * @return the compiled
+	 */
 	public CompiledScript getCompiled() {
 		return this.compiled;
 	}
 	
 	
+	/**
+	 * Sets the compiled.
+	 *
+	 * @param compiled the new compiled
+	 */
 	public void setCompiled(CompiledScript compiled) {
 		this.compiled = compiled;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.scripts.Script#copy(java.lang.Object[])
+	 */
 	public synchronized JSRScript copy(Object ...args){
 		JSRScript copy  = new JSRScript();
 		copy.setArgs(args);
@@ -103,6 +156,10 @@ public class JSRScript extends Script{
 		return copy;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		

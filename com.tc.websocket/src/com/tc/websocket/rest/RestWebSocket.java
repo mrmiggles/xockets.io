@@ -50,23 +50,38 @@ import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RestWebSocket.
+ */
 public class RestWebSocket implements IRestWebSocket {
 
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(RestWebSocket.class.getName());
 
+	/** The guicer. */
 	@Inject
 	IGuicer guicer;
 
+	/** The msg factory. */
 	@Inject
 	ISocketMessageFactory msgFactory;
 
+	/** The req. */
 	@Context
 	HttpServletRequest req;
 
+	/** The server. */
 	@Inject
 	IDominoWebSocketServer server;
 
 
+	/**
+	 * New bean.
+	 *
+	 * @return the i web socket bean
+	 */
 	private IWebSocketBean newBean(){
 		IWebSocketBean bean = guicer.createObject(IWebSocketBean.class, Const.GUICE_REST_WEBSOCKET);
 		bean.setRequest(req);
@@ -74,6 +89,14 @@ public class RestWebSocket implements IRestWebSocket {
 	}
 
 
+	/**
+	 * Builds the message.
+	 *
+	 * @param text the text
+	 * @param nameValuePairs the name value pairs
+	 * @return the response
+	 * @throws NotesException the notes exception
+	 */
 	private Response buildMessage(String text, Object ... nameValuePairs) throws NotesException{
 
 		//first param name, second param value (i.e. websocketUrl,http://bla)
@@ -103,6 +126,12 @@ public class RestWebSocket implements IRestWebSocket {
 
 	}
 
+	/**
+	 * Builds the response.
+	 *
+	 * @param o the o
+	 * @return the response
+	 */
 	private Response buildResponse(Object o){
 		ResponseBuilder builder = Response.ok(o, MediaType.APPLICATION_JSON_TYPE);
 		CacheControl cacheControl = new CacheControl();
@@ -114,6 +143,10 @@ public class RestWebSocket implements IRestWebSocket {
 
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.rest.IRestWebSocket#register()
+	 */
 	@Override
 	public Response register() throws NotesException {
 		Response res = null;
@@ -130,6 +163,10 @@ public class RestWebSocket implements IRestWebSocket {
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.rest.IRestWebSocket#unregister()
+	 */
 	@Override
 	public Response unregister() throws NotesException {
 		Response res = null;
@@ -145,6 +182,10 @@ public class RestWebSocket implements IRestWebSocket {
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.rest.IRestWebSocket#getOnlineUsers()
+	 */
 	@Override
 	public Response getOnlineUsers() throws NotesException {
 		Response res = null;
@@ -161,6 +202,10 @@ public class RestWebSocket implements IRestWebSocket {
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.rest.IRestWebSocket#getWebSocketUrl()
+	 */
 	@Override
 	public Response getWebSocketUrl() throws NotesException {
 		Response res = null;
@@ -176,6 +221,9 @@ public class RestWebSocket implements IRestWebSocket {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.rest.IRestWebSocket#sendMessage(com.tc.websocket.valueobjects.SocketMessage)
+	 */
 	@Override
 	public Response sendMessage(SocketMessage msg) throws NotesException {
 		Response res= null;
@@ -192,6 +240,10 @@ public class RestWebSocket implements IRestWebSocket {
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.rest.IRestWebSocket#sendMessage(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public Response sendMessage(String from, String to, String text) throws NotesException {
 		SocketMessage msg = new SocketMessage();
@@ -203,6 +255,10 @@ public class RestWebSocket implements IRestWebSocket {
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.rest.IRestWebSocket#getMessages()
+	 */
 	@Override
 	public Response getMessages() throws NotesException {
 
@@ -225,6 +281,10 @@ public class RestWebSocket implements IRestWebSocket {
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.rest.IRestWebSocket#getLatestMessage()
+	 */
 	@Override
 	public Response getLatestMessage() throws NotesException {
 
@@ -255,6 +315,12 @@ public class RestWebSocket implements IRestWebSocket {
 
 	}
 
+	/**
+	 * Checks for web socket connection.
+	 *
+	 * @return true, if successful
+	 * @throws NotesException the notes exception
+	 */
 	private boolean hasWebSocketConnection() throws NotesException{
 		IUser user = server.resolveUser(XSPUtils.session().getEffectiveUserName());
 		return user.getConn()!=null && user.getConn().isOpen();

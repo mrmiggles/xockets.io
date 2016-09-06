@@ -31,45 +31,90 @@ import lotus.domino.NotesException;
 import com.tc.websocket.valueobjects.SocketMessage;
 
 
+	
+// TODO: Auto-generated Javadoc
+/**
+	 * The Interface IRestWebSocket.
+	 */
 	@Path("websocket/v1")
 	public interface IRestWebSocket {
 		
 		
-	    @POST
+	    /**
+    	 * Register.
+    	 *
+    	 * @return the response
+    	 * @throws NotesException the notes exception
+    	 */
+    	@POST
 	    @Produces(MediaType.APPLICATION_JSON)
 	    @Path("registeruser")
 	    public Response register() throws NotesException;
 
 	    
 	    
-	    @POST
+	    /**
+    	 * Unregister.
+    	 *
+    	 * @return the response
+    	 * @throws NotesException the notes exception
+    	 */
+    	@POST
 	    @Produces(MediaType.APPLICATION_JSON)
 	    @Path("removeuser")
 	    public Response unregister() throws NotesException;
 
 	    
 	    
-	    @GET
+	    /**
+    	 * Gets the online users.
+    	 *
+    	 * @return the online users
+    	 * @throws NotesException the notes exception
+    	 */
+    	@GET
 	    @Produces(MediaType.APPLICATION_JSON)
 	    @Path("onlineusers")
 	    public Response getOnlineUsers() throws NotesException;
 	    
 	    
-	    @GET
+	    /**
+    	 * Gets the web socket url.
+    	 *
+    	 * @return the web socket url
+    	 * @throws NotesException the notes exception
+    	 */
+    	@GET
 	    @Produces(MediaType.APPLICATION_JSON)
 	    @Path("websocketurl")
 	    public Response getWebSocketUrl() throws NotesException;
 	    
 	    
 	    
-	    @POST
+	    /**
+    	 * Send message.
+    	 *
+    	 * @param msg the msg
+    	 * @return the response
+    	 * @throws NotesException the notes exception
+    	 */
+    	@POST
 	    @Produces(MediaType.APPLICATION_JSON)
 	    @Consumes(MediaType.APPLICATION_JSON)
 	    @Path("sendmessage")
 	    public Response sendMessage(SocketMessage msg) throws NotesException;
 	    
 	    
-	    @GET
+	    /**
+    	 * Send message.
+    	 *
+    	 * @param from the from
+    	 * @param to the to
+    	 * @param text the text
+    	 * @return the response
+    	 * @throws NotesException the notes exception
+    	 */
+    	@GET
 	    @Produces(MediaType.APPLICATION_JSON)
 	    @Path("sendsimple")
 	    public Response sendMessage(
@@ -78,13 +123,25 @@ import com.tc.websocket.valueobjects.SocketMessage;
 	    		@QueryParam("text") String text) throws NotesException;
 	    
 	    
-	    @GET
+	    /**
+    	 * Gets the messages.
+    	 *
+    	 * @return the messages
+    	 * @throws NotesException the notes exception
+    	 */
+    	@GET
 	    @Produces(MediaType.APPLICATION_JSON)
 	    @Path("messages")
 	    public Response getMessages() throws NotesException;
 	    
 	    
-	    @GET
+	    /**
+    	 * Gets the latest message.
+    	 *
+    	 * @return the latest message
+    	 * @throws NotesException the notes exception
+    	 */
+    	@GET
 	    @Produces(MediaType.APPLICATION_JSON)
 	    @Path("latestmessage")
 	    public Response getLatestMessage() throws NotesException;

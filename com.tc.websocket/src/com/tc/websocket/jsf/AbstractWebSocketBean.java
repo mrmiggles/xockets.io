@@ -44,20 +44,31 @@ import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AbstractWebSocketBean.
+ */
 public abstract class AbstractWebSocketBean implements IWebSocketBean {
 
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(AbstractWebSocketBean.class.getName());
 
+	/** The server. */
 	protected IDominoWebSocketServer server;
 
 
+	/** The user factory. */
 	@Inject
 	protected IUserFactory userFactory;
 
 
 
-	/* (non-Javadoc)
-	 * @see com.tc.websocket.jsf.IWebSocketBean#registerCurrentUser()
+	/**
+	 * Register current user.
+	 *
+	 * @param req the req
+	 * @throws NotesException the notes exception
 	 */
 	public void registerCurrentUser(HttpServletRequest req) throws NotesException{
 
@@ -87,9 +98,12 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see com.tc.websocket.jsf.IWebSocketBean#removeCurrentUser()
+	/**
+	 * Removes the current user.
+	 *
+	 * @param req the req
 	 */
+
 	public void removeCurrentUser(HttpServletRequest req){
 		String sessionId = req.getSession().getId();
 		server.removeUser(sessionId);
@@ -129,8 +143,11 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 
 
 
-	/* (non-Javadoc)
-	 * @see com.tc.websocket.jsf.IWebSocketBean#getWebSocketUrl()
+	/**
+	 * Gets the web socket url.
+	 *
+	 * @param req the req
+	 * @return the web socket url
 	 */
 	public String getWebSocketUrl(HttpServletRequest req){
 
@@ -164,10 +181,14 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#getCustomWebSocketUrl(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public String getCustomWebSocketUrl(HttpServletRequest req, String sessionId, String sourceUri){
 		return buildWebSocketUrl(req.getServerName(),sessionId, sourceUri);
 	}
+
 
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.jsf.IWebSocketBean#sendMessage(java.lang.String, java.lang.String, java.lang.String)
@@ -183,6 +204,7 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 
 	}
 
+
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.jsf.IWebSocketBean#sendMessage(com.tc.websocket.valueobjects.SocketMessage)
 	 */
@@ -193,19 +215,31 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#addObservers(java.lang.String[])
+	 */
 	public void addObservers(String[] resources){
-		for(String resource : resources){
-			this.addEventObserver(resource);
+		for(String source : resources){
+			this.addEventObserver(source);
 		}
 	}
 	
-	public void addEventObserver(String resource){
+	/**
+	 * Adds the event observer.
+	 *
+	 * @param source the source
+	 */
+	public void addEventObserver(String source){
 		for(String func : Const.ALL_EVENTS){
-			this.addEventObserver(func, resource);
+			this.addEventObserver(func, source);
 		}
 	}
 
 	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#addEventObserver(java.lang.String, java.lang.String)
+	 */
 	public void addEventObserver(final String function, final String source){
 		
 		if(!this.containsObserver(function, source)){
@@ -225,6 +259,10 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 		}
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#containsObserver(java.lang.String, java.lang.String)
+	 */
 	public boolean containsObserver(final String function, final String source){
 		Script script = Script.newScript(source);
 		script.setSource(source);
@@ -233,6 +271,10 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#removeObserver(java.lang.String, java.lang.String)
+	 */
 	public void removeObserver(final String function, final String source){
 
 		TaskRunner.getInstance().add(new Runnable(){
@@ -250,16 +292,28 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#containsUriListener(java.lang.String)
+	 */
 	@Override
 	public boolean containsUriListener(String scriptPath){
 		return this.containsScript(scriptPath);
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#containsScript(java.lang.String)
+	 */
 	@Override
 	public boolean containsScript(String scriptPath){
 		return server.findUriListener(scriptPath)!=null;
 	}
 	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#addUriListeners(java.lang.String, java.lang.String[])
+	 */
 	@Override
 	public void addUriListeners(final String uri, final String[] sources){
 		for(String source : sources){
@@ -267,16 +321,28 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 		}
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#addUriListener(java.lang.String)
+	 */
 	@Override
 	public void addUriListener(final String source){
 		this.addUriListener(source, source, null, null);
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#addUriListener(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void addUriListener(final String uri, final String source){
 		this.addUriListener(uri, source, null, null);
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#addUriListener(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void addUriListener(final String uri, final String source, final String runAsUser, final String runAsPassword){
 		
@@ -303,11 +369,23 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	}
 	
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#removeUriListener(java.lang.String)
+	 */
 	public void removeUriListener(String source){
 		server.removeUriListener(server.findUriListener(source));
 	}
 
 
+	/**
+	 * Builds the web socket url.
+	 *
+	 * @param serverName the server name
+	 * @param sessionId the session id
+	 * @param sourceUri the source uri
+	 * @return the string
+	 */
 	public static String buildWebSocketUrl(String serverName, String sessionId, String sourceUri){
 
 		//for ajax requests as we don't want the uri of the service call, but the calling page.
@@ -328,6 +406,9 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#addIntervaledScripts(int, java.lang.String[])
+	 */
 	@Override
 	public void addIntervaledScripts(int interval, String[] sources) {
 		for(String source : sources){
@@ -335,6 +416,11 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 		}
 	}
 
+
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#addIntervaled(int, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public void addIntervaled(final int interval, final String source,final String runAsUser,final String runAsPassword) {
 		
@@ -353,11 +439,21 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 		});
 	}
 
+
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#addIntervaled(int, java.lang.String)
+	 */
 	@Override
 	public void addIntervaled(int interval, String source) {
 		this.addIntervaled(interval, source, null, null);
 	}
 
+
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#removeIntervaled(java.lang.String)
+	 */
 	@Override
 	public void removeIntervaled(final String source) {
 		TaskRunner.getInstance().add(new Runnable(){

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket.scripts;
 
 import java.util.Date;
@@ -14,13 +17,24 @@ import org.python.util.PythonInterpreter;
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PythonScript.
+ */
 public class PythonScript extends Script{
 
+	/** The guicer. */
 	@Inject
 	IGuicer guicer;
 	
+	/** The compiled. */
 	private PyCode compiled;
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		
@@ -84,6 +98,11 @@ public class PythonScript extends Script{
 	
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.scripts.Script#copy(java.lang.Object[])
+	 */
 	@Override
 	public Script copy(Object ...args) {
 		PythonScript copy = new PythonScript();
@@ -97,6 +116,11 @@ public class PythonScript extends Script{
 		return copy;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.scripts.Script#recompile(boolean)
+	 */
 	@Override
 	public boolean recompile(boolean reload) {
 		
@@ -113,12 +137,22 @@ public class PythonScript extends Script{
 
 
 
+	/**
+	 * Gets the compiled.
+	 *
+	 * @return the compiled
+	 */
 	public PyCode getCompiled() {
 		return compiled;
 	}
 
 
 
+	/**
+	 * Sets the compiled.
+	 *
+	 * @param compiled the new compiled
+	 */
 	public void setCompiled(PyCode compiled) {
 		this.compiled = compiled;
 	}

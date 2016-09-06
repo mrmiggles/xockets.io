@@ -32,12 +32,22 @@ import com.tc.websocket.valueobjects.IPrompt;
 import com.tc.websocket.valueobjects.Prompt;
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RestNotesException.
+ */
 @Provider
 public class RestNotesException implements ExceptionMapper<NotesException> {
     
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(RestNotesException.class.getName());
 
 
+
+    /* (non-Javadoc)
+     * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
+     */
     @Override
 	public Response toResponse(NotesException exception) {
         IPrompt prompt = new Prompt();

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket.server.pipeline;
 
 import io.netty.channel.ChannelPipeline;
@@ -11,12 +14,23 @@ import com.tc.websocket.Config;
 import com.tc.websocket.server.handler.WebSocketServerHandler;
 import com.tc.websocket.server.handler.WebSocketValidationHandler;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WebSocketPipelineBuilder.
+ */
 public class WebSocketPipelineBuilder implements IPipelineBuilder {
 	
+	/** The guicer. */
 	@Inject
 	private IGuicer guicer;
 	
 	
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.server.pipeline.IPipelineBuilder#apply(io.netty.channel.ChannelPipeline)
+	 */
 	@Override
 	public void apply(ChannelPipeline pipeline){
 		pipeline.channel().config().setAutoRead(true);

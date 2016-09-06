@@ -32,9 +32,19 @@ import com.tc.websocket.Config;
 import com.tc.websocket.IConfig;
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RedirectionHandler.
+ */
 @ChannelHandler.Sharable
 public class RedirectionHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
+	
+
+	/* (non-Javadoc)
+	 * @see io.netty.channel.SimpleChannelInboundHandler#channelRead0(io.netty.channel.ChannelHandlerContext, java.lang.Object)
+	 */
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req)throws Exception {
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, FOUND);

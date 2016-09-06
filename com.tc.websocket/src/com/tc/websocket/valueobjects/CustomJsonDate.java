@@ -25,13 +25,21 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 
+
+// TODO: Auto-generated Javadoc
 /**
+ * The Class CustomJsonDate.
  *
  * @author mwambler
  */
 public class CustomJsonDate extends JsonSerializer<Date> {
 
     
+    
+
+    /* (non-Javadoc)
+     * @see org.codehaus.jackson.map.JsonSerializer#serialize(java.lang.Object, org.codehaus.jackson.JsonGenerator, org.codehaus.jackson.map.SerializerProvider)
+     */
     @Override
 	public void serialize(Date value, JsonGenerator gen, SerializerProvider arg2) throws IOException, JsonProcessingException {
         String formattedDate = String.valueOf(value.getTime());

@@ -31,17 +31,30 @@ import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AbstractQueueProcessor.
+ */
 public abstract class AbstractQueueProcessor extends NotesOperation {
 
+	/** The server. */
 	@Inject
 	protected IDominoWebSocketServer server;
 
+	/** The msg factory. */
 	@Inject
 	private ISocketMessageFactory msgFactory;
 
+	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(AbstractQueueProcessor.class.getName());
 
 
+	/**
+	 * Process doc.
+	 *
+	 * @param doc the doc
+	 */
 	//@Stopwatch(time=50)
 	protected void processDoc(Document doc){
 		try{
@@ -79,6 +92,12 @@ public abstract class AbstractQueueProcessor extends NotesOperation {
 	}
 
 
+	/**
+	 * Process conflict.
+	 *
+	 * @param doc the doc
+	 * @throws NotesException the notes exception
+	 */
 	//latest one in wins.
 	protected void processConflict(Document doc) throws NotesException{
 
@@ -100,6 +119,12 @@ public abstract class AbstractQueueProcessor extends NotesOperation {
 
 	}
 
+	/**
+	 * Flag for deletion.
+	 *
+	 * @param doc the doc
+	 * @throws NotesException the notes exception
+	 */
 	private void flagForDeletion(Document doc) throws NotesException{
 		doc.removeItem(StringCache.FIELD_REF);
 		doc.removeItem(StringCache.FIELD_CONFLICT);

@@ -33,47 +33,96 @@ import com.tc.websocket.server.RoutingPath;
 import com.tc.xpage.profiler.Stopwatch;
 
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class User.
+ */
 public class User implements IUser {
+	
+	/** The doc id. */
 	private String docId;
+	
+	/** The session id. */
 	private String sessionId;
+	
+	/** The user id. */
 	private String userId;
+	
+	/** The date. */
 	private Date date=new Date();
+	
+	/** The last ping. */
 	private Date lastPing=new Date();
+	
+	/** The string. */
 	private String string;
+	
+	/** The status. */
 	private String status;
+	
+	/** The connections. */
 	private Collection<ContextWrapper> connections = Collections.synchronizedCollection(new ArrayList<ContextWrapper>());
 	
 
+	/** The going offline. */
 	private boolean goingOffline;
+	
+	/** The conn. */
 	private ContextWrapper conn;
+	
+	/** The host. */
 	private String host; //used for clustered environments.
 	
 	//private static final Logger LOG = Logger.getLogger(User.class.getName());
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#isValid()
+	 */
 	@Override
 	public boolean isValid(){
 		return sessionId!=null && userId!=null;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#getSessionId()
+	 */
 	@Override
 	public String getSessionId() {
 		return sessionId;
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#setSessionId(java.lang.String)
+	 */
 	@Override
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#getUserId()
+	 */
 	@Override
 	public String getUserId() {
 		return userId;
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#setUserId(java.lang.String)
+	 */
 	@Override
 	public void setUserId(String userid) {
 		this.userId = userid;
@@ -81,18 +130,32 @@ public class User implements IUser {
 
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#getDate()
+	 */
 	@Override
 	public Date getDate() {
 		return date;
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#setDate(java.util.Date)
+	 */
 	@Override
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString(){
 		if(string==null){
@@ -102,6 +165,11 @@ public class User implements IUser {
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object o){
 		boolean b = false;
@@ -111,41 +179,72 @@ public class User implements IUser {
 		return b;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode(){
 		return this.getSessionId().hashCode();
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#getStatus()
+	 */
 	@Override
 	public synchronized String getStatus() {
 		return status;
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#setStatus(java.lang.String)
+	 */
 	@Override
 	public synchronized void setStatus(String status) {
 		this.status = status;
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#isGoingOffline()
+	 */
 	@Override
 	public synchronized boolean isGoingOffline() {
 		return goingOffline;
 	}
 
 
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#setGoingOffline(boolean)
+	 */
 	@Override
 	public synchronized void setGoingOffline(boolean goingOffline) {
 		this.goingOffline = goingOffline;
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#getConn()
+	 */
 	@Override
 	public synchronized ContextWrapper getConn() {
 		return conn;
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#setConn(com.tc.websocket.server.ContextWrapper)
+	 */
 	@Override
 	public synchronized void setConn(ContextWrapper conn) {
 		this.conn = conn;
@@ -153,39 +252,72 @@ public class User implements IUser {
 	}
 
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#getHost()
+	 */
 	@Override
 	public String getHost() {
 		return host;
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#setHost(java.lang.String)
+	 */
 	@Override
 	public void setHost(String host) {
 		this.host = host;
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#getLastPing()
+	 */
 	@Override
 	public Date getLastPing() {
 		return lastPing;
 	}
 
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#setLastPing(java.util.Date)
+	 */
 	@Override
 	public void setLastPing(Date lastPing) {
 		this.lastPing = lastPing;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#isOpen()
+	 */
 	@Override
 	public boolean isOpen(){
 		return this.count() > 0;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#isOnServer()
+	 */
 	@Override
 	public boolean isOnServer(){
 		return ServerInfo.getInstance().isCurrentServer(this.getHost());
 	}
 	
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#isAnonymous()
+	 */
 	@Override
 	public boolean isAnonymous(){
 		return this.getSessionId().equals(this.getUserId()) || this.getUserId().equals(StringCache.ANONYMOUS);
@@ -193,16 +325,21 @@ public class User implements IUser {
 
 
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.tc.websocket.valueobjects.IUser#getUri()
-	 * this must stay dynamic in case the uri changes in the browser / client.
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUri#getUri()
 	 */
 	@Override
 	public String getUri() {
 		return this.parseUri(this.getConn());
 	}
 	
+	/**
+	 * Parses the uri.
+	 *
+	 * @param wrapper the wrapper
+	 * @return the string
+	 */
 	private String parseUri(ContextWrapper wrapper){
 		String uri = StringCache.FORWARD_SLASH;
 		if(wrapper!=null && wrapper.isOpen()){
@@ -214,6 +351,11 @@ public class User implements IUser {
 		return uri;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#getUserPath()
+	 */
 	@Override
 	public String getUserPath(){
 		String userPath =  this.getUri() + StringCache.FORWARD_SLASH + this.getUserId();
@@ -222,6 +364,11 @@ public class User implements IUser {
 	}
 
 	
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#copy()
+	 */
 	@Override
 	public IUser copy(){
 		IUser user = new User();
@@ -230,6 +377,11 @@ public class User implements IUser {
 		return user;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#send(java.lang.String)
+	 */
 	@Override
 	public void send(String message) {
 		SocketMessage msg = JSONUtils.toObject(message, SocketMessageLite.class);
@@ -242,6 +394,11 @@ public class User implements IUser {
 	}
 
 	
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#findConnection(com.tc.websocket.server.RoutingPath)
+	 */
 	public Collection<ContextWrapper> findConnection(RoutingPath path){
 		
 		
@@ -265,6 +422,11 @@ public class User implements IUser {
 		return results;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#processQueue()
+	 */
 	@Override
 	@Stopwatch(time=10)
 	public void processQueue() {
@@ -273,6 +435,11 @@ public class User implements IUser {
 		}
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#canReceive()
+	 */
 	@Override
 	public boolean canReceive() {
 		boolean b = this.getConn()!=null
@@ -283,28 +450,57 @@ public class User implements IUser {
 		return b;
 	}
 	
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#getDocId()
+	 */
 	@Override
 	public String getDocId() {
 		return docId;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#setDocId(java.lang.String)
+	 */
 	@Override
 	public void setDocId(String docId) {
 		this.docId = docId;
 	}
 
+	
+	 
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#getConnections()
+	 */
 	public Collection<ContextWrapper> getConnections() {
 		return connections;
 	}
 
+	/**
+	 * Sets the connections.
+	 *
+	 * @param connections the new connections
+	 */
 	public void setConnections(Collection<ContextWrapper> connections) {
 		this.connections = connections;
 	}
 	
+	/**
+	 * Adds the conn.
+	 *
+	 * @param wrapper the wrapper
+	 */
 	private void addConn(ContextWrapper wrapper){
 		connections.add(wrapper);
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#close()
+	 */
 	@Override
 	public void close() {
 		for(ContextWrapper w : this.getConnections()){
@@ -315,6 +511,11 @@ public class User implements IUser {
 		this.getConnections().clear();
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUri#getUris()
+	 */
 	@Override
 	public List<String> getUris() {
 		List<String> vec = new ArrayList<String>();
@@ -335,6 +536,11 @@ public class User implements IUser {
 		return vec;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#clear()
+	 */
 	@Override
 	public void clear() {
 		List<ContextWrapper> list = new ArrayList<ContextWrapper>();
@@ -348,6 +554,10 @@ public class User implements IUser {
 		this.getConnections().addAll(list);
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUser#count()
+	 */
 	@Override
 	public int count() {
 		int cntr = 0;
@@ -359,11 +569,21 @@ public class User implements IUser {
 		return cntr;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUri#containsUri(java.lang.String)
+	 */
 	@Override
 	public boolean containsUri(String uri) {
 		return this.getUris().contains(uri);
 	}
 	
+	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.valueobjects.IUri#startsWith(java.lang.String)
+	 */
 	@Override
 	public boolean startsWith(String uri) {
 		for(String str : this.getUris()){

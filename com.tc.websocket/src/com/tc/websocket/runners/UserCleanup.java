@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket.runners;
 
 import com.google.inject.Inject;
@@ -6,18 +9,29 @@ import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 
 
+
+// TODO: Auto-generated Javadoc
 /*
  * cleanup connections / sessions that end abruptly
  */
 
+/**
+ * The Class UserCleanup.
+ */
 public class UserCleanup implements Runnable {
 
+	/** The server. */
 	@Inject
 	IDominoWebSocketServer server;
 
+	/** The guicer. */
 	@Inject
 	IGuicer guicer;
 	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {	
 		Batch batch = new Batch();

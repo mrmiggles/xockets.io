@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.tc.websocket.guice;
 
 import io.netty.channel.EventLoopGroup;
@@ -19,8 +22,17 @@ import com.tc.websocket.server.pipeline.IPipelineBuilder;
 import com.tc.websocket.server.pipeline.RedirectPipelineBuilder;
 import com.tc.websocket.server.pipeline.WebSocketPipelineBuilder;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class NettyModule.
+ */
 public class NettyModule extends AbstractModule {
 
+
+	/* (non-Javadoc)
+	 * @see com.google.inject.AbstractModule#configure()
+	 */
 	@Override
 	protected void configure() {
 		bind(WebSocketServerInitializer.class).in(Singleton.class);
@@ -31,6 +43,11 @@ public class NettyModule extends AbstractModule {
 	}
 	
 	
+	/**
+	 * Provide boss.
+	 *
+	 * @return the event loop group
+	 */
 	@Provides
 	@Named(Const.GUICE_EVENTLOOP_BOSS)
 	@Singleton
@@ -44,6 +61,11 @@ public class NettyModule extends AbstractModule {
 		return loopy;
 	}
 	
+	/**
+	 * Provide worker.
+	 *
+	 * @return the event loop group
+	 */
 	@Provides
 	@Named(Const.GUICE_EVENTLOOP_WORKER)
 	@Singleton

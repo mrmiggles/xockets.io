@@ -38,23 +38,43 @@ import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.xpage.profiler.Stopwatch;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ApplyStatus.
+ */
 public class ApplyStatus extends NotesOperation {
 
+	/** The log. */
 	private static Logger LOG = Logger.getLogger(ApplyStatus.class.getName());
 
+	/** The server. */
 	@Inject
 	IDominoWebSocketServer server;
 
+	/** The user. */
 	private IUser user;
 
+	/** The remove user. */
 	private boolean removeUser;
 
 
+	/**
+	 * Instantiates a new apply status.
+	 *
+	 * @param user the user
+	 */
 	public ApplyStatus(IUser user){
 		this.user = user;
 	}
 
 	
+	/**
+	 * Sets the remove user.
+	 *
+	 * @param removeUser the remove user
+	 * @return the apply status
+	 */
 	public ApplyStatus setRemoveUser(boolean removeUser){
 		this.removeUser=removeUser;
 		return this;
@@ -62,6 +82,9 @@ public class ApplyStatus extends NotesOperation {
 	
 
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	@Stopwatch
 	public void run() {
@@ -86,6 +109,9 @@ public class ApplyStatus extends NotesOperation {
 	}
 
 
+	/**
+	 * Online.
+	 */
 	@Stopwatch
 	private void online(){
 		Session session = null;
@@ -135,6 +161,9 @@ public class ApplyStatus extends NotesOperation {
 
 
 
+	/**
+	 * Offline.
+	 */
 	@Stopwatch
 	private void offline(){
 		Session session = null;
@@ -183,6 +212,13 @@ public class ApplyStatus extends NotesOperation {
 	}
 
 
+	/**
+	 * Gets the by UNID.
+	 *
+	 * @param db the db
+	 * @param unid the unid
+	 * @return the by UNID
+	 */
 	private Document getByUNID(Database db, String unid){
 		Document doc = null;
 
@@ -195,6 +231,14 @@ public class ApplyStatus extends NotesOperation {
 		return doc;
 	}
 
+	/**
+	 * Gets the user doc.
+	 *
+	 * @param session the session
+	 * @param create the create
+	 * @return the user doc
+	 * @throws NotesException the notes exception
+	 */
 	private Document getUserDoc(Session session, boolean create) throws NotesException{
 		Database db = session.getDatabase(StringCache.EMPTY, Const.WEBSOCKET_PATH);
 		Document doc = null;
@@ -224,6 +268,12 @@ public class ApplyStatus extends NotesOperation {
 	}
 
 
+	/**
+	 * Delete anonymous doc.
+	 *
+	 * @param session the session
+	 * @throws NotesException the notes exception
+	 */
 	//if the user moved from anonymous to person to anonymous to person
 	private void deleteAnonymousDoc(Session session) throws NotesException{
 		Database db = session.getDatabase(StringCache.EMPTY, Const.WEBSOCKET_PATH);
@@ -242,12 +292,22 @@ public class ApplyStatus extends NotesOperation {
 
 
 
+	/**
+	 * Gets the user id.
+	 *
+	 * @return the user id
+	 */
 	public String getUserId() {
 		return user.getUserId();
 	}
 
 
 
+	/**
+	 * Gets the session id.
+	 *
+	 * @return the session id
+	 */
 	public String getSessionId() {
 		return this.user.getSessionId();
 	}
@@ -255,6 +315,11 @@ public class ApplyStatus extends NotesOperation {
 
 
 
+	/**
+	 * Gets the status.
+	 *
+	 * @return the status
+	 */
 	public String getStatus() {
 		return this.user.getStatus();
 	}

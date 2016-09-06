@@ -28,9 +28,31 @@ import com.ibm.xsp.application.events.SessionListener;
 import com.tc.utils.XSPUtils;
 import com.tc.websocket.Const;
 
+
+
+
+// TODO: Auto-generated Javadoc
+/**
+ * The listener interface for receiving socketSession events.
+ * The class that is interested in processing a socketSession
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addSocketSessionListener<code> method. When
+ * the socketSession event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see SocketSessionEvent
+ */
 public class SocketSessionListener implements SessionListener {
+	
+	/** The log. */
 	private static Logger LOG = Logger.getLogger(SocketSessionListener.class.getName());
 
+
+
+	/* (non-Javadoc)
+	 * @see com.ibm.xsp.application.events.SessionListener#sessionCreated(com.ibm.xsp.application.ApplicationEx, javax.servlet.http.HttpSessionEvent)
+	 */
 	@Override
 	public void sessionCreated(ApplicationEx app, HttpSessionEvent event) {
 		LOG.log(Level.INFO,"***sessionCreated***");
@@ -42,6 +64,11 @@ public class SocketSessionListener implements SessionListener {
 		}
 	}
 
+
+
+	/* (non-Javadoc)
+	 * @see com.ibm.xsp.application.events.SessionListener#sessionDestroyed(com.ibm.xsp.application.ApplicationEx, javax.servlet.http.HttpSessionEvent)
+	 */
 	@Override
 	public void sessionDestroyed(ApplicationEx app, HttpSessionEvent event) {
 		LOG.log(Level.INFO,"***sessionDestroyed***");	

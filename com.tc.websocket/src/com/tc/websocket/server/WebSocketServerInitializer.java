@@ -38,29 +38,43 @@ import com.tc.websocket.ISSLFactory;
 import com.tc.websocket.server.handler.ProxyFrontendHandler;
 import com.tc.websocket.server.pipeline.IPipelineBuilder;
 
+
+// TODO: Auto-generated Javadoc
 /**
+ * The Class WebSocketServerInitializer.
  */
 public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel> {
 
+	/** The guicer. */
 	@Inject
 	private IGuicer guicer;
 	
+	/** The factory. */
 	@Inject
 	ISSLFactory factory;
 	
+	/** The websocket builder. */
 	@Inject
 	@Named(Const.GUICE_WEBSOCKET_PIPELINE)
 	private IPipelineBuilder websocketBuilder;
 	
+	/** The redirect builder. */
 	@Inject
 	@Named(Const.GUICE_REDIRECT_PIPELINE)
 	private IPipelineBuilder redirectBuilder;	
 
+	/**
+	 * Instantiates a new web socket server initializer.
+	 */
 	public WebSocketServerInitializer() {
 
 	}
 
 
+	
+	/* (non-Javadoc)
+	 * @see io.netty.channel.ChannelInitializer#initChannel(io.netty.channel.Channel)
+	 */
 	@Override
 	public void initChannel(SocketChannel ch) throws Exception {
 

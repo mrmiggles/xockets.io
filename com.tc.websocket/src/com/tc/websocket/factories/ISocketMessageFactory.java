@@ -24,11 +24,28 @@ import lotus.domino.ViewEntryCollection;
 import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.xpage.profiler.Stopwatch;
 
+
+// TODO: Auto-generated Javadoc
+/**
+ * A factory for creating ISocketMessage objects.
+ */
 public interface ISocketMessageFactory {
 	
+	/**
+	 * Builds the messages.
+	 *
+	 * @param col the col
+	 * @return the list
+	 */
 	@Stopwatch
 	public abstract List<SocketMessage> buildMessages(ViewEntryCollection col);
 
+	/**
+	 * Builds the message.
+	 *
+	 * @param doc the doc
+	 * @return the socket message
+	 */
 	@Stopwatch
 	public abstract SocketMessage buildMessage(Document doc);
 
