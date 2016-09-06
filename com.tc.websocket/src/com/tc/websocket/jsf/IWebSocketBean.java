@@ -297,4 +297,15 @@ public interface IWebSocketBean {
 	 */
 	public void removeIntervaled(String source);
 	
+	
+	
+	/**
+	 * Register bean with scripts.
+	 * Make an object available to executing scripts on the server
+	 * Note:  You are responsible for creating a name/key that will not collide with other scripts
+	 * @param key the key
+	 * @param bean the bean
+	 */
+	public void addToScriptScope(String key, Object bean);
+	
 }

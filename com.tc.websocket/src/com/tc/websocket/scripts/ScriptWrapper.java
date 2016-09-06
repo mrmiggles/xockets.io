@@ -100,6 +100,11 @@ public class ScriptWrapper extends Script {
 	
 	
 	
+	/**
+	 * Update interval.
+	 *
+	 * @param interval the interval
+	 */
 	public void updateInterval(int interval){
 		if(!this.script.isIntervaled()){
 			throw new IllegalArgumentException("setInterval can only be called on intervaled scripts.");
@@ -108,6 +113,9 @@ public class ScriptWrapper extends Script {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.scripts.Script#getInterval()
+	 */
 	public int getInterval(){
 		return this.script.getInterval();
 	}

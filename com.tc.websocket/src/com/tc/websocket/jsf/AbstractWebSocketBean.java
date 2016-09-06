@@ -40,6 +40,7 @@ import com.tc.websocket.runners.ApplyStatus;
 import com.tc.websocket.runners.SendMessage;
 import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.scripts.Script;
+import com.tc.websocket.scripts.ScriptCache;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
@@ -457,7 +458,6 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	@Override
 	public void removeIntervaled(final String source) {
 		TaskRunner.getInstance().add(new Runnable(){
-
 			@Override
 			public void run() {
 				Script script = Script.newScript(source)
@@ -465,11 +465,15 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 				.function(Const.ON_INTERVAL);
 				server.removeIntervaled(script);
 			}
-			
-			
 		});
 	}
 	
-	
+
+	/* (non-Javadoc)
+	 * @see com.tc.websocket.jsf.IWebSocketBean#addToScriptScope(java.lang.String, java.lang.Object)
+	 */
+	public void addToScriptScope(String name, Object bean){
+		ScriptCache.insta().put(name, bean);
+	}
 
 }

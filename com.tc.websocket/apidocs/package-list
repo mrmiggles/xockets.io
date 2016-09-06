@@ -1,0 +1,14 @@
+com.tc.websocket
+com.tc.websocket.factories
+com.tc.websocket.filter
+com.tc.websocket.guice
+com.tc.websocket.jsf
+com.tc.websocket.library
+com.tc.websocket.rest
+com.tc.websocket.runners
+com.tc.websocket.scripts
+com.tc.websocket.server
+com.tc.websocket.server.handler
+com.tc.websocket.server.pipeline
+com.tc.websocket.valueobjects
+com.tc.websocket.valueobjects.structures
