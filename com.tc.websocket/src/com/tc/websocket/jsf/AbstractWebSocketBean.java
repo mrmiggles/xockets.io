@@ -250,8 +250,7 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 				public void run() {
 					Script script = Script.newScript(source)
 							.source(source)
-							.function(function)
-							.creds("chatapp", "password");//testing.
+							.function(function);
 					
 					script.recompile(true);
 					server.addEventObserver(script);

@@ -17,7 +17,7 @@ public class StopWatch {
 		this.label = label;
 		this.start();
 	}
-	
+	 
 	public void start(){
 		start = new Date();
 	}
