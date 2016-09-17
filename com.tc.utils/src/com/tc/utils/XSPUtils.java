@@ -117,6 +117,10 @@ public class XSPUtils {
 	public static HttpServletResponse getResponse(){
 		return (HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse();
 	}
+	
+	public static String getParam(String key){
+		return getRequest().getParameter(key);
+	}
 
 
 

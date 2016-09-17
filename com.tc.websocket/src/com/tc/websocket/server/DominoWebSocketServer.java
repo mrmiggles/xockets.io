@@ -444,11 +444,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	 */
 	@Override
 	public void onClose(ContextWrapper conn) {
-		this.closeWithDelay(conn, 10);
+		this.closeWithDelay(conn, 1);
 	}
 
-
-	
 
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.server.IDominoWebSocketServer#closeWithDelay(com.tc.websocket.server.ContextWrapper, int)
@@ -460,9 +458,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		if(user!=null && ServerInfo.getInstance().isCurrentServer(user.getHost())){
 			user.setGoingOffline(true);
 			TaskRunner.getInstance().add(new ApplyStatus(user), delay);//mark user as offline
-			
-			
-			
+
 			TaskRunner.getInstance().add(new Runnable(){
 
 				@Override
@@ -487,7 +483,24 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		return b;
 	}
 	
-
+	public boolean onMessage(SocketMessage msg){
+		boolean b = false;
+		IUser user = VALID_USERS.get(msg.getFrom());
+		if(msg.hasMultipleTargets()){
+			msg.addTarget(msg.getTo());
+			List<String> targets = new ArrayList<String>();
+			targets.addAll(msg.getTargets());
+			for(String target : targets){
+				msg.setTo(target);
+				msg.getTargets().clear();
+				this.processMessage(user, msg, JSONUtils.toJson(msg));
+			}
+		}else{
+			this.processMessage(user, msg, JSONUtils.toJson(msg));
+		}
+		//this.notifyEventObservers(Const.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
+		return b;
+	}
 	
 
 	/* (non-Javadoc)
@@ -600,10 +613,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		}
 
 
-
-
 		//check to see if there's any messages waiting on this event for the sender.
-
 		EventQueueProcessor sendEvent = guicer.createObject(EventQueueProcessor.class);
 		sendEvent.setEventQueue(Const.VIEW_ON_SEND_MSG);
 		sendEvent.setTarget(msg.getFrom());
@@ -1273,6 +1283,10 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	public Collection<Script> getIntervaled() {
 		return INTERVALED;
 	}
+	
+	public UriUserMap getUriUserMap(){
+		return URI_MAP;
+	}
 
-
+	
 }

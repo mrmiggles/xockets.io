@@ -251,6 +251,8 @@ public interface IUser extends IUri {
 	 */
 	public Collection<ContextWrapper> findConnection(RoutingPath path);
 	
+	public ContextWrapper findConnection(String uri);
+	
 	/**
 	 * Gets the connections.
 	 *

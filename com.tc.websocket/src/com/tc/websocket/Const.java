@@ -330,6 +330,8 @@ public class Const {
 	/** The Constant VAR_SESSION. */
 	public static final String VAR_SESSION="session";
 	
+	public static final String VAR_DB="db";
+	
 	/** The Constant VAR_WEBSOCKET_CLIENT. */
 	public static final String VAR_WEBSOCKET_CLIENT="websocketClient";
 	
@@ -344,6 +346,14 @@ public class Const {
 	
 	/** The Constant VAR_SCRIPT. */
 	public static final String VAR_SCRIPT="script";
+	
+	public static final String VAR_B64="b64Utils";
+	
+	public static final String VAR_STRUTILS="strUtils";
+	
+	public static final String VAR_COLUTILS="colUtils";
+	
+	public static final String VAR_STOPWATCH="stopWatch";
 	
 	
 	/** The Constant SOURCE_URI. */

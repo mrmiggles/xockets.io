@@ -156,6 +156,12 @@ public class Base64{
 
 /* ********  P U B L I C   F I E L D S  ******** */
 
+	
+	public static void main(String[] args) throws IOException{
+		String str="W3siaWQiOm51bGwsImZyb20iOiJDTj1NYXJrIEFtYmxlci9PVT1JVC9PVT1NSUEvTz1SQ0wiLCJ0byI6Ii9kaXNjdXNzLm5zZi90b3BpYy9DQUYyMDQyNTAwNUFBRUQxODUyNTgwMjkwMDAzNjdFQiIsInRhcmdldHMiOltdLCJ0ZXh0IjoiUEhBZ1pHbHlQU0pzZEhJaVBuZHBiR3dnZEdocGN5QjNiM0pyUHp3dmNENEsiLCJkYXRhIjp7fSwiZGF0ZSI6MTQ3MzUyMDkzMTA3NSwiZHVyYWJsZSI6ZmFsc2UsInBlcnNpc3RlZCI6ZmFsc2UsInZhbGlkIjp0cnVlfSx7ImlkIjpudWxsLCJmcm9tIjoiQ049TWFyayBBbWJsZXIvT1U9SVQvT1U9TUlBL089UkNMIiwidG8iOiIvZGlzY3Vzcy5uc2YvdG9waWMvQ0FGMjA0MjUwMDVBQUVEMTg1MjU4MDI5MDAwMzY3RUIiLCJ0YXJnZXRzIjpbXSwidGV4dCI6IlBIQWdaR2x5UFNKc2RISWlQbmxsY3k0dUxpQkpJR1JwWkNCd1pYSnphWE4wUEM5d1Bnbz0iLCJkYXRhIjp7fSwiZGF0ZSI6MTQ3MzUyMDkzOTEwNiwiZHVyYWJsZSI6ZmFsc2UsInBlcnNpc3RlZCI6ZmFsc2UsInZhbGlkIjp0cnVlfSx7ImlkIjpudWxsLCJmcm9tIjoiQ049TWFyayBBbWJsZXIvT1U9SVQvT1U9TUlBL089UkNMIiwidG8iOiIvZGlzY3Vzcy5uc2YvdG9waWMvQ0FGMjA0MjUwMDVBQUVEMTg1MjU4MDI5MDAwMzY3RUIiLCJ0YXJnZXRzIjpbXSwidGV4dCI6IlBIQWdaR2x5UFNKc2RISWlQanh6Y0dGdUlITjBlV3hsUFNKaVlXTnJaM0p2ZFc1a0xXTnZiRzl5T2lORVFVRTFNakE3SWo1b2IzY2dZV0p2ZFhRZ2JtOTNQQzl6Y0dGdVBqd3ZjRDRLIiwiZGF0YSI6e30sImRhdGUiOjE0NzM1MjA5NDU2ODUsImR1cmFibGUiOmZhbHNlLCJwZXJzaXN0ZWQiOmZhbHNlLCJ2YWxpZCI6dHJ1ZX0seyJpZCI6bnVsbCwiZnJvbSI6IkNOPU1hcmsgQW1ibGVyL09VPUlUL09VPU1JQS9PPVJDTCIsInRvIjoiL2Rpc2N1c3MubnNmL3RvcGljL0NBRjIwNDI1MDA1QUFFRDE4NTI1ODAyOTAwMDM2N0VCIiwidGFyZ2V0cyI6W10sInRleHQiOiJQSEFnWkdseVBTSnNkSElpUG1GbllXbHVQend2Y0Q0SyIsImRhdGEiOnt9LCJkYXRlIjoxNDczNTIwOTYwMTUwLCJkdXJhYmxlIjpmYWxzZSwicGVyc2lzdGVkIjpmYWxzZSwidmFsaWQiOnRydWV9LHsiaWQiOm51bGwsImZyb20iOiJDTj1NYXJrIEFtYmxlci9PVT1JVC9PVT1NSUEvTz1SQ0wiLCJ0byI6Ii9kaXNjdXNzLm5zZi90b3BpYy9DQUYyMDQyNTAwNUFBRUQxODUyNTgwMjkwMDAzNjdFQiIsInRhcmdldHMiOltdLCJ0ZXh0IjoiUEhSaFlteGxJR0p2Y21SbGNqMGlNU0lnWkdseVBTSnNkSElpSUhOMGVXeGxQU0ozYVdSMGFEb2dOVEF3Y0hnN0lqNEtDVHgwWW05a2VUNEtDUWs4ZEhJK0Nna0pDVHgwWkNCemRIbHNaVDBpZDJsa2RHZzZJREkxTUhCNE95SStkR1Z6ZER3dmRHUStDZ2tKQ1R4MFpDQnpkSGxzWlQwaWQybGtkR2c2SURJMU1IQjRPeUkrZEdWemREd3ZkR1ErQ2drSlBDOTBjajRLQ1FrOGRISStDZ2tKQ1R4MFpDQnpkSGxzWlQwaWQybGtkR2c2SURJMU1IQjRPeUkrSm01aWMzQTdQQzkwWkQ0S0NRa0pQSFJrSUhOMGVXeGxQU0ozYVdSMGFEb2dNalV3Y0hnN0lqNG1ibUp6Y0RzOEwzUmtQZ29KQ1R3dmRISStDZ2tKUEhSeVBnb0pDUWs4ZEdRZ2MzUjViR1U5SW5kcFpIUm9PaUF5TlRCd2VEc2lQblJsYzNROEwzUmtQZ29KQ1FrOGRHUWdjM1I1YkdVOUluZHBaSFJvT2lBeU5UQndlRHNpUG5SbGMzUThMM1JrUGdvSkNUd3ZkSEkrQ2drOEwzUmliMlI1UGdvOEwzUmhZbXhsUGdvS1BIQWdaR2x5UFNKc2RISWlQaVp1WW5Od096d3ZjRDRLIiwiZGF0YSI6e30sImRhdGUiOjE0NzM1MjA5Nzc5OTksImR1cmFibGUiOmZhbHNlLCJwZXJzaXN0ZWQiOmZhbHNlLCJ2YWxpZCI6dHJ1ZX0seyJpZCI6bnVsbCwiZnJvbSI6IkNOPU1hcmsgQW1ibGVyL09VPUlUL09VPU1JQS9PPVJDTCIsInRvIjoiL2Rpc2N1c3MubnNmL3RvcGljL0NBRjIwNDI1MDA1QUFFRDE4NTI1ODAyOTAwMDM2N0VCIiwidGFyZ2V0cyI6W10sInRleHQiOiJQSEFnWkdseVBTSnNkSElpUG5SbGMzUThMM0ErQ2c9PSIsImRhdGEiOnt9LCJkYXRlIjoxNDczNTQyODI0OTg3LCJkdXJhYmxlIjpmYWxzZSwicGVyc2lzdGVkIjpmYWxzZSwidmFsaWQiOnRydWV9XQ";
+		System.out.println(Base64.decodeToString(str));
+	}
+	
 
     /** No options specified. Value is zero. */
     public final static int NO_OPTIONS = 0;
@@ -446,6 +452,11 @@ public class Base64{
     /** Defeats instantiation. */
     private Base64(){}
 
+    public static final Base64 b64 = new Base64();
+    
+    public static Base64 insta(){
+    	return b64;
+    }
 
 
 
@@ -706,6 +717,10 @@ public class Base64{
 
 
 
+    public static String encode(String source){
+    	return new String(Base64.encodeBytes(source.getBytes()));
+    }
+    
     /**
      * Encodes a byte array into Base64 notation.
      * Does not GZip-compress data.
@@ -1220,6 +1235,10 @@ public class Base64{
         return decode( s, NO_OPTIONS );
     }
 
+    
+    public static String decodeToString( String s ) throws java.io.IOException {
+        return new String(decode( s, NO_OPTIONS ));
+    }
 
 
     /**

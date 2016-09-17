@@ -18,9 +18,9 @@
 package com.tc.websocket.valueobjects;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -48,7 +48,7 @@ public class SocketMessage {
 	private String to;
 	
 	/** The targets. */
-	private List<String> targets= new ArrayList<String>();
+	private Collection<String> targets= new ArrayList<String>();
 	
 	/** The text. */
 	protected String text;
@@ -412,7 +412,7 @@ public class SocketMessage {
 	 *
 	 * @return the targets
 	 */
-	public List<String> getTargets() {
+	public Collection<String> getTargets() {
 		return targets;
 	}
 
@@ -421,8 +421,9 @@ public class SocketMessage {
 	 *
 	 * @param targets the new targets
 	 */
-	public void setTargets(List<String> targets) {
-		this.targets = targets;
+	public void setTargets(Collection<String> targets) {
+		this.targets.clear();
+		this.targets.addAll(targets);
 	}
 	
 	/**

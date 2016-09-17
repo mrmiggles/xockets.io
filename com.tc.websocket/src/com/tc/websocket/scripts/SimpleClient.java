@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 import com.tc.utils.JSONUtils;
 import com.tc.websocket.server.IDominoWebSocketServer;
+import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 
 
@@ -54,7 +55,7 @@ public class SimpleClient {
 	 */
 	public void sendMsg(SocketMessage msg){
 		msg.setFrom(this.script.getSource());
-		this.send(msg);;
+		this.send(msg);
 	}
 	
 	/**
@@ -87,5 +88,12 @@ public class SimpleClient {
 		SocketMessage msg = JSONUtils.toObject(json, SocketMessage.class);
 		this.send(msg.from(this.script.getSource()));
 	}
+	
+	
+	public IUser getUser(String userId){
+		return server.resolveUser(userId);
+	}
 
+	
+	
 }

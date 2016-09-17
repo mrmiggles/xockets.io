@@ -205,7 +205,8 @@ public class DxlUtils {
 			String noteId = nc.getFirstNoteID();
 			while(!"".equals(noteId)){
 				docLib = db.getDocumentByID(noteId);
-				if(docLib!=null && resourceName.equals(docLib.getItemValueString("$Title"))){
+				String title = docLib.getItemValueString("$Title");
+				if(docLib!=null && resourceName.equals(title)){
 					byteMe = extractData(docLib,SSJS_LIB_START,SSJS_LIB_END);
 
 					//now lets drop the first 50 bytes, and the last byte (seems to have an illegal character in there).

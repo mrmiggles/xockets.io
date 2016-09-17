@@ -527,7 +527,11 @@ public class User implements IUser {
 		//add the URI paths including userId
 		List<String> list = new ArrayList<String>();
 		for(String str : vec){
-			str = str + "/" + this.getUserId();
+			if(str.equals(StringCache.FORWARD_SLASH)){
+				str = str + this.getUserId();
+			}else{
+				str = str + StringCache.FORWARD_SLASH + this.getUserId();
+			}
 			list.add(str);
 		}
 		
@@ -592,6 +596,18 @@ public class User implements IUser {
 			}
 		}
 		return false;
+	}
+
+
+
+	@Override
+	public ContextWrapper findConnection(String uri) {
+		ContextWrapper wrapper = null;
+		Collection<ContextWrapper> col = this.findConnection(new RoutingPath(uri));
+		if(col!=null && !col.isEmpty()){
+			wrapper = col.iterator().next(); // just return the first;
+		}
+		return wrapper;
 	}
 	
 	

@@ -41,9 +41,11 @@ import com.tc.websocket.runners.SendMessage;
 import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.scripts.Script;
 import com.tc.websocket.scripts.ScriptCache;
+import com.tc.websocket.server.ContextWrapper;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
+import com.tc.websocket.valueobjects.structures.UriUserMap;
 
 
 // TODO: Auto-generated Javadoc
@@ -141,7 +143,23 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 		}
 		return list;
 	}
-
+	
+	
+	@Override
+	public List<SelectItem> getUsersByUri(String uri) throws NotesException{
+		UriUserMap map = server.getUriUserMap();
+		List<SelectItem> list = new ArrayList<SelectItem>();
+		for(IUser user : map.get(uri)){
+			ContextWrapper wrapper = user.findConnection(uri);
+			if(wrapper!=null && wrapper.isOpen()){
+				Name name = XSPUtils.session().createName(user.getUserId());
+				SelectItem select = new SelectItem(user.getUserId(),name.getCommon());
+				list.add(select);
+				name.recycle();
+			}
+		}
+		return list;
+	}
 
 
 	/**
@@ -250,8 +268,7 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 				public void run() {
 					Script script = Script.newScript(source)
 							.source(source)
-							.function(function)
-							.creds("chatapp", "password");//testing.
+							.function(function);
 					
 					script.recompile(true);
 					server.addEventObserver(script);
@@ -472,8 +489,12 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.jsf.IWebSocketBean#addToScriptScope(java.lang.String, java.lang.Object)
 	 */
-	public void addToScriptScope(String name, Object bean){
-		ScriptCache.insta().put(name, bean);
+	public void addToScriptScope(String key, Object bean){
+		ScriptCache.insta().put(key, bean);
+	}
+	
+	public SocketMessage createSocketMessage(){
+		return new SocketMessage();
 	}
 
 }

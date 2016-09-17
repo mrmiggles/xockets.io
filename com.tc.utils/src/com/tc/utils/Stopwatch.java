@@ -27,6 +27,18 @@ public class StopWatch {
 	}
 	
 	
+	public long elapsedSeconds(){
+		return this.elapsedTime(TimeUnit.SECONDS);
+	}
+	
+	public long elapsedMilli(){
+		return this.elapsedTime(TimeUnit.MILLISECONDS);
+	}
+	
+	public long elapsedMin(){
+		return this.elapsedTime(TimeUnit.MINUTES);
+	}
+	
 	public long elapsedTime(TimeUnit timeUnit){
 		
 		if(end==null) this.end();
