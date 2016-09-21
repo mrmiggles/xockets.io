@@ -27,3 +27,5 @@ which are available from Apache at http://commons.apache.org/, and which is unde
 6. The product contains libraries/code from The Netty Project https://github.com/netty licensed using Apache 2.0 (primary engine for websocket / networking)
 
 7. The product contains libraries from jzlib http://www.jcraft.com/jzlib/ under a BSD-style license (used for websocket extension / compression)
+
+8. The product contains the imgscalr library from Ryad Kalla under the Apache 2.0 license which can be found here https://github.com/rkalla/imgscalr
