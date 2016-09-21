@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,6 +82,10 @@ public class XSPUtils {
 
 	public static Object getBean(String objectName){
 		return getFacesObject(objectName);
+	}
+	
+	public static String uuid(){
+		return UUID.randomUUID().toString();
 	}
 
 
@@ -224,7 +229,7 @@ public class XSPUtils {
 		} catch (NotesException e) {
 			logger.log(Level.SEVERE,null, e);
 		}
-		return filePath.replace("\\", "/");
+		return StringCache.FORWARD_SLASH + filePath.replace(StringCache.BACK_SLASH, StringCache.FORWARD_SLASH);
 
 	}
 
@@ -339,7 +344,7 @@ public class XSPUtils {
 
 	public static void goHome(){
 		try {
-			FacesContext.getCurrentInstance().getExternalContext().redirect("/" + XSPUtils.webPath());
+			FacesContext.getCurrentInstance().getExternalContext().redirect(XSPUtils.webPath());
 		} catch (IOException e) {
 			logger.log(Level.SEVERE,null, e);
 		}

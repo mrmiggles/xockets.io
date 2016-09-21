@@ -725,8 +725,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		Database db = null;
 		try{
 			String dbPath = path.getDbPath();
-			int start = dbPath.indexOf('/');
-			if(start==0){
+			if(dbPath.startsWith(StringCache.FORWARD_SLASH)){
 				dbPath = dbPath.substring(1,dbPath.length());
 			}
 

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Imgscalr
+Bundle-SymbolicName: imgscalr
+Bundle-Version: 4.3.0
+Bundle-ClassPath: imgscalr-lib-4.3-SNAPSHOT.jar
+Export-Package: org.imgscalr;version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

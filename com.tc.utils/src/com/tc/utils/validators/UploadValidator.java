@@ -60,7 +60,7 @@ public class UploadValidator implements Validator {
 		
 		
 		if(ufile.getServerFile().length() > Long.parseLong(maxSize.getValue())){
-			String msg = attrError!=null ? attrError.getValue().replace("{fileName}", ufile.getClientFileName()) : ufile.getClientFileName() + " " + maxSize.getValue() +  " is too large.";
+			String msg = attrError!=null ? attrError.getValue().replace("{fileName}", ufile.getClientFileName()) : ufile.getClientFileName() + " " + ufile.getServerFile().length() +  " is too large.";
 			ufile.getServerFile().delete(); //delete the file.
 			XSPUtils.throwValidatorException(msg);
 			return;
