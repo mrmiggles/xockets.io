@@ -5,6 +5,13 @@ public class NameValue<T> {
 	private String name;
 	private T value;
 	
+	public NameValue(String name, T value){
+		this.name = name;
+		this.value = value;
+	}
+	
+	public NameValue(){}
+	
 	public String getName() {
 		return name;
 	}

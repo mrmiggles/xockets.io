@@ -355,6 +355,12 @@ public class Const {
 	
 	public static final String VAR_STOPWATCH="stopWatch";
 	
+	public static final String VAR_IOUTILS = "ioUtils";
+	
+	public static final String VAR_FILEUTILS="fileUtils";
+	
+	public static final String VAR_ATTACHUTILS="attachUtils";
+	
 	
 	/** The Constant SOURCE_URI. */
 	//jsf object keys

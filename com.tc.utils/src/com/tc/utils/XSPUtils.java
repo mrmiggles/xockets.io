@@ -18,6 +18,7 @@
 package com.tc.utils;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -80,6 +81,11 @@ public class XSPUtils {
 		}
 	}
 
+	public static String getXpagesTempDir(){
+		File dir = (File) XSPUtils.appScope().get("javax.servlet.context.tempdir");
+		return dir.getAbsolutePath().replace("\\", "/");
+	}
+	
 	public static Object getBean(String objectName){
 		return getFacesObject(objectName);
 	}

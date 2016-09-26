@@ -30,6 +30,7 @@ import lotus.domino.NotesException;
 import lotus.domino.Session;
 
 import com.google.inject.Inject;
+import com.tc.utils.NameValue;
 import com.tc.utils.StringCache;
 import com.tc.utils.XSPUtils;
 import com.tc.websocket.Config;
@@ -489,11 +490,28 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.jsf.IWebSocketBean#addToScriptScope(java.lang.String, java.lang.Object)
 	 */
-	public void addToScriptScope(String key, Object bean){
-		ScriptCache.insta().put(key, bean);
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> void addToScriptScope(String key, T bean){
+		List<NameValue> list = (List<NameValue>) ScriptCache.insta().get(XSPUtils.webPath());
+		if(list == null){
+			list = new ArrayList<NameValue>();
+		}
+		NameValue nv = new NameValue(key,bean);
+		if(!list.contains(nv)){
+			list.add(nv);
+		}
+		
+		ScriptCache.insta().put(XSPUtils.webPath(), list);
+	}
+
+	
+	
+	@Deprecated
+	public SocketMessage createSocketMessage(){
+		return new SocketMessage();
 	}
 	
-	public SocketMessage createSocketMessage(){
+	public SocketMessage createMessage(){
 		return new SocketMessage();
 	}
 

@@ -307,7 +307,7 @@ public interface IWebSocketBean {
 	 * @param key the key
 	 * @param bean the bean
 	 */
-	public void addToScriptScope(String key, Object bean);
+	public <T> void addToScriptScope(String key, T bean);
 	
 	
 	public SocketMessage createSocketMessage();

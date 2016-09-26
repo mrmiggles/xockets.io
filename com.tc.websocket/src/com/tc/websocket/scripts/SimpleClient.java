@@ -6,6 +6,7 @@ package com.tc.websocket.scripts;
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 import com.tc.utils.JSONUtils;
+import com.tc.utils.StrUtils;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
@@ -54,18 +55,23 @@ public class SimpleClient {
 	 * @param msg the msg
 	 */
 	public void sendMsg(SocketMessage msg){
-		msg.setFrom(this.script.getSource());
 		this.send(msg);
 	}
+	
+	
+	public void sendMessage(SocketMessage msg){
+		this.sendMsg(msg);
+	}
+	
 	
 	/**
 	 * Send.
 	 *
 	 * @param socketMessage the socket message
 	 */
-	public void send(SocketMessage socketMessage){
-		socketMessage.setFrom(this.script.getSource());
-		server.onMessage(socketMessage.getTo(),JSONUtils.toJson(socketMessage));
+	public void send(SocketMessage msg){
+		if(StrUtils.isEmpty(msg.getFrom())) msg.setFrom(this.script.getSource());
+		server.onMessage(msg.getTo(),JSONUtils.toJson(msg));
 	}
 	
 	/**

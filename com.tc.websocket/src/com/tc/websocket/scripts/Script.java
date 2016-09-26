@@ -33,15 +33,18 @@ import lotus.domino.NotesException;
 import lotus.domino.Session;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 import com.tc.guice.domino.module.SessionFactory;
+import com.tc.utils.AttachUtils;
 import com.tc.utils.Base64;
 import com.tc.utils.BundleUtils;
 import com.tc.utils.ColUtils;
 import com.tc.utils.DateUtils;
 import com.tc.utils.DxlUtils;
+import com.tc.utils.NameValue;
 import com.tc.utils.StopWatch;
 import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
@@ -598,6 +601,7 @@ public abstract class Script implements Runnable {
 	 * @param session the session
 	 * @return the common vars
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map<String,Object> getCommonVars(Session session){
 		Map<String,Object> vars = new HashMap<String,Object>();
 		vars.put(Const.FUNCTION, this.getFunction());
@@ -611,14 +615,25 @@ public abstract class Script implements Runnable {
 		vars.put(Const.VAR_STRUTILS,StrUtils.insta());
 		vars.put(Const.VAR_COLUTILS, ColUtils.insta());
 		vars.put(Const.VAR_STOPWATCH, new StopWatch());
-		
-		
+		vars.put(Const.VAR_FILEUTILS, new FileUtils());
+		vars.put(Const.VAR_IOUTILS,new IOUtils());
+		vars.put(Const.VAR_ATTACHUTILS, AttachUtils.insta());
+
+
+		//add user objects to available variables.
+		List<NameValue> added = (List<NameValue>) ScriptCache.insta().get("/" + this.dbPath());
+		if(added!=null && added.isEmpty() == false){
+			for( NameValue nv : added){
+				vars.put(nv.getName(), nv.getValue());
+			}
+		}
+
 		try{
 			vars.put(Const.VAR_DB, session.getDatabase("", this.dbPath()));
 		}catch(NotesException n){
 			LOG.log(Level.SEVERE, null, n);
 		}
-		
+
 		return vars;
 	}
 

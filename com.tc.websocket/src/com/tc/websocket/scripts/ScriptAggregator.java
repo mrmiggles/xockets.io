@@ -2,8 +2,6 @@ package com.tc.websocket.scripts;
 
 import java.io.IOException;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import lotus.domino.Database;
@@ -12,7 +10,7 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 
 import com.tc.utils.DxlUtils;
-import com.tc.utils.JSONUtils;
+import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
 
 public class ScriptAggregator {
@@ -20,17 +18,12 @@ public class ScriptAggregator {
 	private StringBuilder sb = new StringBuilder();
 	private Set<String> dependencies = new LinkedHashSet<String>();
 	private Database db;
-	private static final String IMPORT_PREFIX = "///{\"import\":[";
+	private static final String IMPORT_PREFIX = "///use ";
 	public ScriptAggregator(Database db){
 		this.db = db;
 	}
 	
 	public ScriptAggregator(){}
-	
-	public static void main(String[] args) throws JsonParseException, JsonMappingException, IOException{
-		String fullScript = new ScriptAggregator().build("/blah");
-		System.out.println(fullScript);
-	}
 	
 	public String build(String script) throws JsonParseException, JsonMappingException, IOException{
 		
@@ -74,19 +67,14 @@ public class ScriptAggregator {
 		return script;
 	}
 	
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void resolveDependencies(String script) throws JsonParseException, JsonMappingException, IOException{
-		
-		
 		String[] parsed = script.split("\n");
-		
-		
 		for(String str : parsed){
-			if(str.indexOf("///{")!=-1){
-				str = str.replace("///", "");
-				Map map = JSONUtils.toMap(str);
-				for(String path : (List<String>)map.get("import")){
+			if(str.contains(IMPORT_PREFIX)){
+				str = StrUtils.rightBack(str, IMPORT_PREFIX);
+				String[] references = str.split(StringCache.COMMA);
+				for(String path : references){
+					path = path.trim();
 					if(!dependencies.contains(path)){
 						dependencies.add(path);
 						String newScript = this.resolveScript(path);
