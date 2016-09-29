@@ -3,15 +3,15 @@ package com.tc.utils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import java.util.Vector;
 
 import lotus.domino.Document;
 import lotus.domino.EmbeddedObject;
 import lotus.domino.NotesException;
 import lotus.domino.RichTextItem;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 public class AttachUtils {
 	
@@ -26,8 +26,13 @@ public class AttachUtils {
 	@SuppressWarnings("unchecked")
 	public static void removeAll(Document doc) throws NotesException{
 		boolean save = false;
-		for(EmbeddedObject eo : (Collection<EmbeddedObject>)doc.getEmbeddedObjects()){
-			if(eo.getType() == EmbeddedObject.EMBED_ATTACHMENT){
+		
+		Vector<String> attachments = doc.getParentDatabase().getParent().evaluate("@AttachmentNames", doc);
+		
+		
+		for(String attach : attachments){
+			EmbeddedObject eo = doc.getAttachment(attach);
+			if(eo!=null && eo.getType() == EmbeddedObject.EMBED_ATTACHMENT){
 				eo.remove();
 				save = true;
 			}//end if
@@ -65,7 +70,9 @@ public class AttachUtils {
 		file.delete();
 	}
 	
-	
+	public static void attach(File file, Document doc, String field, String ext) throws IOException, NotesException{
+		attach(file, doc, field);
+	}
 	
 	public static RichTextItem getRichText(Document doc, String field) throws NotesException{
 		RichTextItem rtitem = null;

@@ -371,6 +371,12 @@ public class SocketMessage {
 		return this;
 	}
 	
+	@JsonIgnore
+	public SocketMessage id(String id){
+		this.setId(id);
+		return this;
+	}
+	
 	/**
 	 * Data.
 	 *

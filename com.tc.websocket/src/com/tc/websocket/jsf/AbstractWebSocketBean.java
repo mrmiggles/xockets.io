@@ -19,6 +19,7 @@ package com.tc.websocket.jsf;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -491,12 +492,17 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	 * @see com.tc.websocket.jsf.IWebSocketBean#addToScriptScope(java.lang.String, java.lang.Object)
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> void addToScriptScope(String key, T bean){
+	public <T> void addToScriptScope(String var){
+		
+		T bean = (T) XSPUtils.appScope().get(var);
+		
+		if(bean == null)throw new IllegalArgumentException(var + " not found in application scope.");
+		
 		List<NameValue> list = (List<NameValue>) ScriptCache.insta().get(XSPUtils.webPath());
 		if(list == null){
 			list = new ArrayList<NameValue>();
 		}
-		NameValue nv = new NameValue(key,bean);
+		NameValue nv = new NameValue(var,bean);
 		if(!list.contains(nv)){
 			list.add(nv);
 		}
@@ -508,11 +514,11 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	
 	@Deprecated
 	public SocketMessage createSocketMessage(){
-		return new SocketMessage();
+		return this.createMessage();
 	}
 	
 	public SocketMessage createMessage(){
-		return new SocketMessage();
+		return new SocketMessage().id(UUID.randomUUID().toString());
 	}
 
 }

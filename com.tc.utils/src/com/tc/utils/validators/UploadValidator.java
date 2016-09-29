@@ -26,6 +26,7 @@ public class UploadValidator implements Validator {
 		String[] allowed = null;
 		
 		XspFileUpload fileUpload = (XspFileUpload) comp;
+	
 		
 		
 		//get a handle on the custom attributes.

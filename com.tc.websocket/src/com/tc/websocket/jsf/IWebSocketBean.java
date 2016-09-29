@@ -304,12 +304,17 @@ public interface IWebSocketBean {
 	/**
 	 * Make an object available to executing scripts on the server
 	 * Note:  You are responsible lifetime of the object and for creating a name/key that will not collide with other scripts
-	 * @param key the key
+	 * @param var the key
 	 * @param bean the bean
 	 */
-	public <T> void addToScriptScope(String key, T bean);
+	public <T> void addToScriptScope(String var);
 	
 	
+	@Deprecated
 	public SocketMessage createSocketMessage();
+	
+	
+	public SocketMessage createMessage();
+	
 	
 }

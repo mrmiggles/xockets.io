@@ -347,6 +347,12 @@ public class XSPUtils {
 		}
 		return;
 	}
+	
+	public static void redirect301(String url){
+		XSPUtils.getResponse().setStatus(301);
+		XSPUtils.getResponse().setHeader("Location", url);
+	}
+	
 
 	public static void goHome(){
 		try {
@@ -389,6 +395,18 @@ public class XSPUtils {
 		msg.setSummary(message);
 		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 		XSPUtils.context().addMessage(null, msg);
+	}
+	
+	public static void addWarning(String message){
+		addMessage(message, FacesMessage.SEVERITY_WARN);
+	}
+	
+	public static void addInfo(String message){
+		addMessage(message, FacesMessage.SEVERITY_INFO);
+	}
+	
+	public static void addError(String message){
+		addMessage(message, FacesMessage.SEVERITY_ERROR);
 	}
 
 	public static void addMessageToSession(String key, String message){
