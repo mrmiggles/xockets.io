@@ -76,5 +76,8 @@ public class SocketSessionListener implements SessionListener {
 			IWebSocketBean userMgr = (IWebSocketBean) XSPUtils.getBean(Const.WEBSOCKET_BEAN);
 			userMgr.removeCurrentUser();
 		}
+		//cleanup any stored session vars
+		System.out.println("removing sessiondata for " + event.getSession().getId());
+		Data.insta().remove(event.getSession().getId());
 	}
 }

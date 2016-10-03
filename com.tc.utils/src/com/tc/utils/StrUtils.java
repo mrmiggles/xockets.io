@@ -22,6 +22,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 
 
 public final class StrUtils {
@@ -67,7 +69,8 @@ public final class StrUtils {
     
     
     public static String removeHtml(String source){
-    	return source.replaceAll("<[^>]*>", StringCache.EMPTY).replaceAll("&nbsp;", StringCache.EMPTY);
+    	String scrubbed = source.replaceAll("<[^>]*>", StringCache.EMPTY).replaceAll("&nbsp;", StringCache.EMPTY);
+    	return StringEscapeUtils.unescapeHtml4(scrubbed);
     }
     
     private static final char[] COMPACT_CHARS = {'\r','\n','\r','\t'};

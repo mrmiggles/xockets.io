@@ -377,7 +377,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		//break out since the anonymous user was already added previously.
 		if(anonymousAdded){
-			//this.notifyEventObservers(Const.ON_OPEN, user);
 			return;
 		}
 
@@ -479,7 +478,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	 */
 	public boolean onMessage(String to, String json){
 		boolean b = this.send(to, json);
-		this.notifyEventObservers(Const.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
+		SocketMessage msg =  JSONUtils.toObject(json, SocketMessage.class);
+		IUser user = this.resolveUser(msg.getFrom());
+		this.notifyEventObservers(Const.ON_MESSAGE, msg, user);
 		return b;
 	}
 	
@@ -498,7 +499,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		}else{
 			this.processMessage(user, msg, JSONUtils.toJson(msg));
 		}
-		//this.notifyEventObservers(Const.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
 		return b;
 	}
 	
@@ -596,6 +596,15 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			throw new IllegalArgumentException("Invalid value in from. from must equal current user's Id " + user.getUserId() + " " + msg.getFrom());
 		}
 
+		//now lets process the onBeforeMessage observers after all the other validations.
+		this.notifyEventObserversSync(Const.ON_BEFORE_MESSAGE, msg, user);
+		
+		
+		//if the message is set to short circuit halt it's processing.
+		if(msg.isShortCircuit()){
+			return;
+		}
+		
 
 		//added for page / uri routing.
 		if(msg.getTo().startsWith(StringCache.FORWARD_SLASH)){
@@ -630,7 +639,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		
 		
 		//notify the observers.
-		this.notifyEventObservers(Const.ON_MESSAGE, msg);
+		this.notifyEventObservers(Const.ON_MESSAGE, msg, user);
 	}
 
 
@@ -927,7 +936,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		try{
 			Collection<Script> scripts = SCRIPT_MAP.get(new RoutingPath(uri));
 			for(Script script : scripts){
-				TaskRunner.getInstance().add(script.copy(JSONUtils.toObject(json, SocketMessage.class)));
+				SocketMessage msg = JSONUtils.toObject(json, SocketMessage.class);
+				IUser user = this.resolveUser(msg.getFrom());
+				TaskRunner.getInstance().add(script.copy(msg, user));
 				b = true;
 			}
 		}catch(Exception e){
@@ -1170,8 +1181,15 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		TaskRunner.getInstance().add(batch);
 		
 	}
-
-
+	
+	
+	public synchronized void notifyEventObserversSync(String event, Object ...args) {
+		for(Script script : OBSERVERS){
+			if(script.getFunction().equalsIgnoreCase(event)){
+				guicer.inject(script.copy(args)).run();
+			}
+		}
+	}
 	
 
 	/* (non-Javadoc)
@@ -1286,6 +1304,5 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	public UriUserMap getUriUserMap(){
 		return URI_MAP;
 	}
-
 	
 }

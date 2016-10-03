@@ -70,6 +70,11 @@ public class SocketMessage {
 	
 	/** The persisted. */
 	private boolean persisted;
+	
+	private boolean shortCircuit;
+
+
+
 
 	/** The server. */
 	@Inject
@@ -462,5 +467,12 @@ public class SocketMessage {
 	}
 	
 	
+	public boolean isShortCircuit() {
+		return shortCircuit;
+	}
+
+	public void setShortCircuit(boolean shortCircuit) {
+		this.shortCircuit = shortCircuit;
+	}
 
 }

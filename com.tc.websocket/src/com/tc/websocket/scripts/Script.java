@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,13 +45,14 @@ import com.tc.utils.BundleUtils;
 import com.tc.utils.ColUtils;
 import com.tc.utils.DateUtils;
 import com.tc.utils.DxlUtils;
-import com.tc.utils.NameValue;
 import com.tc.utils.StopWatch;
 import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
 import com.tc.websocket.IConfig;
+import com.tc.websocket.jsf.Data;
+import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 
 
@@ -92,6 +94,8 @@ public abstract class Script implements Runnable {
 
 	/** The args. */
 	protected Object[] args;
+	
+	private IConfig cfg = Config.getInstance();
 
 	/** The guicer. */
 	@Inject
@@ -101,7 +105,7 @@ public abstract class Script implements Runnable {
 	/**
 	 * Should run.
 	 *
-	 * @return true, if successful
+	 * @return true, if successfulg
 	 */
 	public boolean shouldRun(){
 		boolean b = true;
@@ -139,14 +143,6 @@ public abstract class Script implements Runnable {
 		return session;
 	}
 
-	/**
-	 * Sets the arts.
-	 *
-	 * @param args the new arts
-	 */
-	public void setArts(Object ...args){
-		this.args = args;
-	}
 
 	/**
 	 * Close session.
@@ -355,7 +351,7 @@ public abstract class Script implements Runnable {
 			}
 
 			byte[] byteMe = DxlUtils.findFileResource(db, this.getResource());
-			script = new String(byteMe);
+			script = new String(byteMe, cfg.getCharSet());
 
 			//resolve dependencies.
 			script = new ScriptAggregator(db).build(script);
@@ -387,7 +383,7 @@ public abstract class Script implements Runnable {
 		try {
 			db = session.getDatabase(StringCache.EMPTY, dbPath());
 			byte[] byteMe = DxlUtils.findSSJS(db, resource);
-			script = new String(byteMe).trim();
+			script = new String(byteMe, cfg.getCharSet()).trim();
 
 			//resolve all dependencies.
 			script = new ScriptAggregator(db).build(script);
@@ -601,7 +597,6 @@ public abstract class Script implements Runnable {
 	 * @param session the session
 	 * @return the common vars
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map<String,Object> getCommonVars(Session session){
 		Map<String,Object> vars = new HashMap<String,Object>();
 		vars.put(Const.FUNCTION, this.getFunction());
@@ -618,23 +613,47 @@ public abstract class Script implements Runnable {
 		vars.put(Const.VAR_FILEUTILS, new FileUtils());
 		vars.put(Const.VAR_IOUTILS,new IOUtils());
 		vars.put(Const.VAR_ATTACHUTILS, AttachUtils.insta());
-
-
-		//add user objects to available variables.
-		List<NameValue> added = (List<NameValue>) ScriptCache.insta().get("/" + this.dbPath());
-		if(added!=null && added.isEmpty() == false){
-			for( NameValue nv : added){
-				vars.put(nv.getName(), nv.getValue());
-			}
+		
+		
+		IUser user = this.getUser(); //user isn't always present (e.g. intervaled scripts)
+		
+		//add application scoped objects
+		String key = "/" + dbPath();
+		this.applyVars("/" + dbPath(), vars);
+		
+		//now add user scoped objects
+		if(user!=null){
+			key = "/" + dbPath() + "/" + user.getSessionId();
+			this.applyVars(key, vars);
 		}
-
+		
+		//last bit, make sure db is available.
 		try{
 			vars.put(Const.VAR_DB, session.getDatabase("", this.dbPath()));
 		}catch(NotesException n){
 			LOG.log(Level.SEVERE, null, n);
 		}
+		
 
 		return vars;
+	}
+	
+	private void applyVars(String key,Map<String,Object> vars ){
+		Map<String,Object> sessionVars = Data.insta().get(key);
+		if(sessionVars != null){
+			for(Entry<String, Object> entry : sessionVars.entrySet()){
+				vars.put(entry.getKey(), entry.getValue());
+			}
+		}
+	}
+	
+	public IUser getUser(){
+		for(Object o : this.getArgs()){
+			if(o instanceof IUser){
+				return (IUser) o;
+			}
+		}
+		return null;
 	}
 
 

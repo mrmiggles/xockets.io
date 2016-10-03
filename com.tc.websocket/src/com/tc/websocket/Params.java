@@ -118,7 +118,9 @@ public enum Params {
 	WEBSOCKET_TEST_MODE,
 	
 	/** The websocket filter. */
-	WEBSOCKET_FILTER;
+	WEBSOCKET_FILTER,
+	
+	WEBSOCKET_CHARSET;
 	
 	
 	

@@ -124,9 +124,8 @@ public interface IDominoWebSocketServer extends Runnable {
 	 */
 	public abstract boolean onMessage(String to, String json);
 	
-	
-	
 	public abstract boolean onMessage(SocketMessage msg);
+	
 	
 	/**
 	 * On message.
@@ -289,6 +288,10 @@ public interface IDominoWebSocketServer extends Runnable {
 	 */
 	public void notifyEventObservers(String event, Object ...args);
 	
+	
+	public void notifyEventObserversSync(String event, Object ...args);
+	
+	
 	/**
 	 * Gets the event observers.
 	 *
@@ -350,7 +353,7 @@ public interface IDominoWebSocketServer extends Runnable {
 	 * @return the intervaled
 	 */
 	public Collection<Script> getIntervaled(); 
-	
+
 	
 	public UriUserMap getUriUserMap();
 	

@@ -17,12 +17,16 @@
 
 package com.tc.websocket;
 
+import java.nio.charset.Charset;
+
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class Const.
  */
 public class Const {
+	
+	public static final Charset SCRIPT_CHAR_SET=Charset.defaultCharset();
 	
 	/** The Constant ON_LOGIN. */
 	//websocket url constants.
@@ -57,6 +61,10 @@ public class Const {
 	
 	/** The Constant PARTIAL_GET_WEBSOCKET. */
 	public static final String PARTIAL_GET_WEBSOCKET="G";
+	
+	
+	public static final String ROLE_WS_SENDER="[websocket-send]";
+	public static final String ROLE_WS_REC="[websocket-rec]";
 	
 	
 	/** The Constant VIEW_MSG_QUEUE. */
@@ -263,6 +271,9 @@ public class Const {
 	/** The Constant ON_MESSAGE. */
 	public static final String ON_MESSAGE="onMessage";
 	
+	/** The Constant ON_BEFORE_MESSAGE. */
+	public static final String ON_BEFORE_MESSAGE="onBeforeMessage";
+	
 	/** The Constant ON_ERROR. */
 	public static final String ON_ERROR="onError";
 	
@@ -270,7 +281,7 @@ public class Const {
 	public static final String ON_INTERVAL="onInterval";
 	
 	/** The Constant ALL_EVENTS. */
-	public static final String[] ALL_EVENTS={ON_OPEN,ON_CLOSE,ON_MESSAGE,ON_ERROR,ON_INTERVAL};
+	public static final String[] ALL_EVENTS={ON_OPEN,ON_CLOSE,ON_MESSAGE,ON_ERROR,ON_INTERVAL, ON_BEFORE_MESSAGE};
 	
 	
 	/** The Constant GUICE_REST_WEBSOCKET. */

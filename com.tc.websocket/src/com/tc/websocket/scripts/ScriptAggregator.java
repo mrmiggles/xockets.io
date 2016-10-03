@@ -1,6 +1,7 @@
 package com.tc.websocket.scripts;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -12,6 +13,8 @@ import org.codehaus.jackson.map.JsonMappingException;
 import com.tc.utils.DxlUtils;
 import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
+import com.tc.websocket.Config;
+import com.tc.websocket.IConfig;
 
 public class ScriptAggregator {
 	
@@ -19,6 +22,8 @@ public class ScriptAggregator {
 	private Set<String> dependencies = new LinkedHashSet<String>();
 	private Database db;
 	private static final String IMPORT_PREFIX = "///use ";
+	private IConfig cfg = Config.getInstance();
+	
 	public ScriptAggregator(Database db){
 		this.db = db;
 	}
@@ -52,7 +57,7 @@ public class ScriptAggregator {
 		return resource;
 	}
 	
-	public String resolveScript(String source){
+	public String resolveScript(String source) throws UnsupportedEncodingException{
 		
 		if(source.contains(StringCache.DOT_NSF)){
 			source = this.resolveElement(source);
@@ -60,9 +65,9 @@ public class ScriptAggregator {
 		
 		String script = null;
 		if(source.endsWith(".ssjs") || source.endsWith(".js")){
-			script = new String(DxlUtils.findSSJS(db, source));
+			script = new String(DxlUtils.findSSJS(db, source),cfg.getCharSet());
 		}else{
-			script = new String(DxlUtils.findFileResource(db, source));
+			script = new String(DxlUtils.findFileResource(db, source),cfg.getCharSet());
 		}
 		return script;
 	}

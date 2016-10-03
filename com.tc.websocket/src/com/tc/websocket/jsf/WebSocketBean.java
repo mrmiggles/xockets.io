@@ -56,7 +56,11 @@ public class WebSocketBean extends AbstractWebSocketBean implements Serializable
 		if(isOn.compareAndSet(false, true)) {
 			this.server = server;
 			ApplicationEx appEx = (ApplicationEx) XSPUtils.app();
+			
+			//add the listeners
+			appEx.addApplicationListener(new AppListener());
 			appEx.addSessionListener(new SocketSessionListener());
+			
 
 			//catch the very first user.
 			try {
@@ -102,6 +106,9 @@ public class WebSocketBean extends AbstractWebSocketBean implements Serializable
 	public void setRequest(HttpServletRequest req) {
 		throw new UnsupportedOperationException("Unsupported");
 	}
+
+
+
 
 
 

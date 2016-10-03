@@ -31,7 +31,8 @@ import lotus.domino.NotesException;
 import lotus.domino.Session;
 
 import com.google.inject.Inject;
-import com.tc.utils.NameValue;
+import com.ibm.xsp.model.domino.DominoUtils;
+import com.tc.utils.JSONUtils;
 import com.tc.utils.StringCache;
 import com.tc.utils.XSPUtils;
 import com.tc.websocket.Config;
@@ -42,9 +43,9 @@ import com.tc.websocket.runners.ApplyStatus;
 import com.tc.websocket.runners.SendMessage;
 import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.scripts.Script;
-import com.tc.websocket.scripts.ScriptCache;
 import com.tc.websocket.server.ContextWrapper;
 import com.tc.websocket.server.IDominoWebSocketServer;
+import com.tc.websocket.server.IMessageSender;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.websocket.valueobjects.structures.UriUserMap;
@@ -54,7 +55,7 @@ import com.tc.websocket.valueobjects.structures.UriUserMap;
 /**
  * The Class AbstractWebSocketBean.
  */
-public abstract class AbstractWebSocketBean implements IWebSocketBean {
+public abstract class AbstractWebSocketBean implements IWebSocketBean, IMessageSender {
 
 	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(AbstractWebSocketBean.class.getName());
@@ -233,6 +234,29 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	public void sendMessage(SocketMessage msg){
 		msg.setDate(new Date());
 		TaskRunner.getInstance().add(new SendMessage(msg));
+	}
+	
+	@Override
+	public void sendMessageWithDelay(SocketMessage msg, int seconds){
+		msg.setDate(new Date());
+		TaskRunner.getInstance().add(new SendMessage(msg), seconds);
+	}
+	
+	@Override
+	public void sendMessage(String to, String text) {
+		String from = null;
+		try {
+			from = DominoUtils.getCurrentSession().getEffectiveUserName();
+		} catch (NotesException e) {
+			LOG.log(Level.SEVERE, null, e);
+		}
+		this.sendMessage(new SocketMessage().to(to).text(text).from(from));
+	}
+
+
+	@Override
+	public void sendMessage(String json) {
+		this.sendMessage(JSONUtils.toObject(json, SocketMessage.class));
 	}
 
 	
@@ -491,26 +515,19 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.jsf.IWebSocketBean#addToScriptScope(java.lang.String, java.lang.Object)
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <T> void addToScriptScope(String var){
-		
-		T bean = (T) XSPUtils.appScope().get(var);
-		
-		if(bean == null)throw new IllegalArgumentException(var + " not found in application scope.");
-		
-		List<NameValue> list = (List<NameValue>) ScriptCache.insta().get(XSPUtils.webPath());
-		if(list == null){
-			list = new ArrayList<NameValue>();
+		Object o = XSPUtils.getBean(var);
+		o = XSPUtils.appScope().get(var);
+		if(o!=null){
+			Data.insta().put(XSPUtils.webPath(), var, o);
+		}else{
+			o = XSPUtils.sessionScope().get(var);
+			String key = XSPUtils.webPath() + "/" + XSPUtils.getSessionId();
+			Data.insta().put(key, var, o);
 		}
-		NameValue nv = new NameValue(var,bean);
-		if(!list.contains(nv)){
-			list.add(nv);
-		}
-		
-		ScriptCache.insta().put(XSPUtils.webPath(), list);
 	}
 
-	
+
 	
 	@Deprecated
 	public SocketMessage createSocketMessage(){

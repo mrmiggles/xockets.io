@@ -2,6 +2,7 @@ package com.tc.websocket.tests.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Properties;
 
@@ -421,6 +422,11 @@ public class TestConfig implements IConfig {
 	@Override
 	public String property(String key) {
 		return this.props.getProperty(key);
+	}
+
+	@Override
+	public Charset getCharSet() {
+		return Charset.defaultCharset();
 	}
 
 }

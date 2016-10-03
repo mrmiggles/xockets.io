@@ -7,7 +7,10 @@ import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 import com.tc.utils.JSONUtils;
 import com.tc.utils.StrUtils;
+import com.tc.websocket.runners.SendMessage;
+import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.server.IDominoWebSocketServer;
+import com.tc.websocket.server.IMessageSender;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 
@@ -16,7 +19,7 @@ import com.tc.websocket.valueobjects.SocketMessage;
 /**
  * The Class SimpleClient.
  */
-public class SimpleClient {
+public class SimpleClient implements IMessageSender {
 	
 	/** The server. */
 	@Inject
@@ -85,6 +88,12 @@ public class SimpleClient {
 	
 	public IUser getUser(String userId){
 		return server.resolveUser(userId);
+	}
+
+
+	@Override
+	public void sendMessageWithDelay(SocketMessage msg, int seconds) {
+		TaskRunner.getInstance().add(new SendMessage(msg), seconds);
 	}
 
 	

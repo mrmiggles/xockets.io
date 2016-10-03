@@ -92,6 +92,9 @@ public interface IWebSocketBean {
 	 */
 	public abstract void sendMessage(SocketMessage msg);
 	
+	
+	public abstract void sendMessageWithDelay(SocketMessage msg, int seconds);
+	
 	/**
 	 * Sets the request.
 	 *

@@ -348,8 +348,14 @@ public class XSPUtils {
 		return;
 	}
 	
+	@Deprecated
 	public static void redirect301(String url){
-		XSPUtils.getResponse().setStatus(301);
+		redirectPermanently(url);
+	}
+	
+	
+	public static void redirectPermanently(String url){
+		XSPUtils.getResponse().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 		XSPUtils.getResponse().setHeader("Location", url);
 	}
 	
@@ -599,6 +605,10 @@ public class XSPUtils {
 		} catch (IOException e) {
 			logger.log(Level.SEVERE,null,e);
 		}
+	}
+	
+	public static String getSessionId(){
+		return XSPUtils.getRequest().getSession().getId();
 	}
 	
 	public static void logout(String url){    
