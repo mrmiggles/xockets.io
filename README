@@ -3,6 +3,25 @@ It leverages Netty.io websocket libraries to easily scale to a large number of u
 found in the webshell-xpages-ext-lib.  Below is a list of the latest features available in xockets.io:
 
 
+xockets.io as of 3.0.1
+-New Features include:
+	A new event method to script against called onBeforeMessage (fires just before a message will be sent, used for filters, other validations)
+	A new SocketMessage attribute called shortCircuit.  If set to true halts sending of message (for use with onBeforeMessage)
+	Support for includes / use across multiple script libraries using for example:
+		JavaScript external library refernces would be ///use lib1.ssjs, lib2.ssjs, lib3.ssjs
+		Ruby's external references would be #///use lib1.rb, lib2.rb, lib3.rb
+	Support for sharing application and session managed beans (note, only good for sharing state, do not try to perform notes operations)
+	Additional utility objects are now available in script scope as well (e.b. b64Utils, strUtils, ioUtils, fileUtils etc)
+	Group chat application will be available soon on OpenNTF that will demonstrate these new features.
+	
+-Fix:
+	A new parameter to override the default character set when pulling in scripts (see WEBSOCKET_CHARSET=xxxx).
+	
+	
+	
+	
+	
+
 xockets.io as of 3.0.0
 -New Features include:
 	URI Listeners (replaced Rhino SocketEventListeners)
