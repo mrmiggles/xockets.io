@@ -89,6 +89,7 @@ public class PythonScript extends Script{
 			
 			
 		}catch(Exception e){
+			errorCount.incrementAndGet();
 			e.printStackTrace();
 		}finally{
 			if(python!=null) python.cleanup();

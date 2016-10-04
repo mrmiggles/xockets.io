@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -96,6 +97,8 @@ public abstract class Script implements Runnable {
 	protected Object[] args;
 	
 	private IConfig cfg = Config.getInstance();
+	
+	protected AtomicInteger errorCount = new AtomicInteger(0);
 
 	/** The guicer. */
 	@Inject
@@ -109,7 +112,11 @@ public abstract class Script implements Runnable {
 	 */
 	public boolean shouldRun(){
 		boolean b = true;
-		if(this.isIntervaled()){
+		if(errorCount.intValue() > Const.SCRIPT_MAX_ERRORS){
+			LOG.log(Level.SEVERE, this.getSource() + " maxed out errors and will not run.");
+			b = false;
+			
+		}else if(this.isIntervaled()){
 			long secs = DateUtils.getTimeDiffSec(lastRun , new Date());
 			b =  secs > interval;
 		}
@@ -648,9 +655,11 @@ public abstract class Script implements Runnable {
 	}
 	
 	public IUser getUser(){
-		for(Object o : this.getArgs()){
-			if(o instanceof IUser){
-				return (IUser) o;
+		if(args != null){
+			for(Object o : this.getArgs()){
+				if(o instanceof IUser){
+					return (IUser) o;
+				}
 			}
 		}
 		return null;
