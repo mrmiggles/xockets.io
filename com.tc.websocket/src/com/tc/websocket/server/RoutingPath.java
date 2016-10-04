@@ -52,8 +52,7 @@ public class RoutingPath {
 		this.dbPath = this.extractDbPath(uri);
 		this.uri = this.extractUri(uri);
 	}
-
-
+	
 
 	/**
 	 * Extract db path.

@@ -160,6 +160,7 @@ public class Guicer implements IGuicer {
 	 */
 	@Override
 	public  <T> T inject(T t){
+		if(t == null) return null;
 		this.injector.injectMembers(t);
 		return t;
 	}

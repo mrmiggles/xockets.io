@@ -104,7 +104,8 @@ public class RestWebSocket implements IRestWebSocket {
 		String name = StringCache.EMPTY;
 		int cntr = 0;
 		for(Object obj : nameValuePairs){
-
+			
+			
 			//even are the names
 			if((cntr % 2) ==0){
 				name = String.valueOf(obj);

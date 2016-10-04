@@ -18,6 +18,7 @@
 package com.tc.utils;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -79,8 +81,17 @@ public class XSPUtils {
 		}
 	}
 
+	public static String getXpagesTempDir(){
+		File dir = (File) XSPUtils.appScope().get("javax.servlet.context.tempdir");
+		return dir.getAbsolutePath().replace("\\", "/");
+	}
+	
 	public static Object getBean(String objectName){
 		return getFacesObject(objectName);
+	}
+	
+	public static String uuid(){
+		return UUID.randomUUID().toString();
 	}
 
 
@@ -116,6 +127,10 @@ public class XSPUtils {
 
 	public static HttpServletResponse getResponse(){
 		return (HttpServletResponse)FacesContext.getCurrentInstance().getExternalContext().getResponse();
+	}
+	
+	public static String getParam(String key){
+		return getRequest().getParameter(key);
 	}
 
 
@@ -220,7 +235,7 @@ public class XSPUtils {
 		} catch (NotesException e) {
 			logger.log(Level.SEVERE,null, e);
 		}
-		return filePath.replace("\\", "/");
+		return StringCache.FORWARD_SLASH + filePath.replace(StringCache.BACK_SLASH, StringCache.FORWARD_SLASH);
 
 	}
 
@@ -332,10 +347,22 @@ public class XSPUtils {
 		}
 		return;
 	}
+	
+	@Deprecated
+	public static void redirect301(String url){
+		redirectPermanently(url);
+	}
+	
+	
+	public static void redirectPermanently(String url){
+		XSPUtils.getResponse().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+		XSPUtils.getResponse().setHeader("Location", url);
+	}
+	
 
 	public static void goHome(){
 		try {
-			FacesContext.getCurrentInstance().getExternalContext().redirect("/" + XSPUtils.webPath());
+			FacesContext.getCurrentInstance().getExternalContext().redirect(XSPUtils.webPath());
 		} catch (IOException e) {
 			logger.log(Level.SEVERE,null, e);
 		}
@@ -374,6 +401,18 @@ public class XSPUtils {
 		msg.setSummary(message);
 		msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 		XSPUtils.context().addMessage(null, msg);
+	}
+	
+	public static void addWarning(String message){
+		addMessage(message, FacesMessage.SEVERITY_WARN);
+	}
+	
+	public static void addInfo(String message){
+		addMessage(message, FacesMessage.SEVERITY_INFO);
+	}
+	
+	public static void addError(String message){
+		addMessage(message, FacesMessage.SEVERITY_ERROR);
 	}
 
 	public static void addMessageToSession(String key, String message){
@@ -566,6 +605,10 @@ public class XSPUtils {
 		} catch (IOException e) {
 			logger.log(Level.SEVERE,null,e);
 		}
+	}
+	
+	public static String getSessionId(){
+		return XSPUtils.getRequest().getSession().getId();
 	}
 	
 	public static void logout(String url){    

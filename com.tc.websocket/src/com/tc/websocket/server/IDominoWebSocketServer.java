@@ -1,5 +1,5 @@
 /*
- * © Copyright Tek Counsel LLC 2016
+ * Â© Copyright Tek Counsel LLC 2016
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -26,6 +26,7 @@ import com.tc.websocket.filter.IWebsocketFilter;
 import com.tc.websocket.scripts.Script;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
+import com.tc.websocket.valueobjects.structures.UriUserMap;
 
 
 // TODO: Auto-generated Javadoc
@@ -122,6 +123,9 @@ public interface IDominoWebSocketServer extends Runnable {
 	 * @return true, if successful
 	 */
 	public abstract boolean onMessage(String to, String json);
+	
+	public abstract boolean onMessage(SocketMessage msg);
+	
 	
 	/**
 	 * On message.
@@ -284,6 +288,10 @@ public interface IDominoWebSocketServer extends Runnable {
 	 */
 	public void notifyEventObservers(String event, Object ...args);
 	
+	
+	public void notifyEventObserversSync(String event, Object ...args);
+	
+	
 	/**
 	 * Gets the event observers.
 	 *
@@ -345,5 +353,8 @@ public interface IDominoWebSocketServer extends Runnable {
 	 * @return the intervaled
 	 */
 	public Collection<Script> getIntervaled(); 
+
+	
+	public UriUserMap getUriUserMap();
 	
 }

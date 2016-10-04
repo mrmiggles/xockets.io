@@ -6,7 +6,12 @@ package com.tc.websocket.scripts;
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 import com.tc.utils.JSONUtils;
+import com.tc.utils.StrUtils;
+import com.tc.websocket.runners.SendMessage;
+import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.server.IDominoWebSocketServer;
+import com.tc.websocket.server.IMessageSender;
+import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 
 
@@ -14,7 +19,7 @@ import com.tc.websocket.valueobjects.SocketMessage;
 /**
  * The Class SimpleClient.
  */
-public class SimpleClient {
+public class SimpleClient implements IMessageSender {
 	
 	/** The server. */
 	@Inject
@@ -47,24 +52,16 @@ public class SimpleClient {
 		return guicer.createObject(SocketMessage.class);
 	}
 	
-	/**
-	 * Send msg.
-	 *
-	 * @param msg the msg
-	 */
-	public void sendMsg(SocketMessage msg){
-		msg.setFrom(this.script.getSource());
-		this.send(msg);;
-	}
+	
 	
 	/**
 	 * Send.
 	 *
 	 * @param socketMessage the socket message
 	 */
-	public void send(SocketMessage socketMessage){
-		socketMessage.setFrom(this.script.getSource());
-		server.onMessage(socketMessage.getTo(),JSONUtils.toJson(socketMessage));
+	public void sendMessage(SocketMessage msg){
+		if(StrUtils.isEmpty(msg.getFrom())) msg.setFrom(this.script.getSource());
+		server.onMessage(msg.getTo(),JSONUtils.toJson(msg));
 	}
 	
 	/**
@@ -73,9 +70,9 @@ public class SimpleClient {
 	 * @param to the to
 	 * @param text the text
 	 */
-	public void send(String to, String text){
+	public void sendMessage(String to, String text){
 		SocketMessage msg = this.createMessage();
-		this.send(msg.to(to).text(text).from(this.script.getSource()));
+		this.sendMessage(msg.to(to).text(text).from(this.script.getSource()));
 	}
 	
 	/**
@@ -83,9 +80,22 @@ public class SimpleClient {
 	 *
 	 * @param json the json
 	 */
-	public void send(String json){
+	public void sendMessage(String json){
 		SocketMessage msg = JSONUtils.toObject(json, SocketMessage.class);
-		this.send(msg.from(this.script.getSource()));
+		this.sendMessage(msg.from(this.script.getSource()));
+	}
+	
+	
+	public IUser getUser(String userId){
+		return server.resolveUser(userId);
 	}
 
+
+	@Override
+	public void sendMessageWithDelay(SocketMessage msg, int seconds) {
+		TaskRunner.getInstance().add(new SendMessage(msg), seconds);
+	}
+
+	
+	
 }

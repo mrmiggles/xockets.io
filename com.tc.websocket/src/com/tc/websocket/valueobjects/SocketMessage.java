@@ -18,9 +18,9 @@
 package com.tc.websocket.valueobjects;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -48,7 +48,7 @@ public class SocketMessage {
 	private String to;
 	
 	/** The targets. */
-	private List<String> targets= new ArrayList<String>();
+	private Collection<String> targets= new ArrayList<String>();
 	
 	/** The text. */
 	protected String text;
@@ -62,14 +62,16 @@ public class SocketMessage {
 	/** The string. */
 	private String string;
 	
-	/** The json. */
-	private String json;//serialized form of this object.
-	
 	/** The durable. */
 	private boolean durable;
 	
 	/** The persisted. */
 	private boolean persisted;
+	
+	private boolean shortCircuit;
+
+
+
 
 	/** The server. */
 	@Inject
@@ -231,31 +233,9 @@ public class SocketMessage {
 	 */
 	@JsonIgnore
 	public String toJson(){
-		if(this.getJson() == null){
-			this.setJson(JSONUtils.toJson(this));
-		}
-		return this.getJson();
+		return JSONUtils.toJson(this);
 	}
 
-	/**
-	 * Gets the json.
-	 *
-	 * @return the json
-	 */
-	@JsonIgnore
-	public String getJson() {
-		return json;
-	}
-
-	/**
-	 * Sets the json.
-	 *
-	 * @param json the new json
-	 */
-	@JsonIgnore
-	public void setJson(String json) {
-		this.json = json;
-	}
 
 	/**
 	 * Checks if is durable.
@@ -371,6 +351,12 @@ public class SocketMessage {
 		return this;
 	}
 	
+	@JsonIgnore
+	public SocketMessage id(String id){
+		this.setId(id);
+		return this;
+	}
+	
 	/**
 	 * Data.
 	 *
@@ -412,7 +398,7 @@ public class SocketMessage {
 	 *
 	 * @return the targets
 	 */
-	public List<String> getTargets() {
+	public Collection<String> getTargets() {
 		return targets;
 	}
 
@@ -421,8 +407,9 @@ public class SocketMessage {
 	 *
 	 * @param targets the new targets
 	 */
-	public void setTargets(List<String> targets) {
-		this.targets = targets;
+	public void setTargets(Collection<String> targets) {
+		this.targets.clear();
+		this.targets.addAll(targets);
 	}
 	
 	/**
@@ -455,5 +442,12 @@ public class SocketMessage {
 	}
 	
 	
+	public boolean isShortCircuit() {
+		return shortCircuit;
+	}
+
+	public void setShortCircuit(boolean shortCircuit) {
+		this.shortCircuit = shortCircuit;
+	}
 
 }

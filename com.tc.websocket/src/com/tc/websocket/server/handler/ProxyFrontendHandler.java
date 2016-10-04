@@ -134,8 +134,6 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 		ByteBuf buf = (ByteBuf) msg;
 		String data = new String(ByteBufUtil.getBytes(buf));
 		
-		writeToFile("frontend", ByteBufUtil.getBytes(buf));
-		
 		if(data.contains(Const.UPGRADE_WEBSOCKET) || data.contains(Const.GET_WEBSOCKET)){
 			proxy.set(false);
 

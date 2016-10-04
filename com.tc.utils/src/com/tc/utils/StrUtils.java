@@ -22,15 +22,23 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 
 
 public final class StrUtils {
 
+	private static final StrUtils strUtils = new StrUtils();
 
+	
+	
     private StrUtils() {
     	//should not be instantiated.
     }
     
+    public static StrUtils insta(){
+    	return strUtils;
+    }
     
     public static final String EMPTY_STRING=StringCache.EMPTY;
     
@@ -57,6 +65,33 @@ public final class StrUtils {
         }
         return sb.toString();
 
+    }
+    
+    
+    public static String removeHtml(String source){
+    	String scrubbed = source.replaceAll("<[^>]*>", StringCache.EMPTY).replaceAll("&nbsp;", StringCache.EMPTY);
+    	return StringEscapeUtils.unescapeHtml4(scrubbed);
+    }
+    
+    private static final char[] COMPACT_CHARS = {'\r','\n','\r','\t'};
+    public static String compact(String source){
+    	return  StrUtils.remRepeats(StrUtils.replaceChars(source, COMPACT_CHARS, ' '), ' ');
+    }
+    
+
+    public static String remRepeats(String source, char r){
+    	StringBuilder sb = new StringBuilder();
+    	
+    	char prior = '\0';
+    	for(char c : source.toCharArray()){
+    		if(c == r && prior ==r){
+    			//do nothing
+    		}else{
+    			sb.append(c);
+    		}
+    		prior = c;
+    	}
+    	return sb.toString();
     }
 
     public static String whiteList(String source, char[] allowedChars) {

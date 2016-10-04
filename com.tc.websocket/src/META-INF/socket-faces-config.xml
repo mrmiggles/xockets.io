@@ -6,9 +6,12 @@
 	<application>
 		<variable-resolver>com.tc.websocket.jsf.GuiceVariableResolver</variable-resolver>
 	</application>
+	
 	<managed-bean>
 		<managed-bean-name>websocketBean</managed-bean-name>
 		<managed-bean-class>com.tc.websocket.jsf.WebSocketBean</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+	
+	
 </faces-config>

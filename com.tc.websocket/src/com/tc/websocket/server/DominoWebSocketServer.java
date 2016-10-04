@@ -1,5 +1,5 @@
 /*
- * © Copyright Tek Counsel LLC 2016
+ * Â© Copyright Tek Counsel LLC 2016
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -377,7 +377,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 
 		//break out since the anonymous user was already added previously.
 		if(anonymousAdded){
-			//this.notifyEventObservers(Const.ON_OPEN, user);
 			return;
 		}
 
@@ -444,11 +443,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	 */
 	@Override
 	public void onClose(ContextWrapper conn) {
-		this.closeWithDelay(conn, 10);
+		this.closeWithDelay(conn, 1);
 	}
 
-
-	
 
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.server.IDominoWebSocketServer#closeWithDelay(com.tc.websocket.server.ContextWrapper, int)
@@ -460,9 +457,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		if(user!=null && ServerInfo.getInstance().isCurrentServer(user.getHost())){
 			user.setGoingOffline(true);
 			TaskRunner.getInstance().add(new ApplyStatus(user), delay);//mark user as offline
-			
-			
-			
+
 			TaskRunner.getInstance().add(new Runnable(){
 
 				@Override
@@ -483,11 +478,28 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	 */
 	public boolean onMessage(String to, String json){
 		boolean b = this.send(to, json);
-		this.notifyEventObservers(Const.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
+		SocketMessage msg =  JSONUtils.toObject(json, SocketMessage.class);
+		this.notifyEventObservers(Const.ON_MESSAGE, msg);
 		return b;
 	}
 	
-
+	public boolean onMessage(SocketMessage msg){
+		boolean b = false;
+		IUser user = VALID_USERS.get(msg.getFrom());
+		if(msg.hasMultipleTargets()){
+			msg.addTarget(msg.getTo());
+			List<String> targets = new ArrayList<String>();
+			targets.addAll(msg.getTargets());
+			for(String target : targets){
+				msg.setTo(target);
+				msg.getTargets().clear();
+				this.processMessage(user, msg, JSONUtils.toJson(msg));
+			}
+		}else{
+			this.processMessage(user, msg, JSONUtils.toJson(msg));
+		}
+		return b;
+	}
 	
 
 	/* (non-Javadoc)
@@ -583,6 +595,15 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			throw new IllegalArgumentException("Invalid value in from. from must equal current user's Id " + user.getUserId() + " " + msg.getFrom());
 		}
 
+		//now lets process the onBeforeMessage observers after all the other validations.
+		this.notifyEventObserversSync(Const.ON_BEFORE_MESSAGE, msg);
+		
+		
+		//if the message is set to short circuit halt it's processing.
+		if(msg.isShortCircuit()){
+			return;
+		}
+		
 
 		//added for page / uri routing.
 		if(msg.getTo().startsWith(StringCache.FORWARD_SLASH)){
@@ -600,10 +621,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		}
 
 
-
-
 		//check to see if there's any messages waiting on this event for the sender.
-
 		EventQueueProcessor sendEvent = guicer.createObject(EventQueueProcessor.class);
 		sendEvent.setEventQueue(Const.VIEW_ON_SEND_MSG);
 		sendEvent.setTarget(msg.getFrom());
@@ -715,8 +733,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		Database db = null;
 		try{
 			String dbPath = path.getDbPath();
-			int start = dbPath.indexOf('/');
-			if(start==0){
+			if(dbPath.startsWith(StringCache.FORWARD_SLASH)){
 				dbPath = dbPath.substring(1,dbPath.length());
 			}
 
@@ -918,7 +935,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		try{
 			Collection<Script> scripts = SCRIPT_MAP.get(new RoutingPath(uri));
 			for(Script script : scripts){
-				TaskRunner.getInstance().add(script.copy(JSONUtils.toObject(json, SocketMessage.class)));
+				SocketMessage msg = JSONUtils.toObject(json, SocketMessage.class);
+				IUser user = this.resolveUser(msg.getFrom());
+				TaskRunner.getInstance().add(script.copy(msg, user));
 				b = true;
 			}
 		}catch(Exception e){
@@ -1161,8 +1180,15 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		TaskRunner.getInstance().add(batch);
 		
 	}
-
-
+	
+	
+	public synchronized void notifyEventObserversSync(String event, Object ...args) {
+		for(Script script : OBSERVERS){
+			if(script.getFunction().equalsIgnoreCase(event)){
+				guicer.inject(script.copy(args)).run();
+			}
+		}
+	}
 	
 
 	/* (non-Javadoc)
@@ -1273,6 +1299,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	public Collection<Script> getIntervaled() {
 		return INTERVALED;
 	}
-
-
+	
+	public UriUserMap getUriUserMap(){
+		return URI_MAP;
+	}
+	
 }

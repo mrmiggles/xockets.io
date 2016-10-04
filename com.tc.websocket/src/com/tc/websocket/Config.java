@@ -19,6 +19,7 @@ package com.tc.websocket;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -173,6 +174,9 @@ public class Config implements Runnable, IConfig {
 	
 	/** The props. */
 	private Properties props;
+	
+	
+	private String charset;
 
 	/** The config. */
 	private static IConfig config = new Config();
@@ -390,6 +394,8 @@ public class Config implements Runnable, IConfig {
 
 			this.redirectPorts = this.envAsIntegerList(s,Params.WEBSOCKET_REDIRECT_PORTS.name(), StringCache.EMPTY);
 
+			
+			this.charset = this.env(s, Params.WEBSOCKET_CHARSET.name(), Charset.defaultCharset().toString());
 
 			//setup the creds used for server-side operations.
 			this.username = env(s,Params.WEBSOCKET_USER.name(),"");
@@ -1074,6 +1080,11 @@ public class Config implements Runnable, IConfig {
 	@Override
 	public String property(String key) {
 		return this.props.getProperty(key);
+	}
+
+	@Override
+	public Charset getCharSet() {
+		return Charset.forName(this.charset);
 	}
 
 }

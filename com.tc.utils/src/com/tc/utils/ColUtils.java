@@ -31,7 +31,14 @@ public final class ColUtils {
     public static final int SORT_ASC = 1;
     public static final int SORT_DESC = 2;
     private static final ReflectionUtils reflect=new ReflectionUtils();
+    private static final ColUtils colUtils = new ColUtils();
+    
+    private ColUtils(){}
 
+    public static ColUtils insta(){
+    	return colUtils;
+    }
+    
     @SuppressWarnings("rawtypes")
 	public static List<Object> toArrayList(Collection col, String getter, boolean sort, boolean unique) {
         List list = new ArrayList(col.size());
@@ -159,8 +166,34 @@ public final class ColUtils {
 
 		return Collections.binarySearch(col, value, c);
 	}
+	
+	
+
+	public static boolean contains(List<String> strings, String srch, boolean sort){
+		if(sort) Collections.sort(strings);
+		return Collections.binarySearch(strings, srch) >= 0;
+	}
+	
+	
+	//linear search for small collections
+	public static <T> T findObject(List<T> col, String getter, Object value) {	
+		T result = null;
+		for(T t : col){
+			Object storedValue = reflect.invokeMethod(getter, t);
+			if(storedValue.equals(value)){
+				result = t;
+				break;
+			}
+		}
+		return result;
+	}
 
 	public static <T> T findObject(List<T> col, String getter, Object value, boolean sort) {
+		
+		if(col.size() <= 50){
+			return findObject(col, getter, value);
+		}
+		
 		BeanCompare c = new SearchCompare();
 		T t = null;
 
@@ -197,13 +230,15 @@ public final class ColUtils {
     }
     
     
-    public static <T> Vector<T> toVector(List<T> list){
+    public static <T> Vector<T> toVector(Collection<T> list){
     	Vector<T> vec = new Vector<T>(list.size());
     	for(T t : list){
     		vec.add(t);
     	}
     	return vec;
     }
+    
+
 
     public static Map<String,Object> toMap(Object ...args){
     	Map<String,Object> map = new HashMap<String,Object>();

@@ -19,6 +19,7 @@ package com.tc.websocket.jsf;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +31,8 @@ import lotus.domino.NotesException;
 import lotus.domino.Session;
 
 import com.google.inject.Inject;
+import com.ibm.xsp.model.domino.DominoUtils;
+import com.tc.utils.JSONUtils;
 import com.tc.utils.StringCache;
 import com.tc.utils.XSPUtils;
 import com.tc.websocket.Config;
@@ -40,17 +43,19 @@ import com.tc.websocket.runners.ApplyStatus;
 import com.tc.websocket.runners.SendMessage;
 import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.scripts.Script;
-import com.tc.websocket.scripts.ScriptCache;
+import com.tc.websocket.server.ContextWrapper;
 import com.tc.websocket.server.IDominoWebSocketServer;
+import com.tc.websocket.server.IMessageSender;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
+import com.tc.websocket.valueobjects.structures.UriUserMap;
 
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class AbstractWebSocketBean.
  */
-public abstract class AbstractWebSocketBean implements IWebSocketBean {
+public abstract class AbstractWebSocketBean implements IWebSocketBean, IMessageSender {
 
 	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(AbstractWebSocketBean.class.getName());
@@ -141,7 +146,23 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 		}
 		return list;
 	}
-
+	
+	
+	@Override
+	public List<SelectItem> getUsersByUri(String uri) throws NotesException{
+		UriUserMap map = server.getUriUserMap();
+		List<SelectItem> list = new ArrayList<SelectItem>();
+		for(IUser user : map.get(uri)){
+			ContextWrapper wrapper = user.findConnection(uri);
+			if(wrapper!=null && wrapper.isOpen()){
+				Name name = XSPUtils.session().createName(user.getUserId());
+				SelectItem select = new SelectItem(user.getUserId(),name.getCommon());
+				list.add(select);
+				name.recycle();
+			}
+		}
+		return list;
+	}
 
 
 	/**
@@ -213,6 +234,29 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	public void sendMessage(SocketMessage msg){
 		msg.setDate(new Date());
 		TaskRunner.getInstance().add(new SendMessage(msg));
+	}
+	
+	@Override
+	public void sendMessageWithDelay(SocketMessage msg, int seconds){
+		msg.setDate(new Date());
+		TaskRunner.getInstance().add(new SendMessage(msg), seconds);
+	}
+	
+	@Override
+	public void sendMessage(String to, String text) {
+		String from = null;
+		try {
+			from = DominoUtils.getCurrentSession().getEffectiveUserName();
+		} catch (NotesException e) {
+			LOG.log(Level.SEVERE, null, e);
+		}
+		this.sendMessage(new SocketMessage().to(to).text(text).from(from));
+	}
+
+
+	@Override
+	public void sendMessage(String json) {
+		this.sendMessage(JSONUtils.toObject(json, SocketMessage.class));
 	}
 
 	
@@ -471,8 +515,27 @@ public abstract class AbstractWebSocketBean implements IWebSocketBean {
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.jsf.IWebSocketBean#addToScriptScope(java.lang.String, java.lang.Object)
 	 */
-	public void addToScriptScope(String name, Object bean){
-		ScriptCache.insta().put(name, bean);
+	public <T> void addToScriptScope(String var){
+		Object o = XSPUtils.getBean(var);
+		o = XSPUtils.appScope().get(var);
+		if(o!=null){
+			Data.insta().put(XSPUtils.webPath(), var, o);
+		}else{
+			o = XSPUtils.sessionScope().get(var);
+			String key = XSPUtils.webPath() + "/" + XSPUtils.getSessionId();
+			Data.insta().put(key, var, o);
+		}
+	}
+
+
+	
+	@Deprecated
+	public SocketMessage createSocketMessage(){
+		return this.createMessage();
+	}
+	
+	public SocketMessage createMessage(){
+		return new SocketMessage().id(UUID.randomUUID().toString());
 	}
 
 }

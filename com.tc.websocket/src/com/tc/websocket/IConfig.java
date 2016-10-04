@@ -3,6 +3,7 @@
  */
 package com.tc.websocket;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 
@@ -369,5 +370,8 @@ public interface IConfig {
 	 * @return the string
 	 */
 	public String property(String key);
+	
+	
+	public Charset getCharSet();
 
 }

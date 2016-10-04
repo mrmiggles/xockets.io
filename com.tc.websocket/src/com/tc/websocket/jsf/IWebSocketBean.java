@@ -66,6 +66,8 @@ public interface IWebSocketBean {
 	 * @throws NotesException the notes exception
 	 */
 	public abstract List<SelectItem> getOnlineUsers() throws NotesException;
+	
+	public abstract List<SelectItem> getUsersByUri(String uri) throws NotesException;
 
 	/**
 	 * Gets the web socket url.
@@ -89,6 +91,9 @@ public interface IWebSocketBean {
 	 * @param msg the msg
 	 */
 	public abstract void sendMessage(SocketMessage msg);
+	
+	
+	public abstract void sendMessageWithDelay(SocketMessage msg, int seconds);
 	
 	/**
 	 * Sets the request.
@@ -300,12 +305,19 @@ public interface IWebSocketBean {
 	
 	
 	/**
-	 * Register bean with scripts.
 	 * Make an object available to executing scripts on the server
-	 * Note:  You are responsible for creating a name/key that will not collide with other scripts
-	 * @param key the key
+	 * Note:  You are responsible lifetime of the object and for creating a name/key that will not collide with other scripts
+	 * @param var the key
 	 * @param bean the bean
 	 */
-	public void addToScriptScope(String key, Object bean);
+	public <T> void addToScriptScope(String var);
+	
+	
+	@Deprecated
+	public SocketMessage createSocketMessage();
+	
+	
+	public SocketMessage createMessage();
+	
 	
 }

@@ -22,16 +22,18 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.ContinuationWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import org.apache.commons.io.FileUtils;
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 import com.tc.websocket.Config;
@@ -55,6 +57,8 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
 	/** The domino server. */
 	private IDominoWebSocketServer dominoServer;
+	
+	private StringBuilder textBuffer = new StringBuilder();
 
 	/** The guicer. */
 	@Inject
@@ -82,7 +86,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 	}
 
 
-	
+
 
 	/* (non-Javadoc)
 	 * @see io.netty.channel.SimpleChannelInboundHandler#channelRead0(io.netty.channel.ChannelHandlerContext, java.lang.Object)
@@ -97,14 +101,13 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 	}
 
 
-	
+
 
 	/* (non-Javadoc)
 	 * @see io.netty.channel.ChannelInboundHandlerAdapter#channelReadComplete(io.netty.channel.ChannelHandlerContext)
 	 */
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) {
-		//print ("channelReadComplete");
 		ctx.flush();
 	}
 
@@ -124,7 +127,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 			dominoServer.onOpen(this.newWrapper(ctx), req);
 		}
 	}
-	
+
 	/**
 	 * New wrapper.
 	 *
@@ -144,36 +147,52 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 	 */
 	private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
 
-		// Check for closing frame
-		if (frame instanceof CloseWebSocketFrame) {
-			dominoServer.onClose(this.newWrapper(ctx));
-			handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
-			return;
+		try{
+
+			// Check for closing frame
+			if (frame instanceof CloseWebSocketFrame) {
+				dominoServer.onClose(this.newWrapper(ctx));
+				handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
+				return;
+
+			}
+			if (frame instanceof PingWebSocketFrame) {
+				ctx.channel().write(new PongWebSocketFrame(frame.content().retain()));
+				return;
+			}
+
+
+			if(frame instanceof PongWebSocketFrame){
+				return;//do nothing.
+				
+			}
+
+
+			if(frame instanceof TextWebSocketFrame){
+				String message = ((TextWebSocketFrame) frame).text();
+				textBuffer.append(message);
+			}else if(frame instanceof ContinuationWebSocketFrame){
+				textBuffer.append(((ContinuationWebSocketFrame) frame).text());
+			}
 			
-		}
-		if (frame instanceof PingWebSocketFrame) {
-			ctx.channel().write(new PongWebSocketFrame(frame.content().retain()));
-			return;
-		}
-		
-		
-		if(frame instanceof PongWebSocketFrame){
-			return;//do nothing.
-		}
-		
-		
-		if (!(frame instanceof TextWebSocketFrame)) {
-			throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass()
-					.getName()));
-		}
+	
+			if(frame.isFinalFragment()){
+				dominoServer.onMessage(this.newWrapper(ctx), textBuffer.toString());
+				textBuffer = new StringBuilder();
+			}
+			
 
-		String message = ((TextWebSocketFrame) frame).text();
-		dominoServer.onMessage(this.newWrapper(ctx), message);
-
-
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeToTempFile(String fragment, boolean isFinal) throws IOException{
+		File file = File.createTempFile((isFinal ? "final" : "frag"),".json");
+		FileUtils.write(file,fragment);
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see io.netty.channel.ChannelInboundHandlerAdapter#exceptionCaught(io.netty.channel.ChannelHandlerContext, java.lang.Throwable)
 	 */

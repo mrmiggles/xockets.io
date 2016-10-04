@@ -108,6 +108,7 @@ public class JSRScript extends Script{
 					Compilable compilingEngine = (Compilable)engine;
 					this.setCompiled(compilingEngine.compile(this.getScript()));
 				}catch(final Throwable ex){
+					toFile();
 					LOG.log(Level.SEVERE, null, ex);
 					b = false;
 				}
@@ -115,9 +116,13 @@ public class JSRScript extends Script{
 		}catch(Exception e){
 			LOG.log(Level.SEVERE,null, e);
 			b = false;
+			
 		}
 		return b;
 	}
+	
+	
+
 
 	
 	/**
@@ -207,10 +212,13 @@ public class JSRScript extends Script{
 
 		}catch(ScriptException se){
 			LOG.log(Level.SEVERE,null, se);
+			this.toFile();
 			
 		
 		}catch (Exception e) {
 			LOG.log(Level.SEVERE, null, e);
+			this.toFile();
+			
 			
 		} finally {
 			this.closeSession(session);

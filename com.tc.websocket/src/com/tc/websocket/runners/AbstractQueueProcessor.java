@@ -74,7 +74,7 @@ public abstract class AbstractQueueProcessor extends NotesOperation {
 
 				//validate the data was bound correctly.
 				if(msg.isValid()){
-					boolean b = server.onMessage(to, msg.getJson());
+					boolean b = server.onMessage(to, msg.toJson());
 					if(b){
 						doc.replaceItemValue(Const.FIELD_SENTFLAG, Const.FIELD_SENTFLAG_VALUE_SENT);
 						doc.save();

@@ -85,6 +85,7 @@ public class BSHScript extends Script {
 			this.setLastRun(new Date());
 		
 		}catch(Exception e){
+			
 			LOG.log(Level.SEVERE,null, e);
 		}finally{
 			this.closeSession(session);

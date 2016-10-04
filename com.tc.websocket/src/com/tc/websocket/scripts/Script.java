@@ -17,10 +17,12 @@
 
 package com.tc.websocket.scripts;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,16 +33,26 @@ import lotus.domino.Database;
 import lotus.domino.NotesException;
 import lotus.domino.Session;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 import com.tc.guice.domino.module.SessionFactory;
+import com.tc.utils.AttachUtils;
+import com.tc.utils.Base64;
 import com.tc.utils.BundleUtils;
+import com.tc.utils.ColUtils;
 import com.tc.utils.DateUtils;
 import com.tc.utils.DxlUtils;
+import com.tc.utils.StopWatch;
+import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
 import com.tc.websocket.Config;
 import com.tc.websocket.Const;
 import com.tc.websocket.IConfig;
+import com.tc.websocket.jsf.Data;
+import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 
 
@@ -49,55 +61,63 @@ import com.tc.websocket.valueobjects.SocketMessage;
  * The Class Script.
  */
 public abstract class Script implements Runnable {
-	
+
 	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(Script.class.getName());
-	
+
 	/** The uri. */
 	private String uri;
-	
+
 	/** The wild. */
 	private boolean wild;
-	
+
 	/** The function. */
 	private String function;
-	
+
 	/** The script. */
 	private String script;
-	
+
 	/** The source. */
 	private String source;
-	
+
 	/** The to string. */
 	private String toString;
-	
+
 	/** The interval. */
 	private int interval;
-	
+
 	/** The last run. */
 	private Date lastRun = new Date();
-	
+
 	/** The password. */
 	protected String user, password;
-	
+
 	/** The args. */
 	protected Object[] args;
-	
+
+	private IConfig cfg = Config.getInstance();
+
+
+
+
 	/** The guicer. */
 	@Inject
 	IGuicer guicer;
-	
-	
+
+
 	/**
 	 * Should run.
 	 *
-	 * @return true, if successful
+	 * @return true, if successfulg
 	 */
 	public boolean shouldRun(){
 		boolean b = true;
+		
+		//scripts don't run for broadcast messages.
 		if(this.isIntervaled()){
 			long secs = DateUtils.getTimeDiffSec(lastRun , new Date());
 			b =  secs > interval;
+			
 		}
 		return b;
 	}
@@ -120,7 +140,7 @@ public abstract class Script implements Runnable {
 	protected Session openSession(){
 		Session session = null;
 		IConfig cfg = Config.getInstance();
-		
+
 		if(hasCreds()){
 			session = SessionFactory.openSessionDefaultToTrusted(user, password);
 		}else{
@@ -128,16 +148,8 @@ public abstract class Script implements Runnable {
 		}
 		return session;
 	}
-	
-	/**
-	 * Sets the arts.
-	 *
-	 * @param args the new arts
-	 */
-	public void setArts(Object ...args){
-		this.args = args;
-	}
-	
+
+
 	/**
 	 * Close session.
 	 *
@@ -146,7 +158,7 @@ public abstract class Script implements Runnable {
 	protected void closeSession(Session session){
 		SessionFactory.closeSession(session);
 	}
-	
+
 
 
 
@@ -160,7 +172,7 @@ public abstract class Script implements Runnable {
 		this.user = user;
 		this.password = password;
 	}
-	
+
 	/**
 	 * Checks for creds.
 	 *
@@ -169,7 +181,7 @@ public abstract class Script implements Runnable {
 	public boolean hasCreds(){
 		return this.user!=null && this.password!=null;
 	}
-	
+
 	/**
 	 * Gets the function.
 	 *
@@ -187,7 +199,7 @@ public abstract class Script implements Runnable {
 	public void setFunction(String event) {
 		this.function = event;
 	}
-	
+
 	/**
 	 * Gets the script.
 	 *
@@ -196,7 +208,7 @@ public abstract class Script implements Runnable {
 	public String getScript() {
 		return script;
 	}
-	
+
 	/**
 	 * Sets the script.
 	 *
@@ -205,7 +217,7 @@ public abstract class Script implements Runnable {
 	public void setScript(String script) {
 		this.script = script;
 	}
-	
+
 	/**
 	 * Gets the source.
 	 *
@@ -214,7 +226,7 @@ public abstract class Script implements Runnable {
 	public String getSource() {
 		return source;
 	}
-	
+
 	/**
 	 * Sets the source.
 	 *
@@ -223,9 +235,9 @@ public abstract class Script implements Runnable {
 	public void setSource(String source) {
 		this.source = source;
 	}
-	
-	
-	
+
+
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -237,8 +249,8 @@ public abstract class Script implements Runnable {
 		}
 		return toString;
 	}
-	
-	
+
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -251,9 +263,9 @@ public abstract class Script implements Runnable {
 		}
 		return b;
 	}
-	
-	
-	
+
+
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -262,9 +274,9 @@ public abstract class Script implements Runnable {
 	public int hashCode(){
 		return this.toString().hashCode();
 	}
-	
 
-	
+
+
 	/**
 	 * Gets the uri.
 	 *
@@ -286,7 +298,7 @@ public abstract class Script implements Runnable {
 			this.uri = this.uri.substring(0,this.uri.length() -1);
 		}
 	}
-	
+
 	/**
 	 * Checks if is wild.
 	 *
@@ -304,8 +316,8 @@ public abstract class Script implements Runnable {
 	public void setWild(boolean wild) {
 		this.wild = wild;
 	}
-	
-	
+
+
 	/**
 	 * Gets the resource.
 	 *
@@ -316,7 +328,7 @@ public abstract class Script implements Runnable {
 		return resource;
 	}
 
-	
+
 	/**
 	 * Db path.
 	 *
@@ -327,7 +339,7 @@ public abstract class Script implements Runnable {
 		String dbpath = path.substring(1, path.lastIndexOf(StringCache.DOT_NSF)) + ".nsf";
 		return dbpath;	
 	}
-	
+
 	/**
 	 * Extract file.
 	 *
@@ -339,17 +351,27 @@ public abstract class Script implements Runnable {
 		try{
 			session = this.openSession();
 			Database db = session.getDatabase(StringCache.EMPTY, this.dbPath());
+
+			if(!db.isOpen()){
+				db.open();
+			}
+
 			byte[] byteMe = DxlUtils.findFileResource(db, this.getResource());
-			script = new String(byteMe);
+			script = new String(byteMe, cfg.getCharSet());
+
+			//resolve dependencies.
+			script = new ScriptAggregator(db).build(script);
+
 		}catch(Exception n){
-			n.printStackTrace();
+			LOG.log(Level.SEVERE, null, n);
+
 		}finally{
 			this.closeSession(session);
 		}
-			
+
 		return script;
 	}
-	
+
 	/**
 	 * Extract script.
 	 *
@@ -367,15 +389,22 @@ public abstract class Script implements Runnable {
 		try {
 			db = session.getDatabase(StringCache.EMPTY, dbPath());
 			byte[] byteMe = DxlUtils.findSSJS(db, resource);
-			script = new String(byteMe).trim();
+			script = new String(byteMe, cfg.getCharSet()).trim();
+
+			//resolve all dependencies.
+			script = new ScriptAggregator(db).build(script);
+
 		} catch (NotesException e) {
 			LOG.log(Level.SEVERE, null, e);
 
-		} finally {
+		}catch(Exception e){
+			LOG.log(Level.SEVERE,null, e);
+
+		}finally {
 			SessionFactory.closeSession(session);
 		}
 
-		return script;
+		return script.replace("\0", "");
 	}
 
 	/**
@@ -385,7 +414,7 @@ public abstract class Script implements Runnable {
 	 * @return the script
 	 */
 	public abstract Script copy(Object ...args);
-	
+
 	/**
 	 * Recompile.
 	 *
@@ -393,7 +422,7 @@ public abstract class Script implements Runnable {
 	 * @return true, if successful
 	 */
 	public abstract boolean recompile(boolean reload);
-	
+
 	/**
 	 * Sets the args.
 	 *
@@ -402,7 +431,7 @@ public abstract class Script implements Runnable {
 	public void setArgs(Object ...args){
 		this.args = args;
 	}
-	
+
 	/**
 	 * Gets the args.
 	 *
@@ -411,7 +440,7 @@ public abstract class Script implements Runnable {
 	public Object[] getArgs(){
 		return this.args;
 	}
-	
+
 
 	/**
 	 * Source.
@@ -423,7 +452,7 @@ public abstract class Script implements Runnable {
 		this.source = source;
 		return this;
 	}
-	
+
 	/**
 	 * Uri.
 	 *
@@ -434,7 +463,7 @@ public abstract class Script implements Runnable {
 		this.setUri(uri);
 		return this;
 	}
-	
+
 	/**
 	 * Function.
 	 *
@@ -445,7 +474,7 @@ public abstract class Script implements Runnable {
 		this.function = function;
 		return this;
 	}
-	
+
 	/**
 	 * Creds.
 	 *
@@ -457,7 +486,7 @@ public abstract class Script implements Runnable {
 		this.setCreds(user, password);
 		return this;
 	}
-	
+
 	/**
 	 * Interval.
 	 *
@@ -469,8 +498,8 @@ public abstract class Script implements Runnable {
 		return this;
 	}
 
-	
-	
+
+
 	/**
 	 * New script.
 	 *
@@ -480,25 +509,25 @@ public abstract class Script implements Runnable {
 	public static Script newScript(String resource){
 		Script script = null;
 		String engine = SupportedEngine.findEngine(resource);
-		
+
 		if(SupportedEngine.AGENT.engine().equalsIgnoreCase(engine)){
 			script = new AgentScript();
-		
+
 		}else if(SupportedEngine.PYTHON.engine().equalsIgnoreCase(engine)){
 			script = new PythonScript();
-		
+
 		}else if(SupportedEngine.BEANSHELL.engine().equalsIgnoreCase(engine)){
 			script= new BSHScript();
 		}
 		else{
 			script = new JSRScript(engine);
 		}
-		
+
 		script.setSource(resource);
-		
+
 		return script;
 	}
-	
+
 	/**
 	 * Checks if is calling itself.
 	 *
@@ -525,12 +554,12 @@ public abstract class Script implements Runnable {
 	 */
 	public static void printEngines(){
 		ScriptEngineManager manager = new ScriptEngineManager();
-        List<ScriptEngineFactory> engines = manager.getEngineFactories();
+		List<ScriptEngineFactory> engines = manager.getEngineFactories();
 		for(ScriptEngineFactory engine : engines){
 			System.out.println(engine.getEngineName());
 		}
 	}
-	
+
 	/**
 	 * Gets the interval.
 	 *
@@ -567,7 +596,7 @@ public abstract class Script implements Runnable {
 	public void setLastRun(Date lastRun) {
 		this.lastRun = lastRun;
 	}
-	
+
 	/**
 	 * Gets the common vars.
 	 *
@@ -579,11 +608,86 @@ public abstract class Script implements Runnable {
 		vars.put(Const.FUNCTION, this.getFunction());
 		vars.put(Const.VAR_SESSION, session);
 		vars.put(Const.VAR_BUNDLE_UTILS, new BundleUtils());
-		vars.put(Const.VAR_WEBSOCKET_CLIENT, guicer.inject(new SimpleClient(this)));
+
 		vars.put(Const.VAR_TERM_SIGNAL, TermSignal.insta());
 		vars.put(Const.VAR_CACHE, ScriptCache.insta());
 		vars.put(Const.VAR_SCRIPT,new ScriptWrapper(this));
+		vars.put(Const.VAR_B64,Base64.insta());
+		vars.put(Const.VAR_STRUTILS,StrUtils.insta());
+		vars.put(Const.VAR_COLUTILS, ColUtils.insta());
+		vars.put(Const.VAR_STOPWATCH, new StopWatch());
+		vars.put(Const.VAR_FILEUTILS, new FileUtils());
+		vars.put(Const.VAR_IOUTILS,new IOUtils());
+		vars.put(Const.VAR_ATTACHUTILS, AttachUtils.insta());
+
+
+		SimpleClient client = guicer.inject(new SimpleClient(this));
+		vars.put(Const.VAR_WEBSOCKET_CLIENT, client);
+
+
+		String from = this.getFrom();
+
+		//add application scoped objects
+		String key = "/" + dbPath();
+		this.applyVars("/" + dbPath(), vars);
+
+
+
+		//now add user scoped objects
+		if(!StrUtils.isEmpty(from)){
+			IUser user = client.getUser(from);
+			if(user!=null){
+				key = "/" + dbPath() + "/" + user.getSessionId();
+				this.applyVars(key, vars);
+			}
+		}
+
+
+		//last bit, make sure db is available.
+		try{
+			vars.put(Const.VAR_DB, session.getDatabase("", this.dbPath()));
+		}catch(NotesException n){
+			LOG.log(Level.SEVERE, null, n);
+		}
+
+
 		return vars;
+	}
+
+	private String getFrom(){
+		String from = StringCache.EMPTY;
+		if(args!= null){
+			for(Object o : this.getArgs()){
+				if(o instanceof SocketMessage){
+					from = ((SocketMessage) o).getFrom();
+				}
+			}
+		}
+		return from;
+	}
+
+
+	private void applyVars(String key,Map<String,Object> vars ){
+		Map<String,Object> sessionVars = Data.insta().get(key);
+		if(sessionVars != null){
+			for(Entry<String, Object> entry : sessionVars.entrySet()){
+				vars.put(entry.getKey(), entry.getValue());
+			}
+		}
+	}
+
+
+
+
+	public void toFile(){
+		try{
+			File file = File.createTempFile("tmp", ".txt");
+			FileUtils.write(file, this.getScript());
+			LOG.log(Level.SEVERE,"aggregate file has been created for debug");
+			LOG.log(Level.SEVERE, file.getPath());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 }
