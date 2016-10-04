@@ -213,12 +213,12 @@ public class JSRScript extends Script{
 		}catch(ScriptException se){
 			LOG.log(Level.SEVERE,null, se);
 			this.toFile();
-			errorCount.incrementAndGet();
+			
 		
 		}catch (Exception e) {
 			LOG.log(Level.SEVERE, null, e);
 			this.toFile();
-			errorCount.incrementAndGet();
+			
 			
 		} finally {
 			this.closeSession(session);

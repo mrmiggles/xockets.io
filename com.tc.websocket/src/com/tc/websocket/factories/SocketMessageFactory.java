@@ -111,9 +111,6 @@ public class SocketMessageFactory implements ISocketMessageFactory {
 				return new SocketMessage();//return empty invalid message.
 			}
 
-
-			msg.setJson(json);//so we don't have to re-serialize...
-
 		}catch(Exception e){
 			LOG.log(Level.SEVERE,null, e);
 			try{

@@ -62,9 +62,6 @@ public class SocketMessage {
 	/** The string. */
 	private String string;
 	
-	/** The json. */
-	private String json;//serialized form of this object.
-	
 	/** The durable. */
 	private boolean durable;
 	
@@ -236,31 +233,9 @@ public class SocketMessage {
 	 */
 	@JsonIgnore
 	public String toJson(){
-		if(this.getJson() == null){
-			this.setJson(JSONUtils.toJson(this));
-		}
-		return this.getJson();
+		return JSONUtils.toJson(this);
 	}
 
-	/**
-	 * Gets the json.
-	 *
-	 * @return the json
-	 */
-	@JsonIgnore
-	public String getJson() {
-		return json;
-	}
-
-	/**
-	 * Sets the json.
-	 *
-	 * @param json the new json
-	 */
-	@JsonIgnore
-	public void setJson(String json) {
-		this.json = json;
-	}
 
 	/**
 	 * Checks if is durable.

@@ -47,7 +47,7 @@ public class MessagingLoadTest{
 		cfg.overrideProperty("print.on.count", "100");
 		cfg.overrideProperty("number.of.clients", "1000");
 		cfg.overrideProperty("compression.enabled", "false");
-		cfg.overrideProperty("message.delay", "100");
+		cfg.overrideProperty("message.delay", "500");
 		
 		
 		loader = new MessagingLoadTest();

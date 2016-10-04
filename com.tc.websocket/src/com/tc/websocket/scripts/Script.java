@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -95,10 +94,11 @@ public abstract class Script implements Runnable {
 
 	/** The args. */
 	protected Object[] args;
-	
+
 	private IConfig cfg = Config.getInstance();
-	
-	protected AtomicInteger errorCount = new AtomicInteger(0);
+
+
+
 
 	/** The guicer. */
 	@Inject
@@ -112,13 +112,12 @@ public abstract class Script implements Runnable {
 	 */
 	public boolean shouldRun(){
 		boolean b = true;
-		if(errorCount.intValue() > Const.SCRIPT_MAX_ERRORS){
-			LOG.log(Level.SEVERE, this.getSource() + " maxed out errors and will not run.");
-			b = false;
-			
-		}else if(this.isIntervaled()){
+		
+		//scripts don't run for broadcast messages.
+		if(this.isIntervaled()){
 			long secs = DateUtils.getTimeDiffSec(lastRun , new Date());
 			b =  secs > interval;
+			
 		}
 		return b;
 	}
@@ -609,7 +608,7 @@ public abstract class Script implements Runnable {
 		vars.put(Const.FUNCTION, this.getFunction());
 		vars.put(Const.VAR_SESSION, session);
 		vars.put(Const.VAR_BUNDLE_UTILS, new BundleUtils());
-		vars.put(Const.VAR_WEBSOCKET_CLIENT, guicer.inject(new SimpleClient(this)));
+
 		vars.put(Const.VAR_TERM_SIGNAL, TermSignal.insta());
 		vars.put(Const.VAR_CACHE, ScriptCache.insta());
 		vars.put(Const.VAR_SCRIPT,new ScriptWrapper(this));
@@ -620,31 +619,54 @@ public abstract class Script implements Runnable {
 		vars.put(Const.VAR_FILEUTILS, new FileUtils());
 		vars.put(Const.VAR_IOUTILS,new IOUtils());
 		vars.put(Const.VAR_ATTACHUTILS, AttachUtils.insta());
-		
-		
-		IUser user = this.getUser(); //user isn't always present (e.g. intervaled scripts)
-		
+
+
+		SimpleClient client = guicer.inject(new SimpleClient(this));
+		vars.put(Const.VAR_WEBSOCKET_CLIENT, client);
+
+
+		String from = this.getFrom();
+
 		//add application scoped objects
 		String key = "/" + dbPath();
 		this.applyVars("/" + dbPath(), vars);
-		
+
+
+
 		//now add user scoped objects
-		if(user!=null){
-			key = "/" + dbPath() + "/" + user.getSessionId();
-			this.applyVars(key, vars);
+		if(!StrUtils.isEmpty(from)){
+			IUser user = client.getUser(from);
+			if(user!=null){
+				key = "/" + dbPath() + "/" + user.getSessionId();
+				this.applyVars(key, vars);
+			}
 		}
-		
+
+
 		//last bit, make sure db is available.
 		try{
 			vars.put(Const.VAR_DB, session.getDatabase("", this.dbPath()));
 		}catch(NotesException n){
 			LOG.log(Level.SEVERE, null, n);
 		}
-		
+
 
 		return vars;
 	}
-	
+
+	private String getFrom(){
+		String from = StringCache.EMPTY;
+		if(args!= null){
+			for(Object o : this.getArgs()){
+				if(o instanceof SocketMessage){
+					from = ((SocketMessage) o).getFrom();
+				}
+			}
+		}
+		return from;
+	}
+
+
 	private void applyVars(String key,Map<String,Object> vars ){
 		Map<String,Object> sessionVars = Data.insta().get(key);
 		if(sessionVars != null){
@@ -653,17 +675,8 @@ public abstract class Script implements Runnable {
 			}
 		}
 	}
-	
-	public IUser getUser(){
-		if(args != null){
-			for(Object o : this.getArgs()){
-				if(o instanceof IUser){
-					return (IUser) o;
-				}
-			}
-		}
-		return null;
-	}
+
+
 
 
 	public void toFile(){

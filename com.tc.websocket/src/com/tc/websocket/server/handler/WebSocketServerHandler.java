@@ -29,14 +29,11 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.apache.commons.io.FileUtils;
-
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 import com.tc.websocket.Config;
@@ -111,7 +108,6 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 	 */
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) {
-		//print ("channelReadComplete");
 		ctx.flush();
 	}
 
@@ -182,7 +178,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
 	
 			if(frame.isFinalFragment()){
 				dominoServer.onMessage(this.newWrapper(ctx), textBuffer.toString());
-				textBuffer.delete(0, textBuffer.length());
+				textBuffer = new StringBuilder();
 			}
 			
 

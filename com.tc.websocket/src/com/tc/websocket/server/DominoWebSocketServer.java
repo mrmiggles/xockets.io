@@ -1,5 +1,5 @@
 /*
- * © Copyright Tek Counsel LLC 2016
+ * Â© Copyright Tek Counsel LLC 2016
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -479,8 +479,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	public boolean onMessage(String to, String json){
 		boolean b = this.send(to, json);
 		SocketMessage msg =  JSONUtils.toObject(json, SocketMessage.class);
-		IUser user = this.resolveUser(msg.getFrom());
-		this.notifyEventObservers(Const.ON_MESSAGE, msg, user);
+		this.notifyEventObservers(Const.ON_MESSAGE, msg);
 		return b;
 	}
 	
@@ -597,7 +596,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		}
 
 		//now lets process the onBeforeMessage observers after all the other validations.
-		this.notifyEventObserversSync(Const.ON_BEFORE_MESSAGE, msg, user);
+		this.notifyEventObserversSync(Const.ON_BEFORE_MESSAGE, msg);
 		
 		
 		//if the message is set to short circuit halt it's processing.
@@ -639,7 +638,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		
 		
 		//notify the observers.
-		this.notifyEventObservers(Const.ON_MESSAGE, msg, user);
+		this.notifyEventObservers(Const.ON_MESSAGE, msg);
 	}
 
 

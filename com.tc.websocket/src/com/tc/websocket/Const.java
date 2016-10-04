@@ -372,9 +372,6 @@ public class Const {
 	
 	public static final String VAR_ATTACHUTILS="attachUtils";
 	
-	public static final int SCRIPT_MAX_ERRORS=5;
-	
-	
 	/** The Constant SOURCE_URI. */
 	//jsf object keys
 	public static final String SOURCE_URI="sourceUri";

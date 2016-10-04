@@ -100,7 +100,7 @@ public class AgentScript extends Script {
 
 
 		}catch(NotesException n){
-			errorCount.incrementAndGet();
+			
 			LOG.log(Level.SEVERE, null, n);
 		}finally{
 			this.closeSession(session);
@@ -121,8 +121,6 @@ public class AgentScript extends Script {
 
 			Document doc = db.createDocument();
 
-
-
 			IUser user = (IUser) this.args[0];
 
 			doc.replaceItemValue("userId",user.getUserId());
@@ -141,7 +139,7 @@ public class AgentScript extends Script {
 
 
 		}catch(NotesException n){
-			errorCount.incrementAndGet();
+			
 			LOG.log(Level.SEVERE, null, n);
 		}finally{
 			this.closeSession(session);
@@ -179,7 +177,7 @@ public class AgentScript extends Script {
 
 
 		}catch(NotesException n){
-			errorCount.incrementAndGet();
+			
 			LOG.log(Level.SEVERE, null, n);
 		}finally{
 			this.closeSession(session);
@@ -201,7 +199,7 @@ public class AgentScript extends Script {
 			Agent agent = db.getAgent(StrUtils.rightBack(this.getSource(), "/"));
 			agent.runWithDocumentContext(doc);
 		}catch(NotesException n){
-			errorCount.incrementAndGet();
+			
 			LOG.log(Level.SEVERE, null, n);
 		}finally{
 			this.closeSession(session);
