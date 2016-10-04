@@ -72,6 +72,11 @@ public class ScriptWrapper extends Script {
 	}
 	
 	
+	public String dbPath(){
+		return this.script.dbPath();
+	}
+	
+	
 
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.scripts.Script#isIntervaled()
