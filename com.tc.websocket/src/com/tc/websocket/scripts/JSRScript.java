@@ -115,6 +115,7 @@ public class JSRScript extends Script{
 			}
 		}catch(Exception e){
 			LOG.log(Level.SEVERE,null, e);
+			LOG.log(Level.SEVERE,null,"source=" +  this.getSource());
 			b = false;
 			
 		}
@@ -192,7 +193,7 @@ public class JSRScript extends Script{
 
 			// execute the compiled script.
 			if (getScript() == null){
-				throw new IllegalArgumentException("Script cannot be null");
+				throw new IllegalArgumentException(this.getSource() + " not found!");
 			}
 
 			

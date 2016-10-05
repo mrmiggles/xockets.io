@@ -520,7 +520,10 @@ public class User implements IUser {
 	public List<String> getUris() {
 		List<String> vec = new ArrayList<String>();
 		for(ContextWrapper wrapper : this.getConnections()){
-			vec.add(this.parseUri(wrapper));
+			String uri = this.parseUri(wrapper);
+			if(!vec.contains(uri)){
+				vec.add(uri);
+			}
 		}
 		
 		
@@ -532,7 +535,9 @@ public class User implements IUser {
 			}else{
 				str = str + StringCache.FORWARD_SLASH + this.getUserId();
 			}
-			list.add(str);
+			if(!list.contains(str)){
+				list.add(str);
+			}
 		}
 		
 		vec.addAll(list);

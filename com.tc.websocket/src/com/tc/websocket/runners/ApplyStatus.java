@@ -68,7 +68,7 @@ public class ApplyStatus extends NotesOperation {
 		this.user = user;
 	}
 
-	
+
 	/**
 	 * Sets the remove user.
 	 *
@@ -79,7 +79,7 @@ public class ApplyStatus extends NotesOperation {
 		this.removeUser=removeUser;
 		return this;
 	}
-	
+
 
 
 	/* (non-Javadoc)
@@ -97,11 +97,11 @@ public class ApplyStatus extends NotesOperation {
 
 			if(user.isGoingOffline()){
 				this.offline();
-				
+
 
 			}else {
 				this.online();
-				
+
 
 			}
 		}
@@ -135,7 +135,7 @@ public class ApplyStatus extends NotesOperation {
 				doc.replaceItemValue(Const.FIELD_STATUS, this.getStatus());
 				doc.replaceItemValue(Const.FIELD_HOST, user.getHost());
 				doc.replaceItemValue(Const.FIELD_URI, ColUtils.toVector(user.getUris()));
-				
+
 				doc.save();
 
 				user.setDocId(doc.getUniversalID());
@@ -145,8 +145,8 @@ public class ApplyStatus extends NotesOperation {
 				}
 
 				doc.recycle();
-				
-				
+
+
 			}
 
 
@@ -176,7 +176,7 @@ public class ApplyStatus extends NotesOperation {
 				Document doc = this.getUserDoc(session, false);
 
 				if(doc==null) return;
-				
+
 				if(user.isOpen()==false){
 					this.user.setStatus(Const.STATUS_OFFLINE);
 				}
@@ -199,8 +199,8 @@ public class ApplyStatus extends NotesOperation {
 
 
 				doc.recycle();
-				
-				
+
+
 			}
 
 		} catch (NotesException e) {
@@ -209,26 +209,6 @@ public class ApplyStatus extends NotesOperation {
 		}finally{
 			this.closeSession(session);
 		}
-	}
-
-
-	/**
-	 * Gets the by UNID.
-	 *
-	 * @param db the db
-	 * @param unid the unid
-	 * @return the by UNID
-	 */
-	private Document getByUNID(Database db, String unid){
-		Document doc = null;
-
-		try {
-			doc = db.getDocumentByUNID(unid);
-		} catch (NotesException e) {
-			LOG.log(Level.FINE, e.text);
-		}
-
-		return doc;
 	}
 
 	/**
@@ -243,27 +223,20 @@ public class ApplyStatus extends NotesOperation {
 		Database db = session.getDatabase(StringCache.EMPTY, Const.WEBSOCKET_PATH);
 		Document doc = null;
 
-		if(!StrUtils.isEmpty(user.getDocId())){
-			doc = this.getByUNID(db, user.getDocId());
-		}
-
+		View users = db.getView(Const.VIEW_USERS);
+		View sessions = db.getView(Const.VIEW_SESSIONS);
+		doc = users.getDocumentByKey(user.getUserId().trim(),true);
 		if(doc == null){
-			View users = db.getView(Const.VIEW_USERS);
-			View sessions = db.getView(Const.VIEW_SESSIONS);
-			doc = users.getDocumentByKey(user.getUserId().trim(),true);
-			if(doc == null){
-				doc = sessions.getDocumentByKey(user.getSessionId(),true);
-			}
-			//if we get here... create the doc.
-			if(doc==null && create){
-				doc = db.createDocument();
-			}
-			//cleanup
-			users.recycle();
-			sessions.recycle();
-
-
+			doc = sessions.getDocumentByKey(user.getSessionId(),true);
 		}
+		//if we get here... create the doc.
+		if(doc==null && create){
+			doc = db.createDocument();
+		}
+		//cleanup
+		users.recycle();
+		sessions.recycle();
+
 		return doc;
 	}
 

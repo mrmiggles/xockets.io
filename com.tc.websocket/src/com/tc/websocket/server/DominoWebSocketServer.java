@@ -936,8 +936,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			Collection<Script> scripts = SCRIPT_MAP.get(new RoutingPath(uri));
 			for(Script script : scripts){
 				SocketMessage msg = JSONUtils.toObject(json, SocketMessage.class);
-				IUser user = this.resolveUser(msg.getFrom());
-				TaskRunner.getInstance().add(script.copy(msg, user));
+				TaskRunner.getInstance().add(script.copy(msg));
 				b = true;
 			}
 		}catch(Exception e){
