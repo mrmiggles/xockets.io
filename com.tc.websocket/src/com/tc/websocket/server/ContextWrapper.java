@@ -587,7 +587,7 @@ public class ContextWrapper implements ChannelHandlerContext {
 	 * @return true, if is open
 	 */
 	public boolean isOpen(){
-		return this.ctx!=null && this.ctx.channel()!=null && this.ctx.channel().isOpen();
+		 return this.ctx!=null && this.ctx.channel()!=null && this.ctx.channel().isOpen();
 	}
 
 	

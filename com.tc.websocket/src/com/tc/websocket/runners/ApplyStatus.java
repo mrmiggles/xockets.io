@@ -179,6 +179,8 @@ public class ApplyStatus extends NotesOperation {
 
 				if(user.isOpen()==false){
 					this.user.setStatus(Const.STATUS_OFFLINE);
+				}else{
+					this.user.setGoingOffline(false);//reset flag
 				}
 
 				doc.replaceItemValue(Const.FIELD_FORM, Const.FIELD_VALUE_USER);

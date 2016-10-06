@@ -445,7 +445,7 @@ public class User implements IUser {
 		boolean b = this.getConn()!=null
 				&& this.getStatus().equals(Const.STATUS_ONLINE)
 				&& this.isOnServer()
-				&& !this.getConn().isClosed() && !this.isGoingOffline();
+				&& this.isOpen() && !this.isGoingOffline();
 
 		return b;
 	}
