@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.tc.guice.domino.module.ServerInfo;
 import com.tc.utils.JSONUtils;
@@ -66,7 +67,7 @@ public class User implements IUser {
 	
 
 	/** The going offline. */
-	private boolean goingOffline;
+	private AtomicBoolean goingOffline= new AtomicBoolean(false);
 	
 	/** The conn. */
 	private ContextWrapper conn;
@@ -216,8 +217,8 @@ public class User implements IUser {
 	 * @see com.tc.websocket.valueobjects.IUser#isGoingOffline()
 	 */
 	@Override
-	public synchronized boolean isGoingOffline() {
-		return goingOffline;
+	public boolean isGoingOffline() {
+		return goingOffline.get();
 	}
 
 
@@ -226,8 +227,9 @@ public class User implements IUser {
 	 * @see com.tc.websocket.valueobjects.IUser#setGoingOffline(boolean)
 	 */
 	@Override
-	public synchronized void setGoingOffline(boolean goingOffline) {
-		this.goingOffline = goingOffline;
+	public void setGoingOffline(boolean b) {
+		this.goingOffline.getAndSet(b);
+		
 	}
 
 
@@ -445,7 +447,7 @@ public class User implements IUser {
 		boolean b = this.getConn()!=null
 				&& this.getStatus().equals(Const.STATUS_ONLINE)
 				&& this.isOnServer()
-				&& this.isOpen() && !this.isGoingOffline();
+				&& this.isOpen();// && !this.isGoingOffline();
 
 		return b;
 	}
