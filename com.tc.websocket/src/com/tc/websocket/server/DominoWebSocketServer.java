@@ -478,14 +478,13 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	 */
 	public boolean onMessage(String to, String json){
 		boolean b = this.send(to, json);
-		SocketMessage msg =  JSONUtils.toObject(json, SocketMessage.class);
-		this.notifyEventObservers(Const.ON_MESSAGE, msg);
+		this.notifyEventObservers(Const.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
 		return b;
 	}
 	
+	
 	public boolean onMessage(SocketMessage msg){
 		boolean b = false;
-		IUser user = VALID_USERS.get(msg.getFrom());
 		if(msg.hasMultipleTargets()){
 			msg.addTarget(msg.getTo());
 			List<String> targets = new ArrayList<String>();
@@ -493,11 +492,14 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			for(String target : targets){
 				msg.setTo(target);
 				msg.getTargets().clear();
-				this.processMessage(user, msg, JSONUtils.toJson(msg));
+				this.send(target, JSONUtils.toJson(msg));
 			}
 		}else{
-			this.processMessage(user, msg, JSONUtils.toJson(msg));
+			this.send(msg.getTo(), JSONUtils.toJson(msg));
 		}
+		
+		this.notifyEventObservers(Const.ON_MESSAGE, msg);
+		
 		return b;
 	}
 	
@@ -972,10 +974,6 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		this.notifyEventObservers(Const.ON_MESSAGE, msg);
 	}
 
-
-
-
-	
 
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.server.IDominoWebSocketServer#queueMessage(com.tc.websocket.valueobjects.SocketMessage)

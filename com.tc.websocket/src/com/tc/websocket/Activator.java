@@ -28,6 +28,8 @@ import org.osgi.framework.ServiceRegistration;
 // TODO: Auto-generated Javadoc
 /**
  * The Class Activator.
+ * Activator for the OSGi environment.
+ * Starts and Stops the xockets.io server.
  */
 public class Activator extends Plugin {
 
