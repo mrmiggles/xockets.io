@@ -477,13 +477,32 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	 * @see com.tc.websocket.server.IDominoWebSocketServer#onMessage(java.lang.String, java.lang.String)
 	 */
 	public boolean onMessage(String to, String json){
+		SocketMessage msg = JSONUtils.toObject(json, SocketMessage.class);
+		
+		//notify onBeforeMessage observers
+		this.notifyEventObserversSync(Const.ON_BEFORE_MESSAGE, msg);
+		
+		//check to see if the message should be halted.
+		if(msg.isShortCircuit()) return false;
+		
 		boolean b = this.send(to, json);
+		
+		//notify onMessage observers
 		this.notifyEventObservers(Const.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
+		
+		
 		return b;
 	}
 	
 	
 	public boolean onMessage(SocketMessage msg){
+		
+		//now lets process the onBeforeMessage observers after all the other validations.
+		this.notifyEventObserversSync(Const.ON_BEFORE_MESSAGE, msg);
+		
+		//if the message shouldn't be sent
+		if(msg.isShortCircuit()) return false;
+		
 		boolean b = false;
 		if(msg.hasMultipleTargets()){
 			msg.addTarget(msg.getTo());
