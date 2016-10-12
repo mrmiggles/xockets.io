@@ -30,6 +30,8 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -472,12 +474,37 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	}
 	
 	
+	private void applyDefaultAtts(SocketMessage msg){
+		this.applyDefaultAtts(null, msg);
+	}
+	
+	private void applyDefaultAtts(ContextWrapper wrapper, SocketMessage msg){
+
+		try{
+			if(wrapper == null){
+				String address = InetAddress.getLocalHost().getHostAddress();
+				msg.getData().put(Const.REMOTE_ADDRESS, address);
+				msg.getData().put(Const.LOCAL_ADDRESS, address);
+
+			}else{
+				msg.getData().put(Const.REMOTE_ADDRESS, wrapper.channel().remoteAddress().toString());
+				msg.getData().put(Const.LOCAL_ADDRESS, wrapper.channel().localAddress().toString());
+			}
+		}catch(UnknownHostException e){
+			LOG.log(Level.SEVERE, null, e);
+		}
+
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see com.tc.websocket.server.IDominoWebSocketServer#onMessage(java.lang.String, java.lang.String)
 	 */
 	public boolean onMessage(String to, String json){
 		SocketMessage msg = JSONUtils.toObject(json, SocketMessage.class);
+		
+		//apply the standard atts.
+		this.applyDefaultAtts(msg);
 		
 		//notify onBeforeMessage observers
 		this.notifyEventObserversSync(Const.ON_BEFORE_MESSAGE, msg);
@@ -496,6 +523,9 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	
 	
 	public boolean onMessage(SocketMessage msg){
+		
+		//apply default atts
+		this.applyDefaultAtts(msg);
 		
 		//now lets process the onBeforeMessage observers after all the other validations.
 		this.notifyEventObserversSync(Const.ON_BEFORE_MESSAGE, msg);
@@ -549,8 +579,13 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			messages.add(JSONUtils.toObject(json, SocketMessage.class));
 		}
 
-
+		
+		
 		for(SocketMessage msg : messages){
+			
+			//apply default atts
+			this.applyDefaultAtts(conn, msg);
+			
 			if(msg.hasMultipleTargets()){
 				msg.addTarget(msg.getTo());
 				List<String> targets = new ArrayList<String>();
@@ -561,6 +596,8 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 					this.processMessage(user, msg, JSONUtils.toJson(msg));
 				}
 			}else{
+				//apply default atts
+				this.applyDefaultAtts(conn, msg);
 				this.processMessage(user, msg, JSONUtils.toJson(msg));
 			}
 		}
@@ -615,7 +652,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		if(!user.getUserId().equals(msg.getFrom())){
 			throw new IllegalArgumentException("Invalid value in from. from must equal current user's Id " + user.getUserId() + " " + msg.getFrom());
 		}
-
+		
 		//now lets process the onBeforeMessage observers after all the other validations.
 		this.notifyEventObserversSync(Const.ON_BEFORE_MESSAGE, msg);
 		
