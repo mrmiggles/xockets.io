@@ -391,7 +391,16 @@ public class User implements IUser {
 		Collection<ContextWrapper> results = this.findConnection(path);
 		Iterator<ContextWrapper> iter = results.iterator();
 		while(iter.hasNext()){
-			iter.next().send(message);
+			if(msg.isOnlyText()){
+				iter.next().send(msg.getText());
+				
+			}else if(msg.isOnlyData()){
+				iter.next().send(JSONUtils.toJson(msg.getData()));
+				
+			}else{
+				iter.next().send(message);
+				
+			}
 		}
 	}
 

@@ -17,6 +17,20 @@
  */
 package com.tc.websocket.server.handler;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.commons.io.FileUtils;
+
+import com.google.inject.Inject;
+import com.tc.di.guicer.IGuicer;
+import com.tc.websocket.Config;
+import com.tc.websocket.Const;
+import com.tc.websocket.server.ContextWrapper;
+import com.tc.websocket.server.IDominoWebSocketServer;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -29,17 +43,6 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
-import com.google.inject.Inject;
-import com.tc.di.guicer.IGuicer;
-import com.tc.websocket.Config;
-import com.tc.websocket.Const;
-import com.tc.websocket.server.ContextWrapper;
-import com.tc.websocket.server.IDominoWebSocketServer;
 
 
 

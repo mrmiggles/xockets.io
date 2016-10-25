@@ -3,10 +3,6 @@
  */
 package com.tc.websocket.guice;
 
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.epoll.EpollEventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -21,6 +17,10 @@ import com.tc.websocket.server.handler.WebSocketValidationHandler;
 import com.tc.websocket.server.pipeline.IPipelineBuilder;
 import com.tc.websocket.server.pipeline.RedirectPipelineBuilder;
 import com.tc.websocket.server.pipeline.WebSocketPipelineBuilder;
+
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 
 
 // TODO: Auto-generated Javadoc

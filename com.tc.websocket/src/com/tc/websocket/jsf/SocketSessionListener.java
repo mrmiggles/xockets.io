@@ -21,12 +21,12 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSessionEvent;
 
-import lotus.domino.NotesException;
-
 import com.ibm.xsp.application.ApplicationEx;
 import com.ibm.xsp.application.events.SessionListener;
 import com.tc.utils.XSPUtils;
 import com.tc.websocket.Const;
+
+import lotus.domino.NotesException;
 
 
 
@@ -77,7 +77,7 @@ public class SocketSessionListener implements SessionListener {
 			userMgr.removeCurrentUser();
 		}
 		//cleanup any stored session vars
-		System.out.println("removing sessiondata for " + event.getSession().getId());
+		LOG.log(Level.INFO, "removing sessiondata for " + event.getSession().getId());
 		Data.insta().remove(event.getSession().getId());
 	}
 }

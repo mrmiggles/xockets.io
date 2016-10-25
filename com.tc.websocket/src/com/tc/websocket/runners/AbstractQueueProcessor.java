@@ -19,9 +19,6 @@ package com.tc.websocket.runners;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import lotus.domino.Document;
-import lotus.domino.NotesException;
-
 import com.google.inject.Inject;
 import com.tc.guice.domino.module.ServerInfo;
 import com.tc.utils.StringCache;
@@ -30,6 +27,9 @@ import com.tc.websocket.factories.ISocketMessageFactory;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
+
+import lotus.domino.Document;
+import lotus.domino.NotesException;
 
 
 // TODO: Auto-generated Javadoc

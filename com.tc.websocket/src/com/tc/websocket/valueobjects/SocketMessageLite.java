@@ -22,7 +22,6 @@ public class SocketMessageLite extends SocketMessage {
 	 * @see com.tc.websocket.valueobjects.SocketMessage#getText()
 	 */
 	@Override
-	@JsonIgnore
 	public String getText() {
 		return text;
 	}
@@ -32,7 +31,6 @@ public class SocketMessageLite extends SocketMessage {
 	 * @see com.tc.websocket.valueobjects.SocketMessage#setText(java.lang.String)
 	 */
 	@Override
-	@JsonIgnore
 	public void setText(String text) {
 		this.text = text;
 	}

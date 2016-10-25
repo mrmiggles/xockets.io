@@ -17,6 +17,17 @@
  */
 package com.tc.websocket.server.handler;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.tc.di.guicer.IGuicer;
+import com.tc.utils.StringCache;
+import com.tc.websocket.Const;
+import com.tc.websocket.server.pipeline.IPipelineBuilder;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
@@ -28,17 +39,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import com.tc.di.guicer.IGuicer;
-import com.tc.utils.StringCache;
-import com.tc.websocket.Const;
-import com.tc.websocket.server.pipeline.IPipelineBuilder;
 
 
 // TODO: Auto-generated Javadoc

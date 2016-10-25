@@ -18,8 +18,6 @@
 package com.tc.websocket.server;
 
 
-import io.netty.handler.codec.http.FullHttpRequest;
-
 import java.util.Collection;
 
 import com.tc.websocket.filter.IWebsocketFilter;
@@ -27,6 +25,8 @@ import com.tc.websocket.scripts.Script;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.websocket.valueobjects.structures.UriUserMap;
+
+import io.netty.handler.codec.http.FullHttpRequest;
 
 
 // TODO: Auto-generated Javadoc

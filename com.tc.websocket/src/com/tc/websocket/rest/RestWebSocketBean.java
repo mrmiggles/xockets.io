@@ -21,8 +21,6 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
-import lotus.domino.NotesException;
-
 import com.google.inject.Inject;
 import com.tc.utils.XSPUtils;
 import com.tc.websocket.jsf.AbstractWebSocketBean;
@@ -30,6 +28,8 @@ import com.tc.websocket.runners.ApplyStatus;
 import com.tc.websocket.runners.TaskRunner;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
+
+import lotus.domino.NotesException;
 
 
 // TODO: Auto-generated Javadoc

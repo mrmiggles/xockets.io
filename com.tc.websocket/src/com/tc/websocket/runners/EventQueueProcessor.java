@@ -19,16 +19,16 @@ package com.tc.websocket.runners;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.tc.utils.StringCache;
+import com.tc.websocket.Const;
+import com.tc.xpage.profiler.Stopwatch;
+
 import lotus.domino.Database;
 import lotus.domino.Document;
 import lotus.domino.DocumentCollection;
 import lotus.domino.NotesException;
 import lotus.domino.Session;
 import lotus.domino.View;
-
-import com.tc.utils.StringCache;
-import com.tc.websocket.Const;
-import com.tc.xpage.profiler.Stopwatch;
 
 
 

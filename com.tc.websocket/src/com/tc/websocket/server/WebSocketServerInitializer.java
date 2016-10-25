@@ -17,15 +17,6 @@
  */
 package com.tc.websocket.server;
 
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.FixedRecvByteBufAllocator;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslHandler;
-import io.netty.util.ResourceLeakDetector;
-import io.netty.util.ResourceLeakDetector.Level;
-
 import javax.net.ssl.SSLEngine;
 
 import com.google.inject.Inject;
@@ -37,6 +28,15 @@ import com.tc.websocket.IConfig;
 import com.tc.websocket.ISSLFactory;
 import com.tc.websocket.server.handler.ProxyFrontendHandler;
 import com.tc.websocket.server.pipeline.IPipelineBuilder;
+
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.FixedRecvByteBufAllocator;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.util.ResourceLeakDetector;
+import io.netty.util.ResourceLeakDetector.Level;
 
 
 // TODO: Auto-generated Javadoc

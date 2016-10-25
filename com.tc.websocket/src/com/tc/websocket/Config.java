@@ -26,11 +26,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import lotus.domino.Database;
-import lotus.domino.Document;
-import lotus.domino.NotesException;
-import lotus.domino.Session;
-
 import org.apache.commons.lang3.SystemUtils;
 
 import com.tc.guice.domino.module.ServerInfo;
@@ -38,6 +33,11 @@ import com.tc.guice.domino.module.SessionFactory;
 import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
 import com.tc.utils.XSPUtils;
+
+import lotus.domino.Database;
+import lotus.domino.Document;
+import lotus.domino.NotesException;
+import lotus.domino.Session;
 
 
 // TODO: Auto-generated Javadoc

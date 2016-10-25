@@ -6,16 +6,16 @@ package com.tc.websocket.runners;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.tc.guice.domino.module.SessionFactory;
+import com.tc.utils.StringCache;
+import com.tc.websocket.Config;
+import com.tc.websocket.Const;
+
 import lotus.domino.Database;
 import lotus.domino.Document;
 import lotus.domino.DocumentCollection;
 import lotus.domino.NotesException;
 import lotus.domino.Session;
-
-import com.tc.guice.domino.module.SessionFactory;
-import com.tc.utils.StringCache;
-import com.tc.websocket.Config;
-import com.tc.websocket.Const;
 
 
 // TODO: Auto-generated Javadoc

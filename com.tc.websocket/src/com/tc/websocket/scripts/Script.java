@@ -29,10 +29,6 @@ import java.util.logging.Logger;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 
-import lotus.domino.Database;
-import lotus.domino.NotesException;
-import lotus.domino.Session;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -54,6 +50,10 @@ import com.tc.websocket.IConfig;
 import com.tc.websocket.jsf.Data;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
+
+import lotus.domino.Database;
+import lotus.domino.NotesException;
+import lotus.domino.Session;
 
 
 // TODO: Auto-generated Javadoc

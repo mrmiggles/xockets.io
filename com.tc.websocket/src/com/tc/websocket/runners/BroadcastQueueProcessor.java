@@ -21,18 +21,18 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.tc.guice.domino.module.ServerInfo;
+import com.tc.utils.StringCache;
+import com.tc.websocket.Config;
+import com.tc.websocket.Const;
+import com.tc.xpage.profiler.Stopwatch;
+
 import lotus.domino.Database;
 import lotus.domino.Document;
 import lotus.domino.DocumentCollection;
 import lotus.domino.NotesException;
 import lotus.domino.Session;
 import lotus.domino.View;
-
-import com.tc.guice.domino.module.ServerInfo;
-import com.tc.utils.StringCache;
-import com.tc.websocket.Config;
-import com.tc.websocket.Const;
-import com.tc.xpage.profiler.Stopwatch;
 
 
 // TODO: Auto-generated Javadoc

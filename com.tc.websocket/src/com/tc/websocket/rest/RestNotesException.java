@@ -26,10 +26,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import lotus.domino.NotesException;
-
 import com.tc.websocket.valueobjects.IPrompt;
 import com.tc.websocket.valueobjects.Prompt;
+
+import lotus.domino.NotesException;
 
 
 

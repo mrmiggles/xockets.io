@@ -18,18 +18,6 @@
 package com.tc.websocket.server;
 
 
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.WriteBufferWaterMark;
-import io.netty.channel.epoll.EpollServerSocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.util.Attribute;
-import io.netty.util.AttributeKey;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -44,11 +32,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import lotus.domino.ACL;
-import lotus.domino.Database;
-import lotus.domino.NotesException;
-import lotus.domino.Session;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -78,6 +61,22 @@ import com.tc.websocket.valueobjects.structures.MultiMap;
 import com.tc.websocket.valueobjects.structures.UriScriptMap;
 import com.tc.websocket.valueobjects.structures.UriUserMap;
 import com.tc.xpage.profiler.Stopwatch;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.WriteBufferWaterMark;
+import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
+import lotus.domino.ACL;
+import lotus.domino.Database;
+import lotus.domino.NotesException;
+import lotus.domino.Session;
 
 
 

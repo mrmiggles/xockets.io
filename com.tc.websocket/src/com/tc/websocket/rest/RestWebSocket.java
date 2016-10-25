@@ -31,13 +31,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import lotus.domino.Database;
-import lotus.domino.Document;
-import lotus.domino.NotesException;
-import lotus.domino.View;
-import lotus.domino.ViewEntry;
-import lotus.domino.ViewEntryCollection;
-
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 import com.tc.utils.DateUtils;
@@ -49,6 +42,13 @@ import com.tc.websocket.jsf.IWebSocketBean;
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
+
+import lotus.domino.Database;
+import lotus.domino.Document;
+import lotus.domino.NotesException;
+import lotus.domino.View;
+import lotus.domino.ViewEntry;
+import lotus.domino.ViewEntryCollection;
 
 
 // TODO: Auto-generated Javadoc

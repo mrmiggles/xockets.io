@@ -3,12 +3,12 @@
  */
 package com.tc.websocket.server.pipeline;
 
+import com.tc.websocket.server.handler.RedirectionHandler;
+
 import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.stream.ChunkedWriteHandler;
-
-import com.tc.websocket.server.handler.RedirectionHandler;
 
 
 // TODO: Auto-generated Javadoc

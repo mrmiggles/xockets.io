@@ -17,10 +17,10 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 
-import lotus.domino.Session;
-
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
+
+import lotus.domino.Session;
 
 
 // TODO: Auto-generated Javadoc

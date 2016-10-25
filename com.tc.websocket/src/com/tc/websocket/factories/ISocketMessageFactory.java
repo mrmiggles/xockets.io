@@ -18,11 +18,11 @@ package com.tc.websocket.factories;
 
 import java.util.List;
 
-import lotus.domino.Document;
-import lotus.domino.ViewEntryCollection;
-
 import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.xpage.profiler.Stopwatch;
+
+import lotus.domino.Document;
+import lotus.domino.ViewEntryCollection;
 
 
 // TODO: Auto-generated Javadoc
