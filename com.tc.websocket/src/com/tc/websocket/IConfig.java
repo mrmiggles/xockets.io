@@ -373,5 +373,7 @@ public interface IConfig {
 	
 	
 	public Charset getCharSet();
+	
+	public boolean isCertAuth();
 
 }

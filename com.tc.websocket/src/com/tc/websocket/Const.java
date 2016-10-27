@@ -381,4 +381,6 @@ public class Const {
 	public static final String REMOTE_ADDRESS="remoteAddress";
 	public static final String LOCAL_ADDRESS="localAddress";
 	
+	public static final String IBM_X509="ibmX509";
+	
 }

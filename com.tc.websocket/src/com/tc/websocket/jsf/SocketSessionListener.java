@@ -16,11 +16,13 @@
 
 package com.tc.websocket.jsf;
 
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpSessionEvent;
 
+import com.tc.websocket.Config;
 import com.ibm.xsp.application.ApplicationEx;
 import com.ibm.xsp.application.events.SessionListener;
 import com.tc.utils.XSPUtils;
@@ -79,5 +81,13 @@ public class SocketSessionListener implements SessionListener {
 		//cleanup any stored session vars
 		LOG.log(Level.INFO, "removing sessiondata for " + event.getSession().getId());
 		Data.insta().remove(event.getSession().getId());
+		
+		if(Config.getInstance().isCertAuth()){
+			System.out.println("Deleting sessionFile");
+			File sessionFile = new File("c:/sessions/" + event.getSession().getId()  + ".txt");
+			if(sessionFile.exists()) sessionFile.delete();
+		}
+		
+		
 	}
 }

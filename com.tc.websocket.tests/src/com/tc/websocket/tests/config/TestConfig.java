@@ -429,4 +429,10 @@ public class TestConfig implements IConfig {
 		return Charset.defaultCharset();
 	}
 
+	@Override
+	public boolean isCertAuth() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

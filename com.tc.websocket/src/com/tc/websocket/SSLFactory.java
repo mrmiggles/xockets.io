@@ -75,7 +75,7 @@ public class SSLFactory implements ISSLFactory {
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance( KeyManagerFactory.getDefaultAlgorithm() );
 			kmf.init( ks, cfg.getKeyPassword().toCharArray() );
 
-
+			
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance( KeyManagerFactory.getDefaultAlgorithm() );
 			tmf.init( ks );
 

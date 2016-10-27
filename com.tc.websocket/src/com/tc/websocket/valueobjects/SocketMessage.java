@@ -76,11 +76,6 @@ public class SocketMessage {
 
 
 
-
-
-
-
-
 	/** The server. */
 	@Inject
 	private IDominoWebSocketServer server;

@@ -120,7 +120,9 @@ public enum Params {
 	/** The websocket filter. */
 	WEBSOCKET_FILTER,
 	
-	WEBSOCKET_CHARSET;
+	WEBSOCKET_CHARSET,
+	
+	WEBSOCKET_CERT_AUTH;
 	
 	
 	

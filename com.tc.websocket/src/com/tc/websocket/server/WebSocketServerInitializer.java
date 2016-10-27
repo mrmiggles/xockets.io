@@ -99,10 +99,12 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 	        return;
 		}
 		
+		
 		if (cfg.isEncrypted()) {
 			SslContext sslContext = factory.createSslContext(Config.getInstance());
 			SSLEngine engine = sslContext.newEngine(ch.alloc());
 			engine.setUseClientMode(false);
+			engine.setNeedClientAuth(cfg.isCertAuth());
 			ch.pipeline().addFirst("ssl",new SslHandler(engine));
 		}
 
