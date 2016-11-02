@@ -16,7 +16,9 @@
 
 package com.tc.websocket.filter;
 
+import com.tc.utils.JSONUtils;
 import com.tc.utils.StrUtils;
+import com.tc.websocket.valueobjects.SocketMessage;
 
 public class AllowedCharsFilter implements IWebsocketFilter {
 
@@ -25,7 +27,8 @@ public class AllowedCharsFilter implements IWebsocketFilter {
 
 
 	@Override
-	public String applyFilter(String msg) {
-		return StrUtils.whiteList(msg, ALLOWED_CHARS);
+	public SocketMessage applyFilter(SocketMessage msg) {
+		String json =  StrUtils.whiteList(JSONUtils.toJson(msg), ALLOWED_CHARS);
+		return JSONUtils.toObject(json, SocketMessage.class);
 	}
 }

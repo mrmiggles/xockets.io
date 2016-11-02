@@ -385,8 +385,12 @@ public class User implements IUser {
 	 * @see com.tc.websocket.valueobjects.IUser#send(java.lang.String)
 	 */
 	@Override
-	public void send(String message) {
-		SocketMessage msg = JSONUtils.toObject(message, SocketMessageLite.class);
+	public void send(SocketMessage msg) {
+		
+		//these don't need to be here when sent, just used for onBeforeMessage filters.
+		msg.getData().remove(Const.LOCAL_ADDRESS);
+		msg.getData().remove(Const.REMOTE_ADDRESS);
+		
 		RoutingPath path = new RoutingPath(msg.getTo());	
 		Collection<ContextWrapper> results = this.findConnection(path);
 		Iterator<ContextWrapper> iter = results.iterator();
@@ -398,7 +402,7 @@ public class User implements IUser {
 				iter.next().send(JSONUtils.toJson(msg.getData()));
 				
 			}else{
-				iter.next().send(message);
+				iter.next().send(JSONUtils.toJson(msg));
 				
 			}
 		}

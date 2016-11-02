@@ -35,7 +35,7 @@ public class XocketsPhaseListener implements PhaseListener{
 	public void beforePhase(PhaseEvent event) {
 		IUser user = server.resolveUser(XSPUtils.getSessionId());
 		try {
-			if(!StringCache.ANONYMOUS.equals(XSPUtils.userName()) && user.isAnonymous()){
+			if(user!=null && !StringCache.ANONYMOUS.equals(XSPUtils.userName()) && user.isAnonymous()){
 				LOG.log(Level.SEVERE, "user was anonymous is now " + XSPUtils.userName());
 				IWebSocketBean userMgr = (IWebSocketBean) XSPUtils.getBean(Const.WEBSOCKET_BEAN);
 				userMgr.registerCurrentUser();

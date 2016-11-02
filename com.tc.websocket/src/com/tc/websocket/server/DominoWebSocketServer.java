@@ -511,7 +511,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		//check to see if the message should be halted.
 		if(msg.isShortCircuit()) return false;
 		
-		boolean b = this.send(to, json);
+		boolean b = this.send(to, msg);
 		
 		//notify onMessage observers
 		this.notifyEventObservers(Const.ON_MESSAGE, JSONUtils.toObject(json, SocketMessage.class));
@@ -540,10 +540,10 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			for(String target : targets){
 				msg.setTo(target);
 				msg.getTargets().clear();
-				this.send(target, JSONUtils.toJson(msg));
+				this.send(target, msg);
 			}
 		}else{
-			this.send(msg.getTo(), JSONUtils.toJson(msg));
+			this.send(msg.getTo(), msg);
 		}
 		
 		this.notifyEventObservers(Const.ON_MESSAGE, msg);
@@ -592,12 +592,12 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				for(String target : targets){
 					msg.setTo(target);
 					msg.getTargets().clear();
-					this.processMessage(user, msg, JSONUtils.toJson(msg));
+					this.processMessage(user, msg, msg);
 				}
 			}else{
 				//apply default atts
 				this.applyDefaultAtts(conn, msg);
-				this.processMessage(user, msg, JSONUtils.toJson(msg));
+				this.processMessage(user, msg, msg);
 			}
 		}
 	}
@@ -622,7 +622,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	 * @param msg the msg
 	 * @param message the message
 	 */
-	private void processMessage(IUser user, SocketMessage msg , String message){
+	private void processMessage(IUser user, SocketMessage msg , SocketMessage message){
 		if(msg!=null && !msg.getTo().startsWith(StringCache.FORWARD_SLASH)){
 			if(user == null || user.isAnonymous()) {
 				if(!cfg.isAllowAnonymous()){
@@ -639,7 +639,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		}
 
 		if(msg.isDurable()){
-			this.queueMessage(JSONUtils.toObject(message, SocketMessage.class));
+			this.queueMessage(message);
 			return;
 		}
 
@@ -673,7 +673,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 				this.send(msg.getTo(), message);
 			}else{
 				//make sure we commit the full message.
-				this.queueMessage(JSONUtils.toObject(message, SocketMessage.class));
+				this.queueMessage(message);
 			}
 		}
 
@@ -906,19 +906,18 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	 * @param json the json
 	 * @return true, if successful
 	 */
-	private boolean send(String target, String json){
+	private boolean send(String target, SocketMessage msg){
 
 		boolean sent = false;
 
 		if(target.startsWith(StringCache.FORWARD_SLASH)){
-			return this.sendToUri(target, json);
+			return this.sendToUri(target, msg);
 		}
 
-		if(!isValidSize(json)) return sent;
 
 		//apply the json data filter
 		if(this.filter!=null){
-			json = this.filter.applyFilter(json);
+			msg  = this.filter.applyFilter(msg);
 		}
 
 		//send to all users on this server if target === current server.
@@ -927,14 +926,14 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			Collection<IUser> col = this.getUsersOnThisServer();
 			int batchSize = this.calcBatchSize(col.size());
 			BatchSend batchSend = new BatchSend();
-			batchSend.setMessage(json);
+			batchSend.setMessage(msg);
 			for(IUser user : col){
 				if(user!=null && user.canReceive()){
 					batchSend.addUser(user);
 					if(cntr % batchSize ==0){
 						TaskRunner.getInstance().add(batchSend);
 						batchSend =new BatchSend();
-						batchSend.setMessage(json);
+						batchSend.setMessage(msg);
 					}
 
 					//user.send(json);
@@ -952,12 +951,12 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 			IUser user = VALID_USERS.get(target);
 			if(user!=null && user.canReceive()){
 				sent = true;
-				user.send(json);
+				user.send(msg);
 
 			}else if(user!=null && user.getConn()==null && !user.isGoingOffline()){
 				//queue up for REST service
 				sent = true;
-				this.queueMessage(JSONUtils.toObject(json, SocketMessage.class));
+				this.queueMessage(msg);
 			}
 		}
 		
@@ -974,14 +973,14 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 	 * @return true, if successful
 	 */
 	@Stopwatch
-	private boolean sendToUri(String uri, String json){
+	private boolean sendToUri(String uri, SocketMessage msg){
 		boolean b = false;
 		Collection<IUser> list = this.getUsersByUri(uri);
 		if(list!=null && !list.isEmpty()){
 			for(IUser user : list){
 				//make sure we don't recurse forever
 				if(!user.getUserId().startsWith(StringCache.FORWARD_SLASH)){
-					if(this.send(user.getUserId(), json)){
+					if(this.send(user.getUserId(), msg)){
 						b = true; //if the message was sent to anyone in the uri we're consider it sent.
 					}
 				}
@@ -992,7 +991,7 @@ public class DominoWebSocketServer implements IDominoWebSocketServer, Runnable{
 		try{
 			Collection<Script> scripts = SCRIPT_MAP.get(new RoutingPath(uri));
 			for(Script script : scripts){
-				SocketMessage msg = JSONUtils.toObject(json, SocketMessage.class);
+				//SocketMessage msg = JSONUtils.toObject(json, SocketMessage.class);
 				TaskRunner.getInstance().add(script.copy(msg));
 				b = true;
 			}
