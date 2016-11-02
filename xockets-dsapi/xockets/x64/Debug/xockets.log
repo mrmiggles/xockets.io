@@ -1,0 +1,8 @@
+﻿  dllmain.cpp
+  xockets.cpp
+c:\vsprojects\xockets\xockets\xockets.cpp(63): warning C4101: 'customHeaders': unreferenced local variable
+  stdafx.cpp
+  Generating Code...
+     Creating library C:\vsprojects\xockets\x64\Debug\xockets.lib and object C:\vsprojects\xockets\x64\Debug\xockets.exp
+xockets.obj : error LNK2019: unresolved external symbol AddInLogMessageText referenced in function FilterInit
+C:\vsprojects\xockets\x64\Debug\xockets.dll : fatal error LNK1120: 1 unresolved externals

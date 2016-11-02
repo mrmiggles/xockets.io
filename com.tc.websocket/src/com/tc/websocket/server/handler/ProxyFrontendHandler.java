@@ -164,7 +164,7 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
 					//only write the file if it hasn't been written yet.
 					if(sessionFile.exists() == false){
-						FileUtils.write(sessionFile, p.getName());	
+						FileUtils.write(sessionFile, p.getName().replaceAll("\"",""));	
 					}
 				}
 
