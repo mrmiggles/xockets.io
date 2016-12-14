@@ -23,12 +23,12 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
-import lotus.domino.NotesException;
-
 import com.google.inject.Inject;
 import com.ibm.xsp.application.ApplicationEx;
 import com.tc.utils.XSPUtils;
 import com.tc.websocket.server.IDominoWebSocketServer;
+
+import lotus.domino.NotesException;
 
 
 // TODO: Auto-generated Javadoc

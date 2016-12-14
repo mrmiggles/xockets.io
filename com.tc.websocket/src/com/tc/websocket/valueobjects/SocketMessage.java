@@ -69,7 +69,10 @@ public class SocketMessage {
 	private boolean persisted;
 	
 	private boolean shortCircuit;
-
+	
+	private boolean onlyText;
+	
+	private boolean onlyData;
 
 
 
@@ -450,4 +453,21 @@ public class SocketMessage {
 		this.shortCircuit = shortCircuit;
 	}
 
+	public boolean isOnlyText() {
+		return onlyText;
+	}
+
+	public void setOnlyText(boolean onlyText) {
+		this.onlyText = onlyText;
+	}
+	
+	public boolean isOnlyData() {
+		return onlyData;
+	}
+
+	public void setOnlyData(boolean onlyData) {
+		this.onlyData = onlyData;
+	}
+	
+	
 }

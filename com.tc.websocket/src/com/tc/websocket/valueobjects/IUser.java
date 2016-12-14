@@ -236,7 +236,7 @@ public interface IUser extends IUri {
 	 *
 	 * @param message the message
 	 */
-	public void send(String message);
+	public void send(SocketMessage message);
 	
 	/**
 	 * Process queue.

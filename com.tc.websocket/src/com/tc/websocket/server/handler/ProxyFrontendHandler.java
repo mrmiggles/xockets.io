@@ -17,6 +17,24 @@
  */
 package com.tc.websocket.server.handler;
 
+import java.io.File;
+import java.security.Principal;
+import javax.security.cert.X509Certificate;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.commons.io.FileUtils;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.tc.di.guicer.IGuicer;
+import com.tc.utils.StrUtils;
+import com.tc.utils.StringCache;
+import com.tc.websocket.Config;
+import com.tc.websocket.Const;
+import com.tc.websocket.server.pipeline.IPipelineBuilder;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
@@ -28,17 +46,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import com.tc.di.guicer.IGuicer;
-import com.tc.utils.StringCache;
-import com.tc.websocket.Const;
-import com.tc.websocket.server.pipeline.IPipelineBuilder;
+import io.netty.handler.ssl.SslHandler;
 
 
 // TODO: Auto-generated Javadoc
@@ -52,7 +60,7 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
 	/** The remote host. */
 	private final String remoteHost;
-	
+
 	/** The remote port. */
 	private final int remotePort;
 
@@ -61,7 +69,7 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
 	/** The handler. */
 	private ProxyBackendHandler handler;
-	
+
 	/** The builder. */
 	@Inject
 	@Named(Const.GUICE_WEBSOCKET_PIPELINE)
@@ -82,8 +90,8 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 		this.remotePort = remotePort;
 	}
 
-	
-	
+
+
 	/* (non-Javadoc)
 	 * @see io.netty.channel.ChannelInboundHandlerAdapter#channelActive(io.netty.channel.ChannelHandlerContext)
 	 */
@@ -123,7 +131,7 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 	/** The proxy. */
 	private AtomicBoolean proxy = new AtomicBoolean(true);
 
-	
+
 
 	/* (non-Javadoc)
 	 * @see io.netty.channel.ChannelInboundHandlerAdapter#channelRead(io.netty.channel.ChannelHandlerContext, java.lang.Object)
@@ -133,7 +141,7 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
 		ByteBuf buf = (ByteBuf) msg;
 		String data = new String(ByteBufUtil.getBytes(buf));
-		
+
 		if(data.contains(Const.UPGRADE_WEBSOCKET) || data.contains(Const.GET_WEBSOCKET)){
 			proxy.set(false);
 
@@ -143,6 +151,30 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
 		if(proxy.get()==false){
 			writeToFile("frontend." + ctx.channel().id(), ByteBufUtil.getBytes(buf));
+		}
+
+
+		if(Config.getInstance().isCertAuth()){
+			SslHandler sslhandler = (SslHandler) ctx.channel().pipeline().get("ssl");
+			try {
+				X509Certificate cert = sslhandler.engine().getSession().getPeerCertificateChain()[0];
+				Principal p =cert.getSubjectDN();
+		
+				
+				String sessionId = parseSessionID(data);
+
+				if(sessionId!=null){
+					File sessionFile = new File("c:/sessions/" + sessionId + ".txt");
+
+					//only write the file if it hasn't been written yet.
+					if(sessionFile.exists() == false){
+						FileUtils.write(sessionFile, p.getName().replaceAll("\"",""));	
+					}
+				}
+
+			} catch (Exception e) {
+				LOG.log(Level.SEVERE,null, e);
+			}
 		}
 
 		if(proxy.get()){
@@ -163,16 +195,16 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 		}else{
 			//make sure the backend handler knows its a websocket connection.
 			this.handler.setWebsocket(true);
-			
+
 			//get handle on the pipeline.
 			ChannelPipeline pipeline = ctx.pipeline();
-			
+
 			//apply the websocket handlers
 			builder.apply(pipeline);
-			
+
 			//remove this handler.
 			pipeline.remove(this);
-			
+
 			//fire the event to move on to the next handler.
 			ctx.fireChannelRead(msg);
 		}
@@ -203,11 +235,11 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 				IOUtils.closeQuietly(out);
 			}
 		}
-		*/
+		 */
 	}
 
 
-	
+
 
 	/* (non-Javadoc)
 	 * @see io.netty.channel.ChannelInboundHandlerAdapter#channelInactive(io.netty.channel.ChannelHandlerContext)
@@ -219,8 +251,8 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 		}
 	}
 
-	
-	
+
+
 	/* (non-Javadoc)
 	 * @see io.netty.channel.ChannelInboundHandlerAdapter#exceptionCaught(io.netty.channel.ChannelHandlerContext, java.lang.Throwable)
 	 */
@@ -244,4 +276,10 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 			ch.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
 		}
 	}
+
+	private static String parseSessionID(String data){
+		return StrUtils.parseCookie(data).get("SessionID");
+	}
+
+
 }

@@ -17,15 +17,6 @@
  */
 package com.tc.websocket.server;
 
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.FixedRecvByteBufAllocator;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslHandler;
-import io.netty.util.ResourceLeakDetector;
-import io.netty.util.ResourceLeakDetector.Level;
-
 import javax.net.ssl.SSLEngine;
 
 import com.google.inject.Inject;
@@ -37,6 +28,15 @@ import com.tc.websocket.IConfig;
 import com.tc.websocket.ISSLFactory;
 import com.tc.websocket.server.handler.ProxyFrontendHandler;
 import com.tc.websocket.server.pipeline.IPipelineBuilder;
+
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.FixedRecvByteBufAllocator;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.util.ResourceLeakDetector;
+import io.netty.util.ResourceLeakDetector.Level;
 
 
 // TODO: Auto-generated Javadoc
@@ -85,7 +85,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 			ResourceLeakDetector.setLevel(Level.ADVANCED);
 		}
 		
-		
+		//so we get enough data to build our pipeline
 		ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(1024));
 
 		ChannelPipeline pipeline = ch.pipeline();
@@ -93,16 +93,18 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 		int incomingPort = ch.localAddress().getPort();
 		
 		
-		//if users are coming in on a different port than the proxy port, we need to redirect them.
+		//if users are coming in on a different port than the proxy port we need to redirect them.
 		if(cfg.isProxy() && cfg.getPort() != incomingPort){
 			redirectBuilder.apply(pipeline);
 	        return;
 		}
 		
+		
 		if (cfg.isEncrypted()) {
 			SslContext sslContext = factory.createSslContext(Config.getInstance());
 			SSLEngine engine = sslContext.newEngine(ch.alloc());
 			engine.setUseClientMode(false);
+			engine.setNeedClientAuth(cfg.isCertAuth());
 			ch.pipeline().addFirst("ssl",new SslHandler(engine));
 		}
 

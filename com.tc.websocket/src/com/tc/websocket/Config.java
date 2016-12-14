@@ -26,11 +26,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import lotus.domino.Database;
-import lotus.domino.Document;
-import lotus.domino.NotesException;
-import lotus.domino.Session;
-
 import org.apache.commons.lang3.SystemUtils;
 
 import com.tc.guice.domino.module.ServerInfo;
@@ -38,6 +33,11 @@ import com.tc.guice.domino.module.SessionFactory;
 import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
 import com.tc.utils.XSPUtils;
+
+import lotus.domino.Database;
+import lotus.domino.Document;
+import lotus.domino.NotesException;
+import lotus.domino.Session;
 
 
 // TODO: Auto-generated Javadoc
@@ -177,6 +177,8 @@ public class Config implements Runnable, IConfig {
 	
 	
 	private String charset;
+	
+	private boolean certAuth;
 
 	/** The config. */
 	private static IConfig config = new Config();
@@ -479,6 +481,8 @@ public class Config implements Runnable, IConfig {
 
 			this.encrypted=new Boolean(this.envAsBool(s, Params.WEBSOCKET_ENCRYPT.name(), Const.WEBSOCKET_ENCRYPT));
 			if(encrypted){	
+				
+				this.certAuth = new Boolean(this.envAsBool(s, Params.WEBSOCKET_CERT_AUTH.name(), false));
 				
 				//certificate file and keyfile.
 				this.certFile = env(s,Params.WEBSOCKET_CERT_FILE.name(),"");
@@ -1085,6 +1089,11 @@ public class Config implements Runnable, IConfig {
 	@Override
 	public Charset getCharSet() {
 		return Charset.forName(this.charset);
+	}
+
+	@Override
+	public boolean isCertAuth() {
+		return this.certAuth;
 	}
 
 }

@@ -3,6 +3,21 @@ It leverages Netty.io websocket libraries to easily scale to a large number of u
 found in the webshell-xpages-ext-lib.  Below is a list of the latest features available in xockets.io:
 
 
+xockets.io as of 3.0.2
+-New Features include:
+	textOnly (e.g. msg.onlyText = true;) flag sends only the text portion of the message to the target recipient(s)
+	dataOnly (e.g. msg.onlyData = true;) flag sends just the data portion of the message to the target recipient(s)
+	both of the above flags help to limit the payload size to the targets by removing message meta data
+	DSAPI plugin project for Visual Studio for a very specific use case handling certificate based authentication (windows only for now)
+	
+	
+-Fixes:
+	fix reload scripts to included intervaled scripts
+	fixed null pointer in XocketsPhaseListener
+
+	
+
+
 xockets.io as of 3.0.1
 -New Features include:
 	A new event method to script against called onBeforeMessage (fires just before a message will be sent, used for filters, other validations)

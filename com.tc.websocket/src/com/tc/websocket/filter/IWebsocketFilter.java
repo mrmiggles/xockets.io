@@ -16,7 +16,7 @@
 
 package com.tc.websocket.filter;
 
-
+import com.tc.websocket.valueobjects.SocketMessage;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -30,6 +30,6 @@ public interface IWebsocketFilter {
 	 * @param msg the msg
 	 * @return the string
 	 */
-	public String applyFilter(String msg);
+	public SocketMessage applyFilter(SocketMessage msg);
 
 }

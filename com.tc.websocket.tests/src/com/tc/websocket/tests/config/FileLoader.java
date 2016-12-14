@@ -6,6 +6,8 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 
+import com.tc.utils.Base64;
+
 
 
 public class FileLoader {
@@ -27,7 +29,8 @@ public class FileLoader {
 		InputStream in = null;
 		try{
 			in = new FileInputStream(file);
-			data = IOUtils.toString(in);
+			byte[] byteMe = IOUtils.toByteArray(in);
+			data = Base64.encodeBytes(byteMe);
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{

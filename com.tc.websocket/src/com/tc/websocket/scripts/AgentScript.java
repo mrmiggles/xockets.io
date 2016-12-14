@@ -7,13 +7,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import lotus.domino.Agent;
-import lotus.domino.Database;
-import lotus.domino.Document;
-import lotus.domino.NotesException;
-import lotus.domino.RichTextItem;
-import lotus.domino.Session;
-
 import com.tc.utils.ColUtils;
 import com.tc.utils.JSONUtils;
 import com.tc.utils.StrUtils;
@@ -21,6 +14,13 @@ import com.tc.utils.StringCache;
 import com.tc.websocket.Const;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
+
+import lotus.domino.Agent;
+import lotus.domino.Database;
+import lotus.domino.Document;
+import lotus.domino.NotesException;
+import lotus.domino.RichTextItem;
+import lotus.domino.Session;
 
 
 // TODO: Auto-generated Javadoc

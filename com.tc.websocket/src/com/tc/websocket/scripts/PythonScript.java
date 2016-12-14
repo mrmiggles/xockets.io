@@ -6,8 +6,6 @@ package com.tc.websocket.scripts;
 import java.util.Date;
 import java.util.Map.Entry;
 
-import lotus.domino.Session;
-
 import org.python.core.Py;
 import org.python.core.PyCode;
 import org.python.core.PyFunction;
@@ -16,6 +14,8 @@ import org.python.util.PythonInterpreter;
 
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
+
+import lotus.domino.Session;
 
 
 // TODO: Auto-generated Javadoc

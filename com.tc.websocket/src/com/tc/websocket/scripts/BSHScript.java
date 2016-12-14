@@ -9,13 +9,12 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import lotus.domino.Session;
-
 import org.apache.commons.io.FileUtils;
 
-import bsh.Interpreter;
-
 import com.tc.websocket.Const;
+
+import bsh.Interpreter;
+import lotus.domino.Session;
 
 
 // TODO: Auto-generated Javadoc
@@ -30,9 +29,6 @@ public class BSHScript extends Script {
 	/** The source file. */
 	private File sourceFile;
 	
-	
-	
-
 
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()

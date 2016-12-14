@@ -20,7 +20,9 @@ package com.tc.utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -458,6 +460,24 @@ public final class StrUtils {
     public static String rtrim(String source) {
         return source.replaceAll("\\s+$", StringCache.EMPTY);
     }
+    
+    
+    
+	public static Map<String,String> parseCookie(String data){
+		String[] arr = data.split("\r\n");
+		Map<String,String> cookies = new HashMap<String,String>();
+		for(String str : arr){
+			if(str.toLowerCase().contains("cookie")){
+				str = str.substring(str.indexOf(":") + 1, str.length());
+				String[] pairs =str.split(";");
+				for(String nv : pairs){
+					String[] nameValue = nv.trim().split("=");
+					cookies.put(nameValue[0], nameValue[1]);
+				}
+			}
+		}
+		return cookies;
+	}
 
 
 }

@@ -5,8 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import lotus.domino.Database;
-
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 
@@ -15,6 +13,8 @@ import com.tc.utils.StrUtils;
 import com.tc.utils.StringCache;
 import com.tc.websocket.Config;
 import com.tc.websocket.IConfig;
+
+import lotus.domino.Database;
 
 public class ScriptAggregator {
 	

@@ -23,6 +23,16 @@ import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
 import static io.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.google.inject.Inject;
+import com.tc.websocket.Config;
+import com.tc.websocket.Const;
+import com.tc.websocket.IConfig;
+import com.tc.websocket.server.IDominoWebSocketServer;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -36,15 +46,6 @@ import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.google.inject.Inject;
-import com.tc.websocket.Config;
-import com.tc.websocket.Const;
-import com.tc.websocket.IConfig;
-import com.tc.websocket.server.IDominoWebSocketServer;
 
 
 

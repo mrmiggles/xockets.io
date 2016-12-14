@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.tc.websocket.valueobjects.IUser;
+import com.tc.websocket.valueobjects.SocketMessage;
 
 
 // TODO: Auto-generated Javadoc
@@ -19,7 +20,7 @@ public class BatchSend implements Runnable{
 	private Set<IUser> users = new HashSet<IUser>();
 	
 	/** The message. */
-	private String message;
+	private SocketMessage message;
 	
 	
 	/**
@@ -27,7 +28,7 @@ public class BatchSend implements Runnable{
 	 *
 	 * @param message the new message
 	 */
-	public void setMessage(String message){
+	public void setMessage(SocketMessage message){
 		this.message = message;
 	}
 	

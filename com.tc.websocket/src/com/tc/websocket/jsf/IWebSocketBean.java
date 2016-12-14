@@ -21,10 +21,10 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import lotus.domino.NotesException;
-
 import com.tc.websocket.server.IDominoWebSocketServer;
 import com.tc.websocket.valueobjects.SocketMessage;
+
+import lotus.domino.NotesException;
 
 
 // TODO: Auto-generated Javadoc

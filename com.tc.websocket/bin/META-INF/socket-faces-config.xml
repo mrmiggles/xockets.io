@@ -3,6 +3,10 @@
                               "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 <faces-config>
 
+	<lifecycle>
+		<phase-listener>com.tc.websocket.jsf.XocketsPhaseListener</phase-listener>
+	</lifecycle>
+
 	<application>
 		<variable-resolver>com.tc.websocket.jsf.GuiceVariableResolver</variable-resolver>
 	</application>

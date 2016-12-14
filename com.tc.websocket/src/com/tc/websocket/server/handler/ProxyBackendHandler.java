@@ -18,6 +18,13 @@
 
 package com.tc.websocket.server.handler;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.tc.utils.StringCache;
+import com.tc.websocket.Config;
+import com.tc.websocket.Const;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
@@ -26,13 +33,6 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.tc.utils.StringCache;
-import com.tc.websocket.Config;
-import com.tc.websocket.Const;
 
 
 // TODO: Auto-generated Javadoc

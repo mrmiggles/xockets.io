@@ -17,9 +17,9 @@
 
 package com.tc.websocket.factories;
 
-import lotus.domino.Document;
-
 import com.tc.websocket.valueobjects.IUser;
+
+import lotus.domino.Document;
 
 
 

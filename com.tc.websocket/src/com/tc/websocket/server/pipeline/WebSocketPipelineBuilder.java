@@ -3,16 +3,16 @@
  */
 package com.tc.websocket.server.pipeline;
 
-import io.netty.channel.ChannelPipeline;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpServerCodec;
-import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
-
 import com.google.inject.Inject;
 import com.tc.di.guicer.IGuicer;
 import com.tc.websocket.Config;
 import com.tc.websocket.server.handler.WebSocketServerHandler;
 import com.tc.websocket.server.handler.WebSocketValidationHandler;
+
+import io.netty.channel.ChannelPipeline;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
 
 
 // TODO: Auto-generated Javadoc

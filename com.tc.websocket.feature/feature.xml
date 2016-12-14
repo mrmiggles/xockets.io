@@ -2,7 +2,7 @@
 <feature
       id="com.tc.websocket.feature"
       label="xockets.io"
-      version="3.0.1.qualifier"
+      version="3.0.2.qualifier"
       provider-name="Tek Counsel LLC">
 
    <description url="http://www.example.com/description">
@@ -16,13 +16,6 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
-
-   <plugin
-         id="com.tc.websocket"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="com.google.guice"
@@ -88,5 +81,12 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="com.tc.websocket"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

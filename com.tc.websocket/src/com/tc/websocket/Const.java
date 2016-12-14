@@ -376,4 +376,11 @@ public class Const {
 	//jsf object keys
 	public static final String SOURCE_URI="sourceUri";
 	
+	
+	//default atts for socketmessage
+	public static final String REMOTE_ADDRESS="remoteAddress";
+	public static final String LOCAL_ADDRESS="localAddress";
+	
+	public static final String IBM_X509="ibmX509";
+	
 }

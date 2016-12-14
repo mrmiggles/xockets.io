@@ -18,8 +18,6 @@
 package com.tc.websocket.server;
 
 
-import io.netty.handler.codec.http.FullHttpRequest;
-
 import java.util.Collection;
 
 import com.tc.websocket.filter.IWebsocketFilter;
@@ -27,6 +25,8 @@ import com.tc.websocket.scripts.Script;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.websocket.valueobjects.structures.UriUserMap;
+
+import io.netty.handler.codec.http.FullHttpRequest;
 
 
 // TODO: Auto-generated Javadoc
@@ -117,6 +117,7 @@ public interface IDominoWebSocketServer extends Runnable {
 
 	/**
 	 * On message.
+	 * Back-end send operation
 	 *
 	 * @param to the to
 	 * @param json the json
@@ -124,11 +125,22 @@ public interface IDominoWebSocketServer extends Runnable {
 	 */
 	public abstract boolean onMessage(String to, String json);
 	
+	
+	
+	/**
+	 * On message.
+	 * Back-end send operation
+	 * @param msg the msg
+	 * @return true, if successful
+	 * 
+	 * 
+	 */
 	public abstract boolean onMessage(SocketMessage msg);
 	
 	
 	/**
 	 * On message.
+	 * Front-end send operation used by websocket clients.
 	 *
 	 * @param conn the conn
 	 * @param message the message
@@ -289,6 +301,12 @@ public interface IDominoWebSocketServer extends Runnable {
 	public void notifyEventObservers(String event, Object ...args);
 	
 	
+	/**
+	 * Notify event observers sync.
+	 *
+	 * @param event the event
+	 * @param args the args
+	 */
 	public void notifyEventObserversSync(String event, Object ...args);
 	
 	
@@ -355,6 +373,11 @@ public interface IDominoWebSocketServer extends Runnable {
 	public Collection<Script> getIntervaled(); 
 
 	
+	/**
+	 * Gets the uri user map.
+	 *
+	 * @return the uri user map
+	 */
 	public UriUserMap getUriUserMap();
 	
 }

@@ -17,6 +17,11 @@ package com.tc.websocket.server.handler;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.FOUND;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import com.tc.utils.StringCache;
+import com.tc.websocket.Config;
+import com.tc.websocket.IConfig;
+
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -26,10 +31,6 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaders;
-
-import com.tc.utils.StringCache;
-import com.tc.websocket.Config;
-import com.tc.websocket.IConfig;
 
 
 

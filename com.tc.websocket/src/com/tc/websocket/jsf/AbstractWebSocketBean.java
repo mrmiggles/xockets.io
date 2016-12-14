@@ -26,10 +26,6 @@ import java.util.logging.Logger;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import lotus.domino.Name;
-import lotus.domino.NotesException;
-import lotus.domino.Session;
-
 import com.google.inject.Inject;
 import com.ibm.xsp.model.domino.DominoUtils;
 import com.tc.utils.JSONUtils;
@@ -49,6 +45,10 @@ import com.tc.websocket.server.IMessageSender;
 import com.tc.websocket.valueobjects.IUser;
 import com.tc.websocket.valueobjects.SocketMessage;
 import com.tc.websocket.valueobjects.structures.UriUserMap;
+
+import lotus.domino.Name;
+import lotus.domino.NotesException;
+import lotus.domino.Session;
 
 
 // TODO: Auto-generated Javadoc
