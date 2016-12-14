@@ -85,7 +85,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 			ResourceLeakDetector.setLevel(Level.ADVANCED);
 		}
 		
-		
+		//so we get enough data to build our pipeline
 		ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(1024));
 
 		ChannelPipeline pipeline = ch.pipeline();
@@ -93,7 +93,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
 		int incomingPort = ch.localAddress().getPort();
 		
 		
-		//if users are coming in on a different port than the proxy port, we need to redirect them.
+		//if users are coming in on a different port than the proxy port we need to redirect them.
 		if(cfg.isProxy() && cfg.getPort() != incomingPort){
 			redirectBuilder.apply(pipeline);
 	        return;

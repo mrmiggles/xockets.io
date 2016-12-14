@@ -50,17 +50,19 @@ public class NettyTestClient extends AbstractClient implements Runnable{
 	@Override
 	public synchronized void onMessage(String message) {
 		
+		int cntr = counter.incrementAndGet();
+		
 		if(start == null ) start = new Date();
 		dataVolume.addAndGet(message.getBytes().length);
 		long kb = message.length() / 1000;
 		long mb = kb / 1000;
 		String strdate = DateUtils.toISODateTime(new Date());
 				
-		if((counter.incrementAndGet() % printOnCount == 0)){
+		if((cntr % printOnCount == 0)){
 			double time = DateUtils.getTimeDiffSecDouble(start, new Date());
 			seconds.add(time);
 			start = new Date();
-			System.out.println("datetime=" + strdate + ", total.msgs=" + counter.get() +  ", seconds=" + time + ", username=" + this.getUsername() + ", uri=" + this.getUri().getPath() + ", received: mb=" + mb + ", kb=" + kb + ", bytes=" + message.length() + ", host=" + this.getRemoteHost());
+			System.out.println("datetime=" + strdate + ", total.msgs=" + cntr +  ", seconds=" + time + ", username=" + this.getUsername() + ", uri=" + this.getUri().getPath() + ", received: mb=" + mb + ", kb=" + kb + ", bytes=" + message.length() + ", host=" + this.getRemoteHost());
 		}	
 		
 		if(printData){

@@ -19,6 +19,7 @@ package com.tc.websocket.server.handler;
 
 import java.io.File;
 import java.security.Principal;
+import javax.security.cert.X509Certificate;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -156,7 +157,10 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 		if(Config.getInstance().isCertAuth()){
 			SslHandler sslhandler = (SslHandler) ctx.channel().pipeline().get("ssl");
 			try {
-				Principal p =sslhandler.engine().getSession().getPeerCertificateChain()[0].getSubjectDN();
+				X509Certificate cert = sslhandler.engine().getSession().getPeerCertificateChain()[0];
+				Principal p =cert.getSubjectDN();
+		
+				
 				String sessionId = parseSessionID(data);
 
 				if(sessionId!=null){
