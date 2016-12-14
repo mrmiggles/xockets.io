@@ -7,3 +7,7 @@ Thumbs.db
 *.phd
 *.trc
 *.class
+
+# Code Recommenders
+.recommenders
+.recommenders/
