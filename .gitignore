@@ -1,4 +1,5 @@
 .metadata
+.recommenders/
 com.ibm.notes.java.api
 com.example.junit.tests
 com.example.xsp
@@ -7,7 +8,6 @@ Thumbs.db
 *.phd
 *.trc
 *.class
-
 
 # Visual C++ cache files
 ipch/
