@@ -34,7 +34,7 @@ public class WebSocketLibrary extends AbstractXspLibrary {
 	public String getLibraryId() {
 		return "com.tc.websocket.library";
 	}
-
+ 
 
 	/* (non-Javadoc)
 	 * @see com.ibm.xsp.library.AbstractXspLibrary#getPluginId()

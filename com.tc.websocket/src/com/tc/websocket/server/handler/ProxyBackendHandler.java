@@ -112,10 +112,10 @@ public class ProxyBackendHandler extends ChannelInboundHandlerAdapter {
 			bufData = Unpooled.wrappedBuffer(data.getBytes());
 		}
 		
-		ProxyFrontendHandler.writeToFile("backend", ByteBufUtil.getBytes(bufData));
+		//ProxyFrontendHandler.writeToFile("backend", ByteBufUtil.getBytes(bufData));
 		
 		
-		inboundChannel.writeAndFlush(bufData).addListener(new ChannelFutureListener() {
+		inboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) {
 				if (future.isSuccess()) {

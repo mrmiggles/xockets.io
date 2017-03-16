@@ -24,9 +24,21 @@
     <ClInclude Include="xconstants.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="hexTobase64.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fingerprint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xockets.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hexTobase64.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fingerprint.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

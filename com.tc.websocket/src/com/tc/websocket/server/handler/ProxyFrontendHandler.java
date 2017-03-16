@@ -18,11 +18,21 @@
 package com.tc.websocket.server.handler;
 
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
+import java.security.cert.CertificateEncodingException;
+
 import javax.security.cert.X509Certificate;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
 
 import org.apache.commons.io.FileUtils;
 
@@ -159,17 +169,34 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 			try {
 				X509Certificate cert = sslhandler.engine().getSession().getPeerCertificateChain()[0];
 				Principal p =cert.getSubjectDN();
+
+				/* Added by Miguel */
+				LdapName ldapDN = new LdapName(p.getName());
+				String username = "";
+		        String thumbprint = getThumbPrint(cert.getEncoded());
 		
+		        for(Rdn rdn: ldapDN.getRdns()) {                	
+		            //System.out.println(rdn.getType() + " -> " + rdn.getValue());
+		            if(rdn.getType().equals("CN")){
+		            	username = rdn.getValue().toString();
+		            	break;
+		            }
+		        }
+		        /* End Added by Miguel*/
 				
 				String sessionId = parseSessionID(data);
 
 				if(sessionId!=null){
-					File sessionFile = new File("c:/sessions/" + sessionId + ".txt");
+			        String current = System.getProperty("user.dir");
+			        //System.out.println("Current working directory in Java : " + current);
+
+					//File sessionFile = new File("c:/sessions/" + sessionId + ".txt");
+					File sessionFile = new File(current + "/data/sessions/" + sessionId + ".txt");
 
 					//only write the file if it hasn't been written yet.
-					if(sessionFile.exists() == false){
-						FileUtils.write(sessionFile, p.getName().replaceAll("\"",""));	
-					}
+					if(sessionFile.createNewFile()){
+						FileUtils.write(sessionFile, p.getName().replaceAll("\"","").replaceAll("\\+", ",") + "\n" + username + "\n" + thumbprint);	
+					}				
 				}
 
 			} catch (Exception e) {
@@ -210,6 +237,29 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 		}
 
 	}
+	
+	public static String getThumbPrint(byte[] der) throws NoSuchAlgorithmException, CertificateEncodingException {
+	    MessageDigest md = MessageDigest.getInstance("SHA-1");
+	    md.update(der);
+	    byte[] digest = md.digest();
+	    return hexify(digest);
+	
+	}
+	
+	public static String hexify (byte bytes[]) {
+	
+	    char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', 
+	            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+	
+	    StringBuffer buf = new StringBuffer(bytes.length * 2);
+	
+	    for (int i = 0; i < bytes.length; ++i) {
+	        buf.append(hexDigits[(bytes[i] & 0xf0) >> 4]);
+	        buf.append(hexDigits[bytes[i] & 0x0f]);
+	    }
+	
+	    return buf.toString();
+	}		
 
 
 
@@ -278,7 +328,21 @@ public class ProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	private static String parseSessionID(String data){
-		return StrUtils.parseCookie(data).get("SessionID");
+		//return StrUtils.parseCookie(data).get("SessionID");
+		String[] req = data.split("\r\n");
+		Map<String,String> cookies = new HashMap<String,String>();
+		
+		for(String str : req){
+			if(str.toLowerCase().contains("cookie")){
+				str = str.substring(str.indexOf(":") + 1, str.length());
+				String[] pairs =str.split(";");
+				for(String nv : pairs){
+					String[] nameValue = nv.trim().split("=");
+					cookies.put(nameValue[0], nameValue[1]);
+				}				
+			}
+		}		
+		return cookies.get("SessionID");		
 	}
 
 

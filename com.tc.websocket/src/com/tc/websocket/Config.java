@@ -17,12 +17,14 @@
 
 package com.tc.websocket;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -160,9 +162,10 @@ public class Config implements Runnable, IConfig {
 	
 	/** The thread count. */
 	private int threadCount;
-
-
-
+	
+	/** boolean indicating WS User is being used */
+	private boolean usingWSUser;
+	
 	/** The event loop threads. */
 	private int eventLoopThreads;
 	
@@ -405,8 +408,10 @@ public class Config implements Runnable, IConfig {
 
 			if(StrUtils.hasEmpty(username, password)){
 				print("****WARNING: WEBSOCKET_USER and WEBSOCKET_PASSWORD are not setup.  xockets.io will run under a trusted session.****");
+				this.usingWSUser = false;
 			}else{
 				print("xockets.io operations will run under userId " + this.username);
+				this.usingWSUser = true;
 			}
 
 
@@ -483,6 +488,63 @@ public class Config implements Runnable, IConfig {
 			if(encrypted){	
 				
 				this.certAuth = new Boolean(this.envAsBool(s, Params.WEBSOCKET_CERT_AUTH.name(), false));
+				if(certAuth){
+					String current = System.getProperty("user.dir");
+					print("********WEBSOCKET PKI AUTHENTICATION ENABLED:********");
+					print("********PKI AUTHENTICATION REQUIREMENTS************");
+					print("* I'll need a sessions folder here: '" + current + "\\data'. Checking if it exists...");
+					File dir = new File(current + "\\data\\sessions");
+					if(!dir.exists()){
+						print("****WARNING****: Could not find sessions folder. Attempting to create...");
+						if(dir.mkdir()) {
+							print("* Success: sessions folder successfully created");
+						} else {
+							print("****ERROR****: Could not find or create the sessions folder. You'll get 403 access errors!!");
+						}
+						
+						
+					} else {
+						print("* Found the sessions directory at " + dir.getAbsolutePath());
+					}
+					
+					print("* domcfg.nsf must be setup and have at least reader access for Default and Anonymous. Checking Access...");
+					Database domcfg = s.getDatabase(StrUtils.EMPTY_STRING, "domcfg.nsf");
+					if(domcfg != null){
+						print("* - Current Privilege Level for Anonymous in DB domcfg.nsf is: " + convertAccessLevelToString(getCurUserPrivilege(domcfg, "Anonymous")));
+						if(getCurUserPrivilege(domcfg, "Anonymous") <= 1) {
+							print("****Warning: Anonymous Level is less than READER, you'll get stuck at the LOGIN page!");
+						}
+						if(getCurUserPrivilege(domcfg, "Default") <= 1) {
+							print("****Warning: Default Level is less than READER, you'll get stuck at the LOGIN page!");
+						}						
+						print("* - Current Privilege Level for Default in DB domcfg.nsf is: " + convertAccessLevelToString(getCurUserPrivilege(domcfg, "Default")));
+						domcfg.recycle();
+					} else {
+						print(" ***Error***: Oops, I could not find domcfg.nsf");
+					}
+					print("* init.nsf should have NO ACCESS set for Anonymous and Default with Read Public Documents checked. Checking Access...");
+					Database init = s.getDatabase(StrUtils.EMPTY_STRING, "init.nsf");
+					if(domcfg != null){
+						print("* - Current Privilege Level for Anonymous in DB init.nsf is: " + convertAccessLevelToString(getCurUserPrivilege(init, "Anonymous")));
+						print("* - Current Privilege Level for Default in DB init.nsf is: " + convertAccessLevelToString(getCurUserPrivilege(init, "Default")));
+						init.recycle();
+					} else {
+						print(" ***Error***: Oops, I could not find init.nsf, perhaps it was named something else or was not created.");
+					}
+					
+					if(this.usingWSUser){
+					
+						print("* In Websocket.nsf Config Doc make sure to add '" + this.username + "' to Other Readers");
+						print("* In Websocket Update Site Websocket User '" + this.username + "' needs DEPOSITOR Access. Anonymous and Default should be NO ACCESS");
+						print("* In websocket.nsf Websocket User '" + this.username + "' needs EDITOR with Delete. Anonymous and Default should be set NO ACCESS");
+						
+						print("* - Current Privilege Level for " + this.username + " in DB " + db.getFileName() + " is: " + convertAccessLevelToString(getCurUserPrivilege(db, this.username)));
+						print("* - Please ensure the Delete Documents has a check next to it.");
+						
+					}
+
+					print("**************END PKI AUTHENTICATION REQUIREMENTS**********************************");
+				}
 				
 				//certificate file and keyfile.
 				this.certFile = env(s,Params.WEBSOCKET_CERT_FILE.name(),"");
@@ -1094,6 +1156,62 @@ public class Config implements Runnable, IConfig {
 	@Override
 	public boolean isCertAuth() {
 		return this.certAuth;
+	}
+	
+	private Vector getCurUserRoles(Database db, String userName) {
+		Vector UserRoles;
+	    try {
+	    	UserRoles = db.queryAccessRoles(userName);
+	    } catch (NotesException e) {
+	        //this.debug("getCurUserRoles ERROR: " + e.getMessage(), "error");
+	    	UserRoles = new Vector();
+	    }
+	    return UserRoles;
+	}
+	
+	private int getCurUserPrivilege(Database db, String userName) {
+		int privLevel;
+	    try {
+	    	privLevel = db.queryAccess(userName);
+	    } catch (NotesException e) {
+	        //this.debug("getCurUserRoles ERROR: " + e.getMessage(), "error");
+	    	privLevel = 0;
+	    }
+	    return privLevel;
+	}	
+	 
+	private boolean hasRole(Vector roles, String role, String uname) {
+	    try {
+	        if (roles.contains(role))
+	            return true;
+	        if (roles.contains("["+role+"]"))
+	            return true;
+	        return false;
+	    } catch (Exception e) {
+	        //this.debug("hasRole ERROR: " + e.getMessage(), "error");
+	        return false;
+	    }
+	 }
+	
+	private String convertAccessLevelToString(int level){
+		String SLevel;
+		switch(level){
+		case 1: SLevel = "DEPOSITOR";
+				break;
+		case 2: SLevel = "READER";
+				break;
+		case 3: SLevel = "AUTHOR";
+				break;
+		case 4: SLevel = "EDITOR";
+				break;		
+		case 5: SLevel = "DESIGNER";
+				break;
+		case 6: SLevel = "MANAGER";
+				break;
+		default: SLevel = "NO ACCESS";
+				break;
+		}
+		return SLevel;
 	}
 
 }

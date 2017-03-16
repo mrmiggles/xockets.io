@@ -1,17 +1,6 @@
 /*
-* © Copyright Tek Counsel LLC 2016
+* © Copyright LANL
 *
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at:
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-* implied. See the License for the specific language governing
-* permissions and limitations under the License.
 */
 
 #pragma once
@@ -25,16 +14,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include <time.h>
+#include <direct.h>
+
 
 /* Special dsapi include file */
-#include <dsapi.h>
+#include "dsapi.h"
 
 /* Notes SDK include files */
+/* notes901 C API available for download at IBM */
 #include "global.h"
 #include "osmem.h"
-#include <addin.h>
+#include "addin.h"
+#include "lookup.h"
 #include "xconstants.h"
+#include "hexTobase64.h"
+#include "fingerprint.h"
 
 
 /*
@@ -44,11 +40,20 @@ Defined functions
 DLLEXPORT unsigned int FilterInit(FilterInitData* filterInitData);
 DLLEXPORT unsigned int HttpFilterProc(FilterContext* context, unsigned int eventType, void* eventData);
 
-
 unsigned int Authenticate(FilterContext* context, FilterAuthenticate* authData);
 void parseCookie(char cookies[], char cookieName[], char result[]);
-void readUserId(char sessionId[], char userId[]);
-void logme(const char*message);
+void readUserId(char sessionId[], char userId[], char username[], char fingerprint[]);
+void xoc_logme(const char*message);
 
 
+/* Retrieval of names from Notes name and address book */
+int getUserNames(FilterContext* context, char *userName,
+	char **pUserFullName, int  *pUserFullNameLen,
+	char **pUserShortName, int  *pUserShortNameLen);
 
+/* Retreival of certificate and public key from user*/
+int getUserCerts(FilterContext* context, char *userName,
+	char **pUserPulicKey, int *pUserPublicKeyLen,
+	char **pUserCertificate, int *pUserCertificateLen);
+
+int getLookupInfo(FilterContext* context, char *pMatch, int  itemNumber, char **pInfo, int  *pInfoLen);

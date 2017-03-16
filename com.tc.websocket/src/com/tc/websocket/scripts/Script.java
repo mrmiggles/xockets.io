@@ -513,13 +513,7 @@ public abstract class Script implements Runnable {
 		if(SupportedEngine.AGENT.engine().equalsIgnoreCase(engine)){
 			script = new AgentScript();
 
-		}else if(SupportedEngine.PYTHON.engine().equalsIgnoreCase(engine)){
-			script = new PythonScript();
-
-		}else if(SupportedEngine.BEANSHELL.engine().equalsIgnoreCase(engine)){
-			script= new BSHScript();
-		}
-		else{
+		} else{
 			script = new JSRScript(engine);
 		}
 
